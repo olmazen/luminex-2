@@ -7,7 +7,7 @@
 <meta name="description" content="FOREST 2.5 — премиум архитектурное ограждение со скрытой LED-подсветкой, художественной перфорацией и модульной конструкцией. Срок службы 25+ лет." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" href="timeline/04.webp" fetchpriority="high">
+<link rel="preload" as="image" href="timeline/20.webp" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -1932,240 +1932,213 @@ input[type="range"]:hover::-moz-range-thumb{
 /* ============================================================
    TIMELINE WIDGET — встроен в секцию daynight
    ============================================================ */
-.timeline-stage{
+.tl{
   position:relative;
   width:100%;
-  aspect-ratio:1414/790;        /* пропорции фотографий */
-  min-height:420px;
-  max-height:880px;
-  background:#000;
+  max-width:1400px;
+  margin:0 auto;
+  border-radius:14px;
   overflow:hidden;
-  border-radius:4px;
-  box-shadow:0 40px 100px rgba(0,0,0,.7), 0 0 0 1px rgba(240,160,66,.05);
+  background:#0a0907;
+  box-shadow:
+    0 40px 100px rgba(0,0,0,.65),
+    0 0 0 1px rgba(240,160,66,.06);
+  user-select:none;
 }
-/* Слой с кадрами времени суток — все картинки уложены друг на друга,
-   активный кадр через .is-active. Crossfade через opacity. */
-.timeline-images{
-  position:absolute; inset:0;
-  width:100%; height:100%;
+.tl-stage{
+  position:relative;
+  width:100%;
+  aspect-ratio:1414/790;
+  background:#000;
 }
-.timeline-images img{
+.tl-images{position:absolute; inset:0}
+.tl-images img{
   position:absolute; inset:0;
   width:100%; height:100%;
   object-fit:cover;
   opacity:0;
-  transition:opacity .7s ease;
+  transition:opacity .55s cubic-bezier(.4,0,.2,1);
   pointer-events:none;
-  /* Лёгкий зум первого кадра не нужен — оставляем спокойно */
+  will-change:opacity;
 }
-.timeline-images img.is-active{ opacity:1 }
-/* Полоска наплывает на сцену снизу */
-.timeline-bar{
-  position:relative;
-  z-index:2;
-  margin:-44px auto 0;
-  width:min(680px, 70%);
-  padding:22px 56px 22px;
+.tl-images img.is-active{opacity:1}
+
+/* === UI поверх фото снизу === */
+.tl-ui{
+  position:absolute;
+  left:0; right:0; bottom:0;
+  pointer-events:none;          /* пропускает события к фото, но дети возвращают auto */
+}
+/* Стеклянная плашка с blur-фоном. Отдельный слой, чтобы blur не задевал детей. */
+.tl-ui-bg{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  /* Двухслойный градиент: чуть тёплый снизу, прозрачный сверху */
   background:linear-gradient(180deg,
-    rgba(20,18,15,.92) 0%,
-    rgba(14,12,10,.88) 100%);
-  border:1px solid rgba(240,160,66,.12);
-  border-radius:6px;            /* минимально скруглён — НЕ капсула */
-  backdrop-filter:blur(20px) saturate(130%);
-  -webkit-backdrop-filter:blur(20px) saturate(130%);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.06),
-    inset 0 -1px 0 rgba(0,0,0,.4),
-    0 24px 60px rgba(0,0,0,.6),
-    0 4px 20px rgba(0,0,0,.4);
-  user-select:none;
+    rgba(10,9,7,0) 0%,
+    rgba(10,9,7,.35) 30%,
+    rgba(10,9,7,.72) 100%);
+  backdrop-filter:blur(14px) saturate(120%);
+  -webkit-backdrop-filter:blur(14px) saturate(120%);
+  /* Маска, чтобы blur плавно сходил наверху — нижняя плашка, не вся высота UI */
+  -webkit-mask-image:linear-gradient(180deg, transparent 0%, #000 35%, #000 100%);
+          mask-image:linear-gradient(180deg, transparent 0%, #000 35%, #000 100%);
 }
-.timeline-top{
+.tl-ui-inner{
+  position:relative;
+  padding:clamp(22px, 4vw, 44px) clamp(20px, 4vw, 56px) clamp(20px, 3vw, 32px);
+  pointer-events:auto;
+}
+.tl-meta{
   display:flex;
-  justify-content:space-between;
   align-items:baseline;
-  margin-bottom:20px;            /* было 14 — больше воздуха */
-  padding:0 2px;
+  gap:18px;
+  margin-bottom:22px;
+  pointer-events:none;
 }
-.timeline-time{
+.tl-time{
   font-family:'Cormorant Garamond', serif;
-  font-size:28px;
+  font-size:clamp(28px, 3.6vw, 44px);
   font-weight:300;
-  color:rgba(236,232,223,.96);
+  color:rgba(244,240,232,.98);
   letter-spacing:-.01em;
   line-height:1;
   font-variant-numeric:tabular-nums;
-  text-shadow:0 2px 12px rgba(0,0,0,.5);
+  text-shadow:0 2px 16px rgba(0,0,0,.6);
 }
-.timeline-mood{
+.tl-mood{
   font-family:'JetBrains Mono', monospace;
-  font-size:10px;
+  font-size:11px;
   letter-spacing:.32em;
   text-transform:uppercase;
-  color:rgba(240,160,66,.75);
-  text-shadow:0 1px 8px rgba(0,0,0,.6);
+  color:rgba(240,160,66,.82);
+  text-shadow:0 1px 8px rgba(0,0,0,.7);
+  transition:color .5s ease;
 }
-.timeline-track{
+
+/* === Дорожка из множества тонких чёрточек === */
+.tl-track{
   position:relative;
-  height:6px;
-  border-radius:2px;             /* минимальное скругление, не капсула */
-  background:linear-gradient(180deg,
-    rgba(0,0,0,.6) 0%,
-    rgba(0,0,0,.35) 100%);
-  box-shadow:
-    inset 0 1px 2px rgba(0,0,0,.65),
-    inset 0 -1px 0 rgba(255,255,255,.04);
+  height:48px;
   cursor:pointer;
+  touch-action:none;
 }
-.timeline-fill{
+.tl-track:focus-visible{outline:none}
+.tl-track:focus-visible .tl-handle{
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.7) inset,
+    0 0 0 3px rgba(240,160,66,.55),
+    0 6px 18px rgba(0,0,0,.6);
+}
+.tl-bars{
   position:absolute;
-  top:0; left:0; bottom:0;
-  border-radius:2px;
-  background:linear-gradient(90deg,
-    rgba(240,180,100,.4) 0%,
-    rgba(255,215,140,.85) 80%,
-    rgba(255,230,170,1) 100%);
-  box-shadow:0 0 16px rgba(255,200,120,.45);
+  left:0; right:0;
+  bottom:0;
+  height:32px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
   pointer-events:none;
-  transition:background .5s ease, box-shadow .5s ease;
 }
-.timeline-fill.night{
-  background:linear-gradient(90deg,
-    rgba(140,130,180,.25) 0%,
-    rgba(180,175,220,.6) 80%,
-    rgba(220,215,245,.85) 100%);
-  box-shadow:0 0 14px rgba(170,160,220,.35);
+/* Декоративные чёрточки (их много — 60+). По умолчанию короткие.
+   --d ∈ [0..1] — близость к текущей позиции пина (через CSS-var на .tl-bars). */
+.tl-bar{
+  width:2px;
+  height:calc(6px + 22px * var(--d, 0));
+  background:rgba(255,255,255, calc(.18 + .55 * var(--d, 0)));
+  border-radius:1px;
+  transition:height .3s cubic-bezier(.2,.6,.2,1),
+             background .3s ease;
 }
-.timeline-ticks{position:absolute; inset:0; pointer-events:none}
-.timeline-tick{
+.tl-bar.anchor{
+  width:3px;
+  background:rgba(240,170,80, calc(.32 + .55 * var(--d, 0)));
+}
+
+/* === Handle — стеклянный прямоугольник-переключатель === */
+.tl-handle{
   position:absolute;
-  top:50%;
-  width:1px;
-  height:4px;
-  background:rgba(255,255,255,.18);
-  transform:translate(-50%,-50%);
-  transition:background .2s ease, height .2s ease;
-}
-.timeline-tick.major{
-  height:8px;
-  background:rgba(240,160,66,.45);
-}
-.timeline-handle{
-  position:absolute;
-  top:50%;
   left:0;
-  width:14px;                    /* меньше, прямоугольник */
-  height:22px;
-  transform:translate(-50%,-50%);
-  border-radius:2px;             /* скошенные углы вместо круга */
-  background:linear-gradient(180deg,
-    rgba(255,250,235,.98) 0%,
-    rgba(255,225,170,.95) 35%,
-    rgba(240,180,100,.95) 70%,
-    rgba(180,130,70,.95) 100%);
-  border:1px solid rgba(255,235,200,.9);
-  box-shadow:
-    inset 0 1px 1px rgba(255,255,255,.9),
-    inset 0 -1px 2px rgba(0,0,0,.35),
-    0 4px 12px rgba(0,0,0,.55),
-    0 0 calc(var(--glow,0)*16px) rgba(255,200,120, calc(var(--glow,0)*.7)),
-    0 0 calc(var(--glow,0)*40px) rgba(255,200,120, calc(var(--glow,0)*.4));
-  cursor:grab;
-  z-index:3;
-  transition:transform .12s ease, box-shadow .4s ease, background .6s ease;
-}
-.timeline-handle:hover{transform:translate(-50%,-50%) scale(1.08)}
-.timeline-handle:active, .timeline-handle.dragging{
-  cursor:grabbing;
-  transform:translate(-50%,-50%) scale(1.12);
-}
-.timeline-handle.night{
-  background:linear-gradient(180deg,
-    rgba(255,255,255,.98) 0%,
-    rgba(230,235,255,.92) 35%,
-    rgba(190,200,230,.92) 70%,
-    rgba(110,120,160,.95) 100%);
-  box-shadow:
-    inset 0 1px 1px rgba(255,255,255,.9),
-    inset 0 -1px 2px rgba(0,0,0,.35),
-    0 4px 12px rgba(0,0,0,.55),
-    0 0 calc(var(--glow,0)*16px) rgba(200,210,255, calc(var(--glow,0)*.7)),
-    0 0 calc(var(--glow,0)*40px) rgba(200,210,255, calc(var(--glow,0)*.4));
-}
-.timeline-step{
-  position:absolute;
   top:50%;
-  transform:translateY(-50%);
-  width:26px;
-  height:26px;
-  border-radius:3px;             /* скошен, не круг */
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(240,160,66,.18);
-  color:rgba(236,232,223,.7);
-  font-size:15px;
-  font-family:'Inter', sans-serif;
-  cursor:pointer;
-  display:flex; align-items:center; justify-content:center;
-  transition:all .15s ease;
-  user-select:none;
-  line-height:1;
-  padding:0;
-}
-.timeline-step:hover{
-  background:rgba(240,160,66,.12);
-  color:rgba(236,232,223,.95);
-  border-color:rgba(240,160,66,.4);
-}
-.timeline-step:active{transform:translateY(-50%) scale(.92)}
-.timeline-step.prev{left:14px}
-.timeline-step.next{right:14px}
-.timeline-hint{
-  position:absolute;
-  left:50%; bottom:-26px;
-  transform:translateX(-50%);
-  font-family:'JetBrains Mono', monospace;
-  font-size:10px; letter-spacing:.28em;
-  text-transform:uppercase;
-  color:rgba(240,160,66,.5);
+  width:52px;
+  height:30px;
+  transform:translate(-50%, calc(-50% - var(--lift, 0px)));
+  border-radius:7px;
+  background:linear-gradient(180deg,
+    rgba(255,255,255,.32) 0%,
+    rgba(255,255,255,.12) 50%,
+    rgba(255,255,255,.08) 100%);
+  backdrop-filter:blur(10px) saturate(150%);
+  -webkit-backdrop-filter:blur(10px) saturate(150%);
+  border:1px solid rgba(255,255,255,.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.6),
+    inset 0 -1px 0 rgba(0,0,0,.3),
+    0 6px 22px rgba(0,0,0,.55),
+    0 0 calc(var(--glow, 0) * 26px) rgba(240,170,80, calc(var(--glow, 0) * .55));
+  transition:left .25s cubic-bezier(.2,.6,.2,1),
+             transform .5s cubic-bezier(.34,1.56,.64,1),
+             box-shadow .5s ease,
+             border-color .5s ease;
   pointer-events:none;
-  transition:opacity .6s ease;
-  white-space:nowrap;
+  will-change:transform, left;
 }
-.timeline-hint.hidden{opacity:0}
+/* Тонкий верхний хайлайт — «отблеск стекла» */
+.tl-handle-hl{
+  position:absolute;
+  left:5px; right:5px; top:3px;
+  height:5px;
+  border-radius:4px 4px 3px 3px;
+  background:linear-gradient(180deg,
+    rgba(255,255,255,.5) 0%,
+    rgba(255,255,255,0) 100%);
+  pointer-events:none;
+}
+/* Ночной handle — холоднее, перламутровый отблеск */
+.tl-handle.night{
+  background:linear-gradient(180deg,
+    rgba(220,225,255,.22) 0%,
+    rgba(200,210,240,.05) 100%);
+  border-color:rgba(220,225,255,.4);
+}
 
-/* Планшеты и узкие экраны — сцена становится горизонтальнее, ниже по высоте */
+.tl-hint{
+  font-family:'JetBrains Mono', monospace;
+  font-size:10px;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:rgba(240,160,66,.55);
+  margin-top:14px;
+  pointer-events:none;
+  transition:opacity .5s ease;
+}
+.tl-hint.hidden{opacity:0; visibility:hidden}
+
+/* Уважаем accessibility-настройки */
+@media (prefers-reduced-motion: reduce){
+  .tl-images img, .tl-bar, .tl-handle, .tl-hint{
+    transition-duration:.1s !important;
+  }
+}
+
+/* Планшеты */
 @media (max-width:900px){
-  .timeline-stage{
-    aspect-ratio:4/3;            /* было 4/5 — теперь горизонтальнее */
-    min-height:320px;            /* было 380 */
-    max-height:520px;
-  }
-  .timeline-bar{
-    width:90%;
-    margin-top:-30px;
-    padding:18px 44px 18px;
-  }
-  .timeline-time{font-size:22px}
-  .timeline-mood{font-size:8px; letter-spacing:.24em}
-  .timeline-handle{width:12px; height:18px}
-  .timeline-step{width:24px; height:24px}
-  .timeline-step.prev{left:10px}
-  .timeline-step.next{right:10px}
+  .tl{border-radius:10px}
+  .tl-stage{aspect-ratio:4/3}
+  .tl-ui-inner{padding:24px 22px 22px}
+  .tl-meta{margin-bottom:16px}
+  .tl-track{height:44px}
+  .tl-bars{height:28px}
+  .tl-handle{width:46px; height:26px; border-radius:6px}
 }
-
-/* Телефоны — ещё ниже */
 @media (max-width:560px){
-  .timeline-stage{
-    aspect-ratio:3/2;
-    min-height:260px;
-    max-height:380px;
-  }
-  .timeline-bar{
-    width:94%;
-    margin-top:-22px;
-    padding:14px 40px 14px;
-  }
-  .timeline-time{font-size:20px}
+  .tl-stage{aspect-ratio:3/2}
+  .tl-ui-inner{padding:20px 16px 18px}
+  .tl-meta{margin-bottom:12px; gap:12px}
+  .tl-track{height:40px}
+  .tl-bars{height:24px}
+  .tl-handle{width:40px; height:24px; border-radius:6px}
 }
 
 
@@ -2563,36 +2536,41 @@ input[type="range"]:hover::-moz-range-thumb{
       <p class="lead-text">Днём — приватность и архитектурный дизайн участка. Ночью — подсветка периметра, которая заменяет 8–12 садовых фонарей и кабельных трасс. Один блок питания 24V на весь забор. Перемотайте сутки — увидите, как один забор работает 24 часа.</p>
     </div>
 
-    <div class="timeline-stage" id="timelineStage">
-    <div class="timeline-images" id="timelineImages">
-      <img src="timeline/04.webp" alt="Забор в 04:00" data-step="0" loading="eager" fetchpriority="high" decoding="async">
-      <img src="timeline/06.webp" alt="Забор в 06:00" data-step="1" loading="lazy" fetchpriority="auto" decoding="async">
-      <img src="timeline/08.webp" alt="Забор в 08:00" data-step="2" loading="lazy" fetchpriority="auto" decoding="async">
-      <img src="timeline/10.webp" alt="Забор в 10:00" data-step="3" loading="lazy" fetchpriority="auto" decoding="async">
-      <img src="timeline/14.webp" alt="Забор в 14:00" data-step="4" loading="lazy" fetchpriority="auto" decoding="async">
-      <img src="timeline/18.webp" alt="Забор в 18:00" data-step="5" loading="lazy" fetchpriority="auto" decoding="async">
-      <img src="timeline/20.webp" alt="Забор в 20:00" data-step="6" loading="lazy" fetchpriority="auto" decoding="async">
-      <img src="timeline/00.webp" alt="Забор в 00:00" data-step="7" loading="lazy" fetchpriority="auto" decoding="async">
-      <img src="timeline/02.webp" alt="Забор в 02:00" data-step="8" loading="lazy" fetchpriority="auto" decoding="async">
-    </div>
-    </div>
+    <div class="tl" id="tl">
+      <!-- Слой фото -->
+      <div class="tl-stage" id="tlStage">
+        <div class="tl-images" id="tlImages">
+          <img src="timeline/04.webp" alt="Забор в 04:00" data-step="0" loading="lazy" decoding="async">
+          <img src="timeline/06.webp" alt="Забор в 06:00" data-step="1" loading="lazy" decoding="async">
+          <img src="timeline/08.webp" alt="Забор в 08:00" data-step="2" loading="lazy" decoding="async">
+          <img src="timeline/10.webp" alt="Забор в 10:00" data-step="3" loading="lazy" decoding="async">
+          <img src="timeline/14.webp" alt="Забор в 14:00" data-step="4" loading="lazy" decoding="async">
+          <img src="timeline/18.webp" alt="Забор в 18:00" data-step="5" loading="lazy" decoding="async">
+          <img src="timeline/20.webp" alt="Забор в 20:00" data-step="6" loading="eager" fetchpriority="high" decoding="async">
+          <img src="timeline/00.webp" alt="Забор в 00:00" data-step="7" loading="lazy" decoding="async">
+          <img src="timeline/02.webp" alt="Забор в 02:00" data-step="8" loading="lazy" decoding="async">
+        </div>
+      </div>
 
-    <!-- TIMELINE — ползунок под/наплывом на сцену -->
-    <div class="timeline-bar" id="timelineBar">
-      <div class="timeline-top">
-        <div class="timeline-time" id="tlTime">10:00</div>
-        <div class="timeline-mood" id="tlMood">День</div>
+      <!-- UI поверх фото снизу. Свой собственный glass-scrim. -->
+      <div class="tl-ui">
+        <div class="tl-ui-bg" aria-hidden="true"></div>
+        <div class="tl-ui-inner">
+          <div class="tl-meta">
+            <div class="tl-time" id="tlTime">20:00</div>
+            <div class="tl-mood" id="tlMood">Подсветка</div>
+          </div>
+          <!-- Дорожка из множества тонких чёрточек + handle-прямоугольник. -->
+          <div class="tl-track" id="tlTrack" role="slider" tabindex="0"
+               aria-label="Время суток" aria-valuemin="0" aria-valuemax="8" aria-valuenow="6">
+            <div class="tl-bars" id="tlBars"></div>
+            <div class="tl-handle" id="tlHandle" aria-hidden="true">
+              <div class="tl-handle-hl"></div>
+            </div>
+          </div>
+          <div class="tl-hint" id="tlHint">перетащите ползунок</div>
+        </div>
       </div>
-      <div class="timeline-track" id="tlTrack">
-        <div class="timeline-fill" id="tlFill"></div>
-        <div class="timeline-ticks" id="tlTicks"></div>
-        <div class="timeline-handle" id="tlHandle" tabindex="0" role="slider"
-             aria-label="Время суток"
-             aria-valuemin="0" aria-valuemax="8" aria-valuenow="3"></div>
-      </div>
-      <button class="timeline-step prev" id="tlPrev" aria-label="Назад">−</button>
-      <button class="timeline-step next" id="tlNext" aria-label="Вперёд">+</button>
-      <div class="timeline-hint" id="tlHint">демо · перетащите ползунок</div>
     </div>
   </div>
 </section>
@@ -4429,176 +4407,229 @@ onScrollFrame(); // initial
 <script>
 
 /* ============================================================
-   TIMELINE WIDGET — 9 шагов, реальные фото времени суток
+   TIMELINE — 9 шагов фото, дорожка из 51 чёрточки + glass-handle.
    ============================================================ */
 (function(){
 
-// 9 шагов времени суток. Порядок соответствует <img> в .timeline-images.
-// Каждый шаг: метка для подписи, "mood" под подписью, признак "ночь" (для подсветки полоски).
-// Шаги расположены ХРОНОЛОГИЧЕСКИ от раннего утра до глубокой ночи через полночь.
 const STEPS = [
-  { hh:'04:00', mood:'Предрассвет',     night:true  },
-  { hh:'06:00', mood:'Рассвет',         night:false },
-  { hh:'08:00', mood:'Утро',            night:false },
-  { hh:'10:00', mood:'День',            night:false },
-  { hh:'14:00', mood:'Закат',           night:false },
-  { hh:'18:00', mood:'Сумерки',         night:true  },
-  { hh:'20:00', mood:'Подсветка',       night:true  },
-  { hh:'00:00', mood:'Ночь',            night:true  },
-  { hh:'02:00', mood:'Глубокая ночь',   night:true  },
+  { hh:'04:00', mood:'Предрассвет',   night:true  },
+  { hh:'06:00', mood:'Рассвет',       night:false },
+  { hh:'08:00', mood:'Утро',          night:false },
+  { hh:'10:00', mood:'День',          night:false },
+  { hh:'14:00', mood:'Закат',         night:false },
+  { hh:'18:00', mood:'Сумерки',       night:true  },
+  { hh:'20:00', mood:'Подсветка',     night:true  },
+  { hh:'00:00', mood:'Ночь',          night:true  },
+  { hh:'02:00', mood:'Глубокая ночь', night:true  },
 ];
-const N = STEPS.length;          // 9
-const LAST = N - 1;              // 8 — индекс последнего шага
-// Мажорные тики на дорожке — узловые моменты (рассвет, день, закат, ночь)
-const MAJOR_STEPS = new Set([1, 3, 4, 6]);
+const N = STEPS.length;     // 9 шагов с фото
+const LAST = N - 1;         // 8 — индекс последнего
+const START_STEP = 6;       // 20:00 / Подсветка
+const DEMO_RUN_ON_VIEWPORT = true;
+const N_BARS = 81;          // декоративные чёрточки. 81 = 8*10+1 → якоря ровно на шагах
 
-// === Элементы DOM ===
-const stageEl   = document.getElementById('timelineStage');
-const imagesEl  = document.getElementById('timelineImages');
-const imgs      = imagesEl ? Array.from(imagesEl.querySelectorAll('img')) : [];
-const trackEl   = document.getElementById('tlTrack');
-const handleEl  = document.getElementById('tlHandle');
-const fillEl    = document.getElementById('tlFill');
-const ticksEl   = document.getElementById('tlTicks');
-const timeEl    = document.getElementById('tlTime');
-const moodEl    = document.getElementById('tlMood');
-const hintEl    = document.getElementById('tlHint');
-const prevBtn   = document.getElementById('tlPrev');
-const nextBtn   = document.getElementById('tlNext');
+// === DOM ===
+const root    = document.getElementById('tl');
+const imgsEl  = document.getElementById('tlImages');
+const imgs    = imgsEl ? Array.from(imgsEl.querySelectorAll('img')) : [];
+const trackEl = document.getElementById('tlTrack');
+const barsEl  = document.getElementById('tlBars');
+const handleEl= document.getElementById('tlHandle');
+const timeEl  = document.getElementById('tlTime');
+const moodEl  = document.getElementById('tlMood');
+const hintEl  = document.getElementById('tlHint');
+if(!root || !trackEl || !handleEl || imgs.length === 0) return;
 
-if(!trackEl || !handleEl || imgs.length === 0) return;
-
-// === Тики (9 точек) ===
-if(ticksEl){
-  for(let i=0; i<N; i++){
-    const tick = document.createElement('div');
-    tick.className = 'timeline-tick' + (MAJOR_STEPS.has(i)?' major':'');
-    tick.style.left = (i/LAST)*100 + '%';
-    ticksEl.appendChild(tick);
+// === Создаём чёрточки ===
+// Якорные позиции — там, где «настоящие» шаги. Это индексы в массиве bars,
+// которые соответствуют целочисленным шагам 0..LAST.
+const anchorIdx = new Set();
+const bars = [];
+for(let i = 0; i < N_BARS; i++){
+  const b = document.createElement('div');
+  b.className = 'tl-bar';
+  // Проверка: чёрточка #i соответствует шагу?
+  // Шаг s имеет позицию s/LAST на дорожке. Чёрточка #i — позицию i/(N_BARS-1).
+  // Якорная, если эти позиции совпадают (с точностью до позиции в сетке).
+  for(let s = 0; s <= LAST; s++){
+    const stepPos  = s / LAST;
+    const barPos   = i / (N_BARS - 1);
+    if(Math.abs(stepPos - barPos) < 0.5 / (N_BARS - 1)){
+      b.classList.add('anchor');
+      anchorIdx.add(i);
+      break;
+    }
   }
+  b.style.setProperty('--d', '0');
+  barsEl.appendChild(b);
+  bars.push(b);
 }
 
 // === Состояние ===
-let currentStep = 3;          // старт — "День" (10:00)
-let tlAutoplay  = true;
-let autoplayDir = 1;
-let tlDragging  = false;
-let autoplayTimer = null;
+let currentT = START_STEP;
+let lifted   = false;
+let dragging = false;
 
-// === Установка кадра + полоски ===
-function applyStep(i){
-  i = Math.max(0, Math.min(LAST, i));
-  currentStep = i;
-  const step = STEPS[i];
+// === Геометрия ===
+function trackRect(){ return trackEl.getBoundingClientRect(); }
+function tFromClientX(x){
+  const r = trackRect();
+  return Math.max(0, Math.min(1, (x - r.left) / r.width)) * LAST;
+}
+function nearestStep(t){ return Math.max(0, Math.min(LAST, Math.round(t))); }
 
-  // Картинка
-  imgs.forEach((img, idx) => img.classList.toggle('is-active', idx === i));
+// === Применение позиции ===
+// t — непрерывная позиция в [0..LAST] (шаги).
+function apply(t, {snap=false} = {}){
+  currentT = t;
+  const step = nearestStep(t);
+  const s = STEPS[step];
 
-  // Полоска
-  const percent = (i/LAST)*100;
-  fillEl.style.width  = percent.toFixed(2) + '%';
-  handleEl.style.left = percent.toFixed(2) + '%';
+  // Картинка — дискретно по ближайшему шагу
+  imgs.forEach((img, idx) => img.classList.toggle('is-active', idx === step));
 
-  // Ночной/дневной режим — для цвета handle и fill
-  fillEl.classList.toggle('night',  step.night);
-  handleEl.classList.toggle('night', step.night);
-  // Glow handle — ярче ночью когда забор подсвечен (20:00, 00:00, 02:00, 04:00)
-  const glow = step.night ? 0.85 : 0.15;
-  handleEl.style.setProperty('--glow', glow.toFixed(2));
+  // Волна по чёрточкам. Позиция пина на дорожке = t/LAST ∈ [0..1].
+  // Кривая: smoothstep (S-кривая ease-in-out) — близкие у пика, дальние резко падают.
+  const pinPos = t / LAST;
+  const waveHalfWidth = 0.12;   // полуширина волны в долях дорожки (~12%)
+  for(let i = 0; i < N_BARS; i++){
+    const pos = i / (N_BARS - 1);
+    // dist нормированная: 0 в центре волны, 1 на её краю
+    const dist = Math.min(1, Math.abs(pos - pinPos) / waveHalfWidth);
+    // Smoothstep инвертированный: даёт ease-in-out спад от 1 (центр) до 0 (край)
+    const d = 1 - (3 * dist * dist - 2 * dist * dist * dist);
+    bars[i].style.setProperty('--d', d.toFixed(3));
+  }
+
+  // Handle: позиция X через left%, lift через --lift и --glow
+  const xPct = (t / LAST) * 100;
+  handleEl.style.left = xPct.toFixed(2) + '%';
+  handleEl.style.setProperty('--lift', lifted ? '8px' : '0px');
+  handleEl.style.setProperty('--glow', lifted ? '1' : '0');
+  handleEl.classList.toggle('night', s.night);
 
   // Подписи
-  if(timeEl) timeEl.textContent = step.hh;
-  if(moodEl) moodEl.textContent = step.mood;
-  handleEl.setAttribute('aria-valuenow', String(i));
+  if(timeEl) timeEl.textContent = s.hh;
+  if(moodEl) moodEl.textContent = s.mood;
+  trackEl.setAttribute('aria-valuenow', String(step));
+
+  // Прелоад соседей при касании
+  if(snap || dragging){
+    [step-1, step+1].forEach(i => {
+      if(i >= 0 && i <= LAST){
+        const img = imgs[i];
+        if(img && img.loading === 'lazy' && !img.complete) img.loading = 'eager';
+      }
+    });
+  }
 }
 
-// === Drag и навигация ===
-function eventToStep(e){
-  const ev = e.touches ? e.touches[0] : e;
-  const rect = trackEl.getBoundingClientRect();
-  const t = Math.max(0, Math.min(1, (ev.clientX - rect.left)/rect.width));
-  return Math.round(t * LAST);
+// === Lift / settle ===
+let settleTimer = null;
+function lift(){
+  lifted = true;
+  if(settleTimer){ clearTimeout(settleTimer); settleTimer = null; }
+  apply(currentT);
 }
-function startDrag(e){
-  tlDragging = true;
-  stopAutoplay();
-  handleEl.classList.add('dragging');
+function settle(){
+  const snapped = nearestStep(currentT);
+  currentT = snapped;
+  if(settleTimer) clearTimeout(settleTimer);
+  apply(currentT, {snap:true});
+  settleTimer = setTimeout(() => {
+    lifted = false;
+    apply(currentT);
+    settleTimer = null;
+  }, 240);
+}
+
+// === Pointer Events ===
+function onPointerDown(e){
+  if(e.button !== undefined && e.button !== 0) return;
+  trackEl.setPointerCapture && trackEl.setPointerCapture(e.pointerId);
+  dragging = true;
+  hideHint();
+  lift();
+  apply(tFromClientX(e.clientX));
   e.preventDefault();
 }
-function onDrag(e){
-  if(!tlDragging) return;
-  applyStep(eventToStep(e));
+function onPointerMove(e){
+  if(!dragging) return;
+  apply(tFromClientX(e.clientX));
 }
-function endDrag(){
-  tlDragging = false;
-  handleEl.classList.remove('dragging');
+function onPointerUp(e){
+  if(!dragging) return;
+  dragging = false;
+  try{ trackEl.releasePointerCapture(e.pointerId); }catch(_){}
+  settle();
 }
-trackEl.addEventListener('mousedown',  (e) => { applyStep(eventToStep(e)); startDrag(e); });
-trackEl.addEventListener('touchstart', (e) => { applyStep(eventToStep(e)); startDrag(e); }, {passive:false});
-document.addEventListener('mousemove', onDrag);
-document.addEventListener('touchmove', onDrag, {passive:false});
-document.addEventListener('mouseup',   endDrag);
-document.addEventListener('touchend',  endDrag);
+trackEl.addEventListener('pointerdown', onPointerDown);
+trackEl.addEventListener('pointermove', onPointerMove);
+trackEl.addEventListener('pointerup',   onPointerUp);
+trackEl.addEventListener('pointercancel', onPointerUp);
 
-function step(direction){
-  stopAutoplay();
-  applyStep(currentStep + direction);
-}
-if(prevBtn) prevBtn.addEventListener('click', () => step(-1));
-if(nextBtn) nextBtn.addEventListener('click', () => step(+1));
-
-handleEl.addEventListener('keydown', (e) => {
-  if(e.key === 'ArrowLeft'){  e.preventDefault(); step(-1); }
-  if(e.key === 'ArrowRight'){ e.preventDefault(); step(+1); }
-});
-
-// === Autoplay ===
-function easedStepDelay(idx){
-  // База 1100мс. У середины (день/закат) задержки больше — даём рассмотреть.
-  const BASE = 1100, AMP = 0.45;
-  const p = idx / LAST;
-  return BASE * (1 + AMP * (Math.sin(Math.PI * p) - 0.5) * 2);
-}
-function autoplayTick(){
-  if(!tlAutoplay) return;
-  let next = currentStep + autoplayDir;
-  if(next >= LAST){ next = LAST; autoplayDir = -1; }
-  else if(next <= 0){ next = 0; autoplayDir = +1; }
-  applyStep(next);
-  autoplayTimer = setTimeout(autoplayTick, easedStepDelay(next));
-}
-function stopAutoplay(){
-  tlAutoplay = false;
-  if(autoplayTimer){ clearTimeout(autoplayTimer); autoplayTimer = null; }
-  if(hintEl) hintEl.classList.add('hidden');
-}
-
-// === Старт по появлению секции в viewport ===
-function startTimeline(){
-  applyStep(currentStep);                            // 10:00, день
-  setTimeout(() => { if(tlAutoplay) autoplayTick(); }, 1200);
-  setTimeout(() => { if(tlAutoplay && hintEl) hintEl.classList.add('hidden'); }, 7000);
-}
-
-if(stageEl && 'IntersectionObserver' in window){
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if(e.isIntersecting){ startTimeline(); io.disconnect(); }
-    });
-  }, { threshold: 0.2 });
-  io.observe(stageEl);
-} else {
-  startTimeline();
-}
-
-// === Pause autoplay когда вкладка не видна — не молотим setTimeout впустую ===
-document.addEventListener('visibilitychange', () => {
-  if(document.hidden && autoplayTimer){
-    clearTimeout(autoplayTimer); autoplayTimer = null;
-  } else if(!document.hidden && tlAutoplay && !autoplayTimer){
-    autoplayTimer = setTimeout(autoplayTick, 600);
+// Клавиатура
+trackEl.addEventListener('keydown', (e) => {
+  if(e.key === 'ArrowLeft' || e.key === 'ArrowRight'){
+    e.preventDefault();
+    hideHint();
+    lift();
+    currentT = Math.max(0, Math.min(LAST, nearestStep(currentT) + (e.key === 'ArrowLeft' ? -1 : 1)));
+    apply(currentT, {snap:true});
+    if(settleTimer) clearTimeout(settleTimer);
+    settleTimer = setTimeout(() => { lifted = false; apply(currentT); }, 280);
   }
+  if(e.key === 'Home'){ e.preventDefault(); hideHint(); currentT = 0;    apply(currentT, {snap:true}); }
+  if(e.key === 'End'){  e.preventDefault(); hideHint(); currentT = LAST; apply(currentT, {snap:true}); }
 });
+
+function hideHint(){
+  if(hintEl && !hintEl.classList.contains('hidden')){
+    hintEl.classList.add('hidden');
+  }
+}
+
+// === Демо-прокат при первом появлении в viewport ===
+function demoSweep(){
+  if(!DEMO_RUN_ON_VIEWPORT) return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const path = [];
+  for(let i = START_STEP; i <= LAST; i++) path.push(i);
+  for(let i = LAST - 1; i >= 0; i--)    path.push(i);
+  for(let i = 1; i <= START_STEP; i++)  path.push(i);
+  let idx = 0;
+  lifted = true;
+  function tick(){
+    if(dragging){ lifted = false; apply(currentT); return; }
+    apply(path[idx]);
+    idx++;
+    if(idx < path.length){
+      const p = idx / path.length;
+      const delay = 360 + 240 * Math.sin(p * Math.PI);
+      setTimeout(tick, delay);
+    } else {
+      currentT = START_STEP;
+      settle();
+    }
+  }
+  setTimeout(tick, 700);
+}
+
+// === Старт ===
+apply(START_STEP);
+if('IntersectionObserver' in window){
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if(en.isIntersecting){
+        demoSweep();
+        io.disconnect();
+      }
+    });
+  }, { threshold: 0.35 });
+  io.observe(root);
+} else {
+  demoSweep();
+}
 
 })();
 
