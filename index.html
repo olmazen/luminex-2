@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>/Users/almazrafikov/Downloads/index (15).htmlLUMINEX FOREST 2.5 — Архитектурная система ограждения</title>
+<title>LUMINEX FOREST 2.5 — Архитектурная система ограждения</title>
 <meta name="description" content="FOREST 2.5 — премиум архитектурное ограждение со скрытой LED-подсветкой, художественной перфорацией и модульной конструкцией. Срок службы 25+ лет." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="img/timeline/04.webp" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -18,9 +19,6 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   --amber:#f0a042;--amber-bright:#ffb95a;--amber-glow:#ffcb7d;--amber-deep:#c47a25;
   --max-w:1380px;--ease:cubic-bezier(0.16,1,0.3,1);
 }
-/* SELECTION — фирменный янтарный */
-::selection{background:var(--amber);color:#11100d;text-shadow:none}
-::-moz-selection{background:var(--amber);color:#11100d;text-shadow:none}
 body{
   background:var(--bg);color:var(--text);
   font-family:'Inter Tight',sans-serif;font-weight:400;line-height:1.55;
@@ -262,6 +260,73 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
 .coll:hover .coll-foot .arrow{background:var(--amber);border-color:var(--amber);color:var(--bg-deep);transform:rotate(-45deg)}
 .coll.soon .coll-foot .price-val{color:var(--text-dim);font-size:14px;font-family:'JetBrains Mono',monospace;letter-spacing:0.1em}
 
+/* === Каталог декоров: SVG-карточки FOREST === */
+.coll-decor-img {
+  aspect-ratio: 3/4;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #ffcc7a 0%, #e0a042 55%, #a86420 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.coll-decor-img svg { display: block; width: 100%; height: 100%; }
+.coll-decor-img::before {
+  /* Лёгкое мягкое свечение снизу как от LED-подсветки */
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(255,200,120,0.35), transparent 70%);
+  pointer-events: none;
+}
+/* Тег FOREST в углу декор-карточки */
+.coll-tag {
+  position: absolute;
+  top: 14px; right: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  background: rgba(10,9,7,0.85);
+  backdrop-filter: blur(6px);
+  color: var(--amber-bright);
+  z-index: 2;
+}
+/* Кнопки в футере карточки декора */
+.coll-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--line);
+  border-top: 1px solid var(--line);
+}
+.coll-actions button {
+  padding: 14px 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+  text-align: center;
+}
+.coll-actions button:hover {
+  background: rgba(240,160,66,0.06);
+  color: var(--amber-bright);
+}
+.coll-actions button.primary {
+  color: var(--amber);
+}
+.coll-actions button.primary:hover {
+  background: rgba(240,160,66,0.12);
+}
+@media (max-width: 600px) {
+  .coll-actions button { font-size: 9px; padding: 12px 6px; }
+}
+
 /* ========== SEASONS ========== */
 .seasons{background:var(--bg-deep)}
 .seasons-head{margin-bottom:60px}
@@ -352,6 +417,105 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
 .option-group button{padding:14px 12px;border:1px solid var(--line);font-size:13px;color:var(--text-dim);transition:all 0.3s var(--ease);text-align:left}
 .option-group button:hover{border-color:var(--text-dim);color:var(--text)}
 .option-group button.selected{border-color:var(--amber);color:var(--amber-bright);background:rgba(240,160,66,0.05)}
+.option-group.four{grid-template-columns:1fr 1fr 1fr 1fr}
+
+/* Число-инпут (длина участка, ручная ширина ворот/калитки) */
+.num-input{
+  display:flex;align-items:center;gap:0;
+  border:1px solid var(--line);
+  background:rgba(10,9,7,0.4);
+  border-radius:3px;
+  overflow:hidden;
+  transition:border-color 0.3s var(--ease);
+}
+.num-input:focus-within{border-color:var(--amber)}
+.num-input input{
+  flex:1;background:transparent;border:none;
+  color:var(--text);font-family:'Cormorant Garamond',serif;
+  font-size:28px;font-weight:300;line-height:1;
+  padding:14px 16px;outline:none;
+  font-variant-numeric:tabular-nums;
+}
+.num-input input::-webkit-outer-spin-button,
+.num-input input::-webkit-inner-spin-button{
+  -webkit-appearance:none;margin:0;
+}
+.num-input input[type=number]{-moz-appearance:textfield}
+.num-input .num-unit{
+  padding:0 18px;
+  color:var(--text-dim);
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:0.16em;text-transform:uppercase;
+}
+.num-input .num-step{
+  background:transparent;border:none;
+  color:var(--text-dim);
+  width:36px;height:48px;cursor:pointer;
+  font-size:18px;line-height:1;
+  transition:color 0.2s var(--ease),background 0.2s var(--ease);
+  border-left:1px solid var(--line);
+}
+.num-input .num-step:hover{color:var(--amber);background:rgba(240,160,66,0.05)}
+
+/* Toggle Да/Нет */
+.toggle-yn{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+}
+.toggle-yn button{
+  padding:12px 14px;border:1px solid var(--line);
+  font-size:13px;color:var(--text-dim);
+  transition:all 0.3s var(--ease);
+  text-align:center;
+  letter-spacing:0.04em;
+}
+.toggle-yn button:hover{border-color:var(--text-dim);color:var(--text)}
+.toggle-yn button.selected{border-color:var(--amber);color:var(--amber-bright);background:rgba(240,160,66,0.05)}
+
+/* Подразделы (внутри ворот/калитки появляются при Да) */
+.sub-row{
+  margin-top:14px;
+  padding-left:14px;
+  border-left:1px solid rgba(240,160,66,0.15);
+  opacity:0;max-height:0;overflow:hidden;
+  transition:opacity 0.45s var(--ease),max-height 0.45s var(--ease),margin-top 0.45s var(--ease);
+}
+.sub-row.visible{opacity:1;max-height:200px;margin-top:14px}
+.sub-row .sub-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.16em;color:var(--text-dim);
+  text-transform:uppercase;margin-bottom:8px;
+}
+.sub-row .option-group button{padding:11px 10px;font-size:12px}
+.sub-row .num-input input{font-size:22px;padding:10px 12px}
+
+/* Decor select — карточки 4 в ряд (на десктопе), 2 на узких */
+.decor-select{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:8px;
+}
+@media (max-width:900px){.decor-select{grid-template-columns:repeat(2,1fr)}}
+.decor-select button{
+  padding:14px 10px;
+  border:1px solid var(--line);
+  color:var(--text-dim);
+  font-size:12px;
+  text-align:center;
+  transition:all 0.3s var(--ease);
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  background:rgba(10,9,7,0.3);
+}
+.decor-select button:hover{border-color:var(--text-dim);color:var(--text)}
+.decor-select button.selected{
+  border-color:var(--amber);
+  color:var(--amber-bright);
+  background:rgba(240,160,66,0.07);
+}
+.decor-select button.disabled{
+  opacity:0.35;cursor:not-allowed;
+}
 .calc-result{position:sticky;top:100px}
 .calc-result .eyebrow{margin-bottom:16px}
 .calc-result .price-big{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3rem,7vw,5.5rem);line-height:1;letter-spacing:-0.025em;background:linear-gradient(120deg,var(--amber-glow),var(--amber-deep));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin:16px 0 8px}
@@ -1765,224 +1929,383 @@ input[type="range"]:hover::-moz-range-thumb{
   /* TECH viz и LED FLOW viz — компактнее на iPhone */
   .tech-viz .img-ph{aspect-ratio:4/5;max-height:none}
 }
-
-/* ===========================================
-   НОВЫЕ ИНТЕРАКТИВНЫЕ КОМПОНЕНТЫ
-   Toast, Modal, 3D-tilt, Magnetic.
-   Низкая специфичность — не перекрывают существующие правила.
-   =========================================== */
-
-/* TOAST */
-.toast-el{
-  position:fixed;
-  bottom:32px;left:50%;
-  transform:translateX(-50%) translateY(20px);
-  background:rgba(20,18,14,0.95);
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-  border:1px solid rgba(240,160,66,0.3);
-  color:#e8e3d8;
-  padding:14px 22px;
-  border-radius:4px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  letter-spacing:0.08em;
-  z-index:10000;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity 0.4s var(--ease),transform 0.4s var(--ease);
-  box-shadow:0 12px 40px -8px rgba(0,0,0,0.6),
-             0 0 24px -4px rgba(240,160,66,0.2);
-}
-.toast-el.visible{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast-el .toast-dot{
-  display:inline-block;width:6px;height:6px;border-radius:50%;
-  background:var(--amber);margin-right:10px;
-  box-shadow:0 0 8px var(--amber);
-  vertical-align:middle;
-}
-
-/* MODAL — используем уникальные классы lx-* чтобы не конфликтовать */
-.lx-backdrop{
-  position:fixed;inset:0;
-  background:rgba(8,7,5,0);
-  backdrop-filter:blur(0px);
-  -webkit-backdrop-filter:blur(0px);
-  z-index:9998;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity 0.5s var(--ease),backdrop-filter 0.5s var(--ease);
-}
-.lx-backdrop.visible{
-  background:rgba(8,7,5,0.78);
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-  opacity:1;
-  pointer-events:auto;
-}
-.lx-modal{
-  position:fixed;
-  top:50%;left:50%;
-  transform:translate(-50%,-46%) scale(0.96);
-  width:min(560px, calc(100vw - 32px));
-  max-height:calc(100vh - 64px);
-  overflow-y:auto;
-  background:linear-gradient(180deg,#15130f 0%,#0e0d0a 100%);
-  border:1px solid rgba(240,160,66,0.18);
-  border-radius:6px;
-  z-index:9999;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-             transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow:0 30px 80px -20px rgba(0,0,0,0.7),
-             0 0 40px -8px rgba(240,160,66,0.15);
-}
-.lx-modal.visible{
-  opacity:1;pointer-events:auto;
-  transform:translate(-50%,-50%) scale(1);
-}
-.lx-modal-header{
-  padding:28px 32px 18px;
-  border-bottom:1px solid rgba(255,255,255,0.06);
+/* ============================================================
+   TIMELINE WIDGET — встроен в секцию daynight
+   ============================================================ */
+.timeline-stage{
   position:relative;
-}
-.lx-eyebrow{
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;letter-spacing:0.18em;
-  color:var(--amber);text-transform:uppercase;
-  margin-bottom:10px;
-}
-.lx-title{
-  font-family:'Cormorant Garamond',serif;
-  font-weight:300;font-size:28px;line-height:1.15;
-  letter-spacing:-0.01em;color:#e8e3d8;margin:0;
-}
-.lx-close{
-  position:absolute;top:22px;right:22px;
-  width:32px;height:32px;border-radius:50%;
-  border:1px solid rgba(255,255,255,0.1);
-  background:transparent;color:#9c9484;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:all 0.3s var(--ease);
-  font-size:16px;line-height:1;
-}
-.lx-close:hover{
-  border-color:var(--amber);color:var(--amber);
-  transform:rotate(90deg);
-}
-.lx-body{padding:24px 32px 28px}
-.lx-body p.lx-lead{
-  color:#b8b1a3;font-size:14px;line-height:1.55;margin:0 0 22px;
-}
-.lx-field{margin-bottom:16px}
-.lx-field label{
-  display:block;
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;letter-spacing:0.14em;
-  color:#9c9484;text-transform:uppercase;
-  margin-bottom:8px;
-}
-.lx-field label .req{color:var(--amber)}
-.lx-field input{
   width:100%;
-  background:rgba(10,9,7,0.6);
-  border:1px solid rgba(255,255,255,0.1);
-  color:#e8e3d8;
-  padding:12px 14px;border-radius:3px;
-  font-family:inherit;font-size:15px;
-  transition:border-color 0.3s var(--ease),background-color 0.3s var(--ease);
-  box-sizing:border-box;
+  aspect-ratio:1414/790;        /* пропорции фотографий */
+  min-height:420px;
+  max-height:880px;
+  background:#000;
+  overflow:hidden;
+  border-radius:4px;
+  box-shadow:0 40px 100px rgba(0,0,0,.7), 0 0 0 1px rgba(240,160,66,.05);
 }
-.lx-field input:focus{
-  outline:none;border-color:var(--amber);
-  background:rgba(10,9,7,0.85);
+/* Слой с кадрами времени суток — все картинки уложены друг на друга,
+   активный кадр через .is-active. Crossfade через opacity. */
+.timeline-images{
+  position:absolute; inset:0;
+  width:100%; height:100%;
 }
-.lx-field input.invalid{border-color:#c45c4a}
-.lx-check{
-  display:flex;align-items:flex-start;gap:10px;
-  margin-bottom:12px;cursor:pointer;
-  font-size:12px;color:#9c9484;line-height:1.5;
+.timeline-images img{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity .7s ease;
+  pointer-events:none;
+  /* Лёгкий зум первого кадра не нужен — оставляем спокойно */
+}
+.timeline-images img.is-active{ opacity:1 }
+/* Полоска наплывает на сцену снизу */
+.timeline-bar{
+  position:relative;
+  z-index:2;
+  margin:-44px auto 0;
+  width:min(680px, 70%);
+  padding:22px 56px 22px;
+  background:linear-gradient(180deg,
+    rgba(20,18,15,.92) 0%,
+    rgba(14,12,10,.88) 100%);
+  border:1px solid rgba(240,160,66,.12);
+  border-radius:6px;            /* минимально скруглён — НЕ капсула */
+  backdrop-filter:blur(20px) saturate(130%);
+  -webkit-backdrop-filter:blur(20px) saturate(130%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    inset 0 -1px 0 rgba(0,0,0,.4),
+    0 24px 60px rgba(0,0,0,.6),
+    0 4px 20px rgba(0,0,0,.4);
   user-select:none;
 }
-.lx-check input[type="checkbox"]{
-  appearance:none;-webkit-appearance:none;
-  width:16px;height:16px;
-  border:1px solid rgba(255,255,255,0.1);
+.timeline-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  margin-bottom:20px;            /* было 14 — больше воздуха */
+  padding:0 2px;
+}
+.timeline-time{
+  font-family:'Cormorant Garamond', serif;
+  font-size:28px;
+  font-weight:300;
+  color:rgba(236,232,223,.96);
+  letter-spacing:-.01em;
+  line-height:1;
+  font-variant-numeric:tabular-nums;
+  text-shadow:0 2px 12px rgba(0,0,0,.5);
+}
+.timeline-mood{
+  font-family:'JetBrains Mono', monospace;
+  font-size:10px;
+  letter-spacing:.32em;
+  text-transform:uppercase;
+  color:rgba(240,160,66,.75);
+  text-shadow:0 1px 8px rgba(0,0,0,.6);
+}
+.timeline-track{
+  position:relative;
+  height:6px;
+  border-radius:2px;             /* минимальное скругление, не капсула */
+  background:linear-gradient(180deg,
+    rgba(0,0,0,.6) 0%,
+    rgba(0,0,0,.35) 100%);
+  box-shadow:
+    inset 0 1px 2px rgba(0,0,0,.65),
+    inset 0 -1px 0 rgba(255,255,255,.04);
+  cursor:pointer;
+}
+.timeline-fill{
+  position:absolute;
+  top:0; left:0; bottom:0;
   border-radius:2px;
-  background:rgba(10,9,7,0.6);
-  cursor:pointer;position:relative;
-  flex-shrink:0;margin-top:2px;
-  transition:all 0.25s var(--ease);
+  background:linear-gradient(90deg,
+    rgba(240,180,100,.4) 0%,
+    rgba(255,215,140,.85) 80%,
+    rgba(255,230,170,1) 100%);
+  box-shadow:0 0 16px rgba(255,200,120,.45);
+  pointer-events:none;
+  transition:background .5s ease, box-shadow .5s ease;
 }
-.lx-check input[type="checkbox"]:checked{
-  background:var(--amber);border-color:var(--amber);
+.timeline-fill.night{
+  background:linear-gradient(90deg,
+    rgba(140,130,180,.25) 0%,
+    rgba(180,175,220,.6) 80%,
+    rgba(220,215,245,.85) 100%);
+  box-shadow:0 0 14px rgba(170,160,220,.35);
 }
-.lx-check input[type="checkbox"]:checked::after{
-  content:'';position:absolute;left:4px;top:1px;
-  width:5px;height:9px;
-  border:solid #11100d;border-width:0 2px 2px 0;
-  transform:rotate(45deg);
+.timeline-ticks{position:absolute; inset:0; pointer-events:none}
+.timeline-tick{
+  position:absolute;
+  top:50%;
+  width:1px;
+  height:4px;
+  background:rgba(255,255,255,.18);
+  transform:translate(-50%,-50%);
+  transition:background .2s ease, height .2s ease;
 }
-.lx-check a{
-  color:var(--amber);text-decoration:underline;
-  text-underline-offset:2px;
+.timeline-tick.major{
+  height:8px;
+  background:rgba(240,160,66,.45);
 }
-.lx-check a:hover{color:var(--amber-bright)}
-.lx-footer{
-  padding:18px 32px 26px;
-  border-top:1px solid rgba(255,255,255,0.06);
-  display:flex;gap:12px;flex-wrap:wrap;align-items:center;
+.timeline-handle{
+  position:absolute;
+  top:50%;
+  left:0;
+  width:14px;                    /* меньше, прямоугольник */
+  height:22px;
+  transform:translate(-50%,-50%);
+  border-radius:2px;             /* скошенные углы вместо круга */
+  background:linear-gradient(180deg,
+    rgba(255,250,235,.98) 0%,
+    rgba(255,225,170,.95) 35%,
+    rgba(240,180,100,.95) 70%,
+    rgba(180,130,70,.95) 100%);
+  border:1px solid rgba(255,235,200,.9);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.9),
+    inset 0 -1px 2px rgba(0,0,0,.35),
+    0 4px 12px rgba(0,0,0,.55),
+    0 0 calc(var(--glow,0)*16px) rgba(255,200,120, calc(var(--glow,0)*.7)),
+    0 0 calc(var(--glow,0)*40px) rgba(255,200,120, calc(var(--glow,0)*.4));
+  cursor:grab;
+  z-index:3;
+  transition:transform .12s ease, box-shadow .4s ease, background .6s ease;
 }
-.lx-footer .cta-btn{flex:1;min-width:180px}
-.lx-footer .lx-note{
-  font-size:11px;color:#7a7466;
-  font-family:'JetBrains Mono',monospace;
-  letter-spacing:0.08em;margin:0;flex-basis:100%;
+.timeline-handle:hover{transform:translate(-50%,-50%) scale(1.08)}
+.timeline-handle:active, .timeline-handle.dragging{
+  cursor:grabbing;
+  transform:translate(-50%,-50%) scale(1.12);
 }
-.lx-success{text-align:center;padding:48px 32px 56px}
-.lx-success-icon{
-  width:64px;height:64px;margin:0 auto 22px;
+.timeline-handle.night{
+  background:linear-gradient(180deg,
+    rgba(255,255,255,.98) 0%,
+    rgba(230,235,255,.92) 35%,
+    rgba(190,200,230,.92) 70%,
+    rgba(110,120,160,.95) 100%);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.9),
+    inset 0 -1px 2px rgba(0,0,0,.35),
+    0 4px 12px rgba(0,0,0,.55),
+    0 0 calc(var(--glow,0)*16px) rgba(200,210,255, calc(var(--glow,0)*.7)),
+    0 0 calc(var(--glow,0)*40px) rgba(200,210,255, calc(var(--glow,0)*.4));
+}
+.timeline-step{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:26px;
+  height:26px;
+  border-radius:3px;             /* скошен, не круг */
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(240,160,66,.18);
+  color:rgba(236,232,223,.7);
+  font-size:15px;
+  font-family:'Inter', sans-serif;
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .15s ease;
+  user-select:none;
+  line-height:1;
+  padding:0;
+}
+.timeline-step:hover{
+  background:rgba(240,160,66,.12);
+  color:rgba(236,232,223,.95);
+  border-color:rgba(240,160,66,.4);
+}
+.timeline-step:active{transform:translateY(-50%) scale(.92)}
+.timeline-step.prev{left:14px}
+.timeline-step.next{right:14px}
+.timeline-hint{
+  position:absolute;
+  left:50%; bottom:-26px;
+  transform:translateX(-50%);
+  font-family:'JetBrains Mono', monospace;
+  font-size:10px; letter-spacing:.28em;
+  text-transform:uppercase;
+  color:rgba(240,160,66,.5);
+  pointer-events:none;
+  transition:opacity .6s ease;
+  white-space:nowrap;
+}
+.timeline-hint.hidden{opacity:0}
+
+/* Планшеты и узкие экраны — сцена становится горизонтальнее, ниже по высоте */
+@media (max-width:900px){
+  .timeline-stage{
+    aspect-ratio:4/3;            /* было 4/5 — теперь горизонтальнее */
+    min-height:320px;            /* было 380 */
+    max-height:520px;
+  }
+  .timeline-bar{
+    width:90%;
+    margin-top:-30px;
+    padding:18px 44px 18px;
+  }
+  .timeline-time{font-size:22px}
+  .timeline-mood{font-size:8px; letter-spacing:.24em}
+  .timeline-handle{width:12px; height:18px}
+  .timeline-step{width:24px; height:24px}
+  .timeline-step.prev{left:10px}
+  .timeline-step.next{right:10px}
+}
+
+/* Телефоны — ещё ниже */
+@media (max-width:560px){
+  .timeline-stage{
+    aspect-ratio:3/2;
+    min-height:260px;
+    max-height:380px;
+  }
+  .timeline-bar{
+    width:94%;
+    margin-top:-22px;
+    padding:14px 40px 14px;
+  }
+  .timeline-time{font-size:20px}
+}
+
+
+
+/* ============================================================
+   DECOR CARDS — карточки с картинкой 4:3 + radial reveal hover
+   ============================================================ */
+.decor-cards{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin:0 0 14px;
+  padding:0;
+}
+.decor-card{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  padding:0;
+  background:#0a0907;
+  border:1px solid rgba(240,160,66,.14);
+  border-radius:6px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:border-color .25s ease, transform .2s ease, box-shadow .25s ease;
+  font-family:inherit;
+  text-align:left;
+  color:inherit;
+  outline:none;
+}
+.decor-card:hover{
+  border-color:rgba(240,160,66,.35);
+  transform:translateY(-2px);
+  box-shadow:0 12px 28px rgba(0,0,0,.5);
+}
+.decor-card.selected{
+  border-color:var(--amber);
+  box-shadow:
+    inset 0 0 0 1px rgba(240,160,66,.5),
+    0 12px 32px rgba(240,160,66,.18),
+    0 0 0 3px rgba(240,160,66,.08);
+}
+.decor-card:focus-visible{
+  border-color:var(--amber);
+  box-shadow:0 0 0 3px rgba(240,160,66,.25);
+}
+
+/* Сцена под картинку — 4:3 */
+.dc-stage{
+  position:relative;
+  width:100%;
+  aspect-ratio:4/3;
+  background:#050403;
+  overflow:hidden;
+}
+.dc-img{
+  position:absolute; inset:0;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+.dc-img-base{ z-index:1; }
+
+/* Сетка плиток поверх — рендерится JS-ом. Каждая плитка показывает свой
+   кусок второй картинки через background-position. */
+.dc-mosaic{
+  position:absolute; inset:0;
+  z-index:2;
+  pointer-events:none;
+  display:grid;
+  /* колонки/строки задаются JS через CSS custom props --cols/--rows */
+  grid-template-columns:repeat(var(--cols,12), 1fr);
+  grid-template-rows:repeat(var(--rows,9), 1fr);
+}
+.dc-tile{
+  position:relative;
+  background-image:var(--bg);
+  background-size:var(--bg-size);
+  background-position:var(--bg-pos);
+  background-repeat:no-repeat;
+  opacity:0;
+  transform:scale(.55);
+  transition:opacity 240ms cubic-bezier(.4,0,.2,1),
+             transform 240ms cubic-bezier(.4,0,.2,1);
+  transition-delay:var(--d, 0ms);
+  will-change:opacity, transform;
+}
+.decor-card.show-alt .dc-tile{
+  opacity:1;
+  transform:scale(1);
+}
+
+/* Лейбл под картинкой */
+.dc-label{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 14px 12px;
+  background:rgba(10,9,7,.55);
+  border-top:1px solid rgba(240,160,66,.08);
+}
+.dc-tag{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:rgba(240,160,66,.85);
+}
+.decor-card.selected .dc-tag{ color:var(--amber); }
+.dc-meta{
+  font-family:'JetBrains Mono', monospace;
+  font-size:9px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:rgba(236,232,223,.4);
+}
+
+/* Маленький намёк что есть второй ракурс — лёгкая точка-индикатор */
+.dc-stage::after{
+  content:"";
+  position:absolute;
+  top:10px; right:10px;
+  width:6px; height:6px;
   border-radius:50%;
-  background:radial-gradient(circle,rgba(240,160,66,0.25),rgba(240,160,66,0));
-  display:flex;align-items:center;justify-content:center;
-  color:var(--amber-bright);font-size:32px;
-  animation:lxSuccessPop 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  background:rgba(240,160,66,.6);
+  box-shadow:0 0 8px rgba(240,160,66,.5);
+  z-index:3;
+  opacity:.6;
+  transition:opacity .25s ease, transform .25s ease;
 }
-@keyframes lxSuccessPop{
-  from{transform:scale(0.3);opacity:0}
-  60%{transform:scale(1.1)}
-  to{transform:scale(1);opacity:1}
-}
-.lx-success h3{
-  font-family:'Cormorant Garamond',serif;font-weight:300;
-  font-size:26px;margin:0 0 10px;color:#e8e3d8;
-}
-.lx-success p{color:#b8b1a3;font-size:14px;margin:0}
-
-/* 3D TILT — только если есть класс .tilt-on */
-.tilt-on{
-  transition:transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change:transform;
-}
-.tilt-on.tilting{
-  transition:transform 0.1s linear;
-  transform:perspective(900px)
-            rotateX(var(--rx,0deg))
-            rotateY(var(--ry,0deg))
-            translateZ(6px);
+.decor-card:hover .dc-stage::after{
+  opacity:1;
+  transform:scale(1.3);
 }
 
-/* MAGNETIC — кнопки чуть тянутся к курсору */
-.mag-on{
-  transition:transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change:transform;
+@media (max-width:720px){
+  .decor-cards{ grid-template-columns:1fr; gap:12px; }
+  .dc-label{ padding:10px 12px; }
+  .dc-tag{ font-size:10px; }
 }
-.mag-on.mag-active{
-  transition:transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
-  transform:translate(var(--mx,0px), var(--my,0px));
-}
-
 </style>
 </head>
 <body>
@@ -2237,29 +2560,40 @@ input[type="range"]:hover::-moz-range-thumb{
           <em>две функции.</em>
         </h2>
       </div>
-      <p class="lead-text">Днём — приватность и архитектурный дизайн участка. Ночью — подсветка периметра, которая заменяет 8–12 садовых фонарей и кабельных трасс. Один блок питания 24V на весь забор. Перетащите ручку — сравните.</p>
+      <p class="lead-text">Днём — приватность и архитектурный дизайн участка. Ночью — подсветка периметра, которая заменяет 8–12 садовых фонарей и кабельных трасс. Один блок питания 24V на весь забор. Перемотайте сутки — увидите, как один забор работает 24 часа.</p>
     </div>
 
-    <div class="compare-wrap" id="compareWrap">
-      <div class="compare-side day">
-        <div class="img-ph">
-          <span class="ph-num">PHOTO · 05</span>
-          <div class="ph-icon">☀</div>
-          <div class="ph-desc">ДЕНЬ. Тот же ракурс забора, что и hero, но днём при ярком солнечном свете. Чёткая графика перфорации, силуэты деревьев и оленей читаются как тени. Премиум-коттедж, ландшафтный сад, дорожка из брусчатки.</div>
-        </div>
-      </div>
-      <div class="compare-side night" id="compareNight" style="width:50%">
-        <div class="img-ph">
-          <span class="ph-num">PHOTO · 06</span>
-          <div class="ph-icon">☾</div>
-          <div class="ph-desc">НОЧЬ. Тот же ракурс, тот же забор — но в темноте с включенной LED-подсветкой. Тёплый янтарный свет ИЗ-ЗА панели, эффект глубины. Тёмное синее небо, окна коттеджа светятся.</div>
-        </div>
-        <div class="compare-handle">⇄</div>
-      </div>
-      <div class="compare-label day">День</div>
-      <div class="compare-label night">Ночь</div>
+    <div class="timeline-stage" id="timelineStage">
+    <div class="timeline-images" id="timelineImages">
+      <img src="img/timeline/04.webp" alt="Забор в 04:00" data-step="0" loading="eager" fetchpriority="high" decoding="async">
+      <img src="img/timeline/06.webp" alt="Забор в 06:00" data-step="1" loading="lazy" fetchpriority="auto" decoding="async">
+      <img src="img/timeline/08.webp" alt="Забор в 08:00" data-step="2" loading="lazy" fetchpriority="auto" decoding="async">
+      <img src="img/timeline/10.webp" alt="Забор в 10:00" data-step="3" loading="lazy" fetchpriority="auto" decoding="async">
+      <img src="img/timeline/14.webp" alt="Забор в 14:00" data-step="4" loading="lazy" fetchpriority="auto" decoding="async">
+      <img src="img/timeline/18.webp" alt="Забор в 18:00" data-step="5" loading="lazy" fetchpriority="auto" decoding="async">
+      <img src="img/timeline/20.webp" alt="Забор в 20:00" data-step="6" loading="lazy" fetchpriority="auto" decoding="async">
+      <img src="img/timeline/00.webp" alt="Забор в 00:00" data-step="7" loading="lazy" fetchpriority="auto" decoding="async">
+      <img src="img/timeline/02.webp" alt="Забор в 02:00" data-step="8" loading="lazy" fetchpriority="auto" decoding="async">
     </div>
-    <div class="compare-hint">— Потяните за центр, чтобы сравнить —</div>
+    </div>
+
+    <!-- TIMELINE — ползунок под/наплывом на сцену -->
+    <div class="timeline-bar" id="timelineBar">
+      <div class="timeline-top">
+        <div class="timeline-time" id="tlTime">10:00</div>
+        <div class="timeline-mood" id="tlMood">День</div>
+      </div>
+      <div class="timeline-track" id="tlTrack">
+        <div class="timeline-fill" id="tlFill"></div>
+        <div class="timeline-ticks" id="tlTicks"></div>
+        <div class="timeline-handle" id="tlHandle" tabindex="0" role="slider"
+             aria-label="Время суток"
+             aria-valuemin="0" aria-valuemax="8" aria-valuenow="3"></div>
+      </div>
+      <button class="timeline-step prev" id="tlPrev" aria-label="Назад">−</button>
+      <button class="timeline-step next" id="tlNext" aria-label="Вперёд">+</button>
+      <div class="timeline-hint" id="tlHint">демо · перетащите ползунок</div>
+    </div>
   </div>
 </section>
 
@@ -2474,89 +2808,69 @@ input[type="range"]:hover::-moz-range-thumb{
   <div class="container">
     <div class="collections-head">
       <div>
-        <div class="eyebrow">— Каталог / 04</div>
+        <div class="eyebrow">— Каталог декоров / 04</div>
         <h2 class="section-title" style="margin-top:18px;">
-          <span>Дизайн под</span>&nbsp;<em>стиль дома</em>
+          <span>Серия</span>&nbsp;<em>FOREST</em>
         </h2>
       </div>
-      <p class="lead-text">Сейчас доступен один дизайн — FOREST 2.5 «Лес и животные». Ещё три выходят в 2026 году. Также делаем кастомные рисунки по вашему эскизу — от 25 000 ₽ независимо от длины.</p>
+      <p class="lead-text">Четыре сюжета лесной коллекции. Все декоры — лазерная резка стали 2 мм, чёрное матовое покрытие. Крепятся поверх стандартной панели, могут сниматься или переноситься.</p>
     </div>
 
-    <div class="collections-grid">
+    <div class="collections-grid" id="decorCatalog">
 
-      <article class="coll">
-        <div class="coll-img">
-          <span class="coll-badge">в наличии</span>
-          <div class="img-ph">
-            <span class="ph-num">PHOTO · 17</span>
-            <div class="ph-icon">🦌</div>
-            <div class="ph-desc">FOREST 2.5 — продуктовое фото. Секция с лесом и оленями, портретная ориентация, тёмный фон, тёплая подсветка. Главная карточка каталога.</div>
-          </div>
+      <article class="coll" data-decor-card="forest_a">
+        <div class="coll-decor-img" data-decor-render="a">
+          <span class="coll-tag">FOREST · A</span>
         </div>
         <div class="coll-body">
-          <h3>Forest 2.5</h3>
-          <p class="desc">Лес и животные. Олени, кабан, флора, переходные модули. 6 секций, готовое решение от 12 м.</p>
+          <h3>Forest · A</h3>
+          <p class="desc">Олень-самец с раскидистыми рогами. Сильный, мужской сюжет — идеален для участков с природным ландшафтом и деревянных домов.</p>
         </div>
-        <div class="coll-foot">
-          <div><span class="price-from">от</span><span class="price-val">34 900 ₽<span style="font-size:11px;color:var(--text-dim);margin-left:4px;">/секция</span></span></div>
-          <div class="arrow">→</div>
+        <div class="coll-actions">
+          <button class="primary" data-action="add" data-decor="forest_a">Добавить в расчёт</button>
+          <button data-action="preview" data-decor="forest_a">На моём участке</button>
         </div>
       </article>
 
-      <article class="coll soon">
-        <div class="coll-img">
-          <span class="coll-badge soon">Q1 2026</span>
-          <div class="img-ph">
-            <span class="ph-num">PHOTO · 18</span>
-            <div class="ph-icon">𓅪</div>
-            <div class="ph-desc">Концепт коллекции Forest Birds. Силуэты птиц, веток, перья в полёте. Воздушный, более лёгкий рисунок, чем основной FOREST. Тот же стиль подачи.</div>
-          </div>
+      <article class="coll" data-decor-card="forest_b">
+        <div class="coll-decor-img" data-decor-render="b">
+          <span class="coll-tag">FOREST · B</span>
         </div>
         <div class="coll-body">
-          <h3>Forest Birds</h3>
-          <p class="desc">Птицы и ветви в утреннем свете. Камерный, более лёгкий рисунок для садов с цветниками.</p>
+          <h3>Forest · B</h3>
+          <p class="desc">Олениха с оленёнком. Мягкий, лиричный сюжет — подходит для семейных участков и спокойной архитектуры.</p>
         </div>
-        <div class="coll-foot">
-          <div><span class="price-from">старт</span><span class="price-val">скоро</span></div>
-          <div class="arrow">→</div>
+        <div class="coll-actions">
+          <button class="primary" data-action="add" data-decor="forest_b">Добавить в расчёт</button>
+          <button data-action="preview" data-decor="forest_b">На моём участке</button>
         </div>
       </article>
 
-      <article class="coll soon">
-        <div class="coll-img">
-          <span class="coll-badge soon">Q2 2026</span>
-          <div class="img-ph">
-            <span class="ph-num">PHOTO · 19</span>
-            <div class="ph-icon">❀</div>
-            <div class="ph-desc">Концепт коллекции Botanical. Цветы, листья монстеры, тонкие стебли, плотная растительность. Подходит для южных дач.</div>
-          </div>
+      <article class="coll" data-decor-card="forest_c">
+        <div class="coll-decor-img" data-decor-render="c">
+          <span class="coll-tag">FOREST · C</span>
         </div>
         <div class="coll-body">
-          <h3>Botanical</h3>
-          <p class="desc">Плотная флора: листья, цветы, стебли. Подходит для южной архитектуры и плотных участков.</p>
+          <h3>Forest · C</h3>
+          <p class="desc">Медведица с медвежонком и сова на дубе. Самый эпичный сюжет коллекции — для крупных участков с лесными мотивами.</p>
         </div>
-        <div class="coll-foot">
-          <div><span class="price-from">старт</span><span class="price-val">скоро</span></div>
-          <div class="arrow">→</div>
+        <div class="coll-actions">
+          <button class="primary" data-action="add" data-decor="forest_c">Добавить в расчёт</button>
+          <button data-action="preview" data-decor="forest_c">На моём участке</button>
         </div>
       </article>
 
-      <article class="coll soon">
-        <div class="coll-img">
-          <span class="coll-badge soon">Q3 2026</span>
-          <div class="img-ph">
-            <span class="ph-num">PHOTO · 20</span>
-            <div class="ph-icon">⬡</div>
-            <div class="ph-desc">Концепт коллекции Geometric. Орнамент, соты, плетение, абстрактные паттерны. Для современных минималистичных домов.</div>
-          </div>
+      <article class="coll" data-decor-card="forest_d">
+        <div class="coll-decor-img" data-decor-render="d">
+          <span class="coll-tag">FOREST · D</span>
         </div>
         <div class="coll-body">
-          <h3>Geometric</h3>
-          <p class="desc">Чистая геометрия: соты, плетения, орнамент. Для современной минималистичной архитектуры.</p>
+          <h3>Forest · D</h3>
+          <p class="desc">Лиса в густом сосновом лесу. Минималистичный, мистический сюжет — подходит для современных участков и плотного озеленения.</p>
         </div>
-        <div class="coll-foot">
-          <div><span class="price-from">старт</span><span class="price-val">скоро</span></div>
-          <div class="arrow">→</div>
+        <div class="coll-actions">
+          <button class="primary" data-action="add" data-decor="forest_d">Добавить в расчёт</button>
+          <button data-action="preview" data-decor="forest_d">На моём участке</button>
         </div>
       </article>
 
@@ -2787,7 +3101,7 @@ input[type="range"]:hover::-moz-range-thumb{
           <span>Посчитайте</span>&nbsp;<em>свой проект</em>
         </h2>
       </div>
-      <p class="lead-text">Двигайте ползунок — увидите забор и узнаете цену. Шаг — 1 секция (2 метра). Цены реальные, без накруток на сайте.</p>
+      <p class="lead-text">Двигайте ползунок — увидите забор и узнаете цену. Шаг — 1 секция (2,5 метра). Цены реальные, без накруток на сайте.</p>
     </div>
 
     <div class="calc-wrap">
@@ -2814,26 +3128,63 @@ input[type="range"]:hover::-moz-range-thumb{
           </div>
         </div>
         <div class="calc-row">
-          <div class="lbl-flex"><label>Сколько секций</label><span class="val" id="lenVal">6<span class="unit">шт</span></span></div>
-          <input type="range" id="lenInput" min="2" max="30" value="6" step="1">
-          <p class="hint-row">Каждая секция — 2&nbsp;метра. Можно от 2 до 30 секций (от 4 до 60 м).</p>
+          <div class="lbl-flex"><label>Длина участка</label></div>
+          <div class="num-input">
+            <input type="number" id="lenMetersInput" min="5" max="200" value="10" step="0.5">
+            <span class="num-unit">метров</span>
+            <button type="button" class="num-step" data-delta="-2.5" aria-label="Минус 2,5 м">−</button>
+            <button type="button" class="num-step" data-delta="2.5" aria-label="Плюс 2,5 м">+</button>
+          </div>
+          <p class="hint-row" id="sectionsHint">Шаг — 2,5&nbsp;м (одна секция). От 5 до 200&nbsp;м. Сейчас: <span id="lenSectionsHint">4 секции</span>.</p>
         </div>
 
         <div class="calc-row">
-          <div class="lbl-flex"><label>Сколько секций с рисунком</label><span class="val" id="artVal">2<span class="unit">шт</span></span></div>
+          <div class="lbl-flex"><label>Декоративные панели</label><span class="val" id="artVal">2<span class="unit">шт</span></span></div>
           <input type="range" id="artInput" min="0" max="6" value="2" step="1">
-          <p class="hint-row">Остальные секции — глухие (приватные). Например: 2 секции с лесом и оленем в центре, по краям — без рисунка. Так делают в эталонной схеме на 12 м.</p>
+          <p class="hint-row">Декор крепится поверх стандартной панели и может сниматься/переноситься. Цена одной панели — 24&nbsp;840&nbsp;₽.</p>
+        </div>
+
+        <div class="calc-row">
+          <label>Тип декора</label>
+
+          <div class="decor-cards" id="decorTypeGroup">
+            <button class="decor-card selected" data-decor="forest_a" type="button">
+              <div class="dc-stage">
+                <div class="dc-img dc-img-base"></div>
+                <div class="dc-mosaic" aria-hidden="true"></div>
+              </div>
+              <div class="dc-label">
+                <span class="dc-tag">FOREST · A</span>
+                <span class="dc-meta">2&nbsp;ракурса</span>
+              </div>
+            </button>
+            <button class="decor-card" data-decor="forest_b" type="button">
+              <div class="dc-stage">
+                <div class="dc-img dc-img-base"></div>
+                <div class="dc-mosaic" aria-hidden="true"></div>
+              </div>
+              <div class="dc-label">
+                <span class="dc-tag">FOREST · B</span>
+                <span class="dc-meta">2&nbsp;ракурса</span>
+              </div>
+            </button>
+          </div>
+          <p class="hint-row" id="decorHint">FOREST · A — олень-самец с оленёнком на лесной поляне. Идеален для участков с природным ландшафтом и деревянных домов.</p>
         </div>
 
         <div class="calc-row">
           <label>Подсветка</label>
           <div class="option-group" id="lightGroup">
-            <button data-light="0" data-mode="off">Без подсветки</button>
-            <button data-light="4500" data-mode="warm" class="selected">LED 2700K (тёплый)</button>
-            <button data-light="4500" data-mode="cold">LED 4000K (дневной)</button>
-            <button data-light="6500" data-mode="rgb">RGB + умный дом</button>
+            <button data-sides="0" data-mode="off">Без подсветки</button>
+            <button data-sides="1" data-mode="warm" class="selected">LED 2700K (тёплый)</button>
+            <button data-sides="1" data-mode="cold">LED 4000K (дневной)</button>
+            <button data-sides="1" data-mode="rgb">RGB + умный дом</button>
           </div>
-          <p class="hint-row">Скрытая LED-полоса работает 50&nbsp;000 часов (≈17 лет). Гарантия на электронику 5 лет.</p>
+          <div class="option-group two" id="lightSidesGroup" style="margin-top:8px">
+            <button data-sides="1" class="selected">С одной стороны</button>
+            <button data-sides="2">С двух сторон (×2)</button>
+          </div>
+          <p class="hint-row">Скрытая LED-полоса работает 50&nbsp;000 часов (≈17 лет). Гарантия на электронику 5 лет. Цена подсветки одной секции — 8&nbsp;650&nbsp;₽.</p>
         </div>
 
         <div class="calc-row">
@@ -2846,10 +3197,22 @@ input[type="range"]:hover::-moz-range-thumb{
         </div>
 
         <div class="calc-row">
+          <label>Тип установки столбов</label>
+          <div class="option-group" id="postInstallGroup">
+            <button data-pi="platform" class="selected">На готовую площадку</button>
+            <button data-pi="embed">На закладные</button>
+            <button data-pi="concrete">Бетонирование</button>
+            <button data-pi="consult">Обсудить с инженером</button>
+          </div>
+          <p class="hint-row" id="postInstallHint">На готовую площадку — самый быстрый вариант, если стяжка уже залита. Подходит большинству участков.</p>
+        </div>
+
+        <div class="calc-row">
           <label>Услуги</label>
-          <div class="option-group" id="mountGroup">
+          <div class="option-group three" id="mountGroup">
             <button data-mount="0">Только материалы</button>
             <button data-mount="9500" class="selected">Под ключ с монтажом</button>
+            <button data-mount="-1">Нужна консультация</button>
           </div>
           <p class="hint-row">Монтаж включает: рытьё ям, бетонирование, установку стоек, сборку секций, подключение подсветки. 1–3 рабочих дня.</p>
         </div>
@@ -2862,46 +3225,46 @@ input[type="range"]:hover::-moz-range-thumb{
 
         <div class="estimate-table">
           <div class="row">
-            <span class="k">Глухой модуль</span>
-            <span class="q" id="qBlind">× 2</span>
-            <span class="v" id="vBlind">76 780 ₽</span>
+            <span class="k">Стандартная панель 2360×1800 мм</span>
+            <span class="q" id="qBlind">× 6</span>
+            <span class="v" id="vBlind">324 900 ₽</span>
           </div>
           <div class="row">
-            <span class="k">Переходный модуль</span>
-            <span class="q" id="qTrans">× 2</span>
-            <span class="v" id="vTrans">109 780 ₽</span>
+            <span class="k">Декоративная панель с узором</span>
+            <span class="q" id="qTrans">× 0</span>
+            <span class="v" id="vTrans">0 ₽</span>
           </div>
           <div class="row">
-            <span class="k">Основной модуль с арт-композицией</span>
-            <span class="q" id="qMain">× 2</span>
-            <span class="v" id="vMain">153 780 ₽</span>
+            <span class="k">Скрытая LED-подсветка</span>
+            <span class="q" id="qMain">× 6</span>
+            <span class="v" id="vMain">51 900 ₽</span>
           </div>
           <div class="row">
             <span class="k">Столб 140×140 мм + крепёж</span>
             <span class="q" id="qPost">× 7</span>
-            <span class="v" id="vPost">174 300 ₽</span>
+            <span class="v" id="vPost">132 300 ₽</span>
           </div>
           <div class="row">
-            <span class="k">LED-подсветка</span>
-            <span class="q" id="qLed">× 6</span>
-            <span class="v" id="vLed">27 000 ₽</span>
+            <span class="k">Сторон подсветки</span>
+            <span class="q" id="qLed">одна сторона</span>
+            <span class="v" id="vLed">включено</span>
           </div>
           <div class="row">
             <span class="k">Монтаж под ключ</span>
-            <span class="q" id="qMount">12 м</span>
-            <span class="v" id="vMount">114 000 ₽</span>
+            <span class="q" id="qMount">15 м</span>
+            <span class="v" id="vMount">142 500 ₽</span>
           </div>
           <div class="row total">
             <span class="k">Итого</span>
             <span class="q"></span>
-            <span class="v" id="vTotal">655 640 ₽</span>
+            <span class="v" id="vTotal">651 600 ₽</span>
           </div>
         </div>
 
         <p class="calc-disclaimer">Цена ориентировочная. Точную смету бесплатно пришлёт замерщик после выезда на участок.</p>
 
         <div class="calc-actions">
-          <button type="button" class="cta-btn" id="lxOpenPdf">Получить PDF-смету</button>
+          <a href="#contact" class="cta-btn">Получить точную смету</a>
           <a href="#contact" class="cta-btn ghost">Заказать бесплатный замер</a>
         </div>
       </div>
@@ -2989,7 +3352,7 @@ input[type="range"]:hover::-moz-range-thumb{
 
         <div class="faq-item">
           <button class="faq-q"><span>Подходит ли мой участок? Любая длина?</span><span class="icon">+</span></button>
-          <div class="faq-a"><p>Любая длина с шагом 2 метра, от 4 м. Углы участка — отдельные доборные стойки 90°. Перепады высоты до 30 см между секциями компенсируются регулировкой. Если участок очень неровный или сложной формы — замерщик предложит план с минимальной подрезкой. Замер бесплатный.</p></div>
+          <div class="faq-a"><p>Любая длина с шагом 2,5 метра, от 5 м. Углы участка — отдельные доборные стойки 90°. Перепады высоты до 30 см между секциями компенсируются регулировкой. Если участок очень неровный или сложной формы — замерщик предложит план с минимальной подрезкой. Замер бесплатный.</p></div>
         </div>
 
         <div class="faq-item">
@@ -3218,29 +3581,11 @@ document.querySelectorAll('.faq-q').forEach(q => {
 });
 
 // ============================================
-// DAY/NIGHT SLIDER
-// ============================================
-const compareWrap = document.getElementById('compareWrap');
-const compareNight = document.getElementById('compareNight');
-let isDragging = false;
-function setComparePos(clientX) {
-  const rect = compareWrap.getBoundingClientRect();
-  let pct = ((clientX - rect.left) / rect.width) * 100;
-  pct = Math.max(2, Math.min(98, pct));
-  compareNight.style.width = pct + '%';
-}
-compareWrap.addEventListener('mousedown', (e) => { isDragging = true; setComparePos(e.clientX); });
-window.addEventListener('mousemove', (e) => { if (isDragging) setComparePos(e.clientX); });
-window.addEventListener('mouseup', () => { isDragging = false; });
-compareWrap.addEventListener('touchstart', (e) => { isDragging = true; setComparePos(e.touches[0].clientX); }, {passive:true});
-window.addEventListener('touchmove', (e) => { if (isDragging) setComparePos(e.touches[0].clientX); }, {passive:true});
-window.addEventListener('touchend', () => { isDragging = false; });
-
-// ============================================
 // CALCULATOR + INTERACTIVE FENCE GRID
 // ============================================
-const lenInput = document.getElementById('lenInput');
-const lenVal = document.getElementById('lenVal');
+// PHASE 2: длина в метрах, ворота, калитка, тип декора, установка столбов
+const lenMetersInput = document.getElementById('lenMetersInput');
+const lenSectionsHint = document.getElementById('lenSectionsHint');
 const artInput = document.getElementById('artInput');
 const artVal = document.getElementById('artVal');
 const sectionsNote = document.getElementById('sectionsNote');
@@ -3248,6 +3593,62 @@ const fpSections = document.getElementById('fpSections');
 const fpPosts = document.getElementById('fpPosts');
 const fpLength = document.getElementById('fpLength');
 const fpMode = document.getElementById('fpMode');
+
+// Ворота/калитка убраны из калькулятора
+
+// Описания декоров
+const DECOR_DESCRIPTIONS = {
+  forest_a: 'FOREST · A — олень-самец с оленёнком на лесной поляне. Сильные раскидистые рога, ели и кустарники. Идеален для участков с природным ландшафтом и деревянных домов.',
+  forest_b: 'FOREST · B — олениха с оленёнком и птица на ветке среди берёз. Более мягкий, лиричный сюжет. Подходит для семейных участков и спокойной архитектуры.',
+};
+
+// Описания типов установки столбов
+const POST_INSTALL_DESC = {
+  platform: 'На готовую площадку — самый быстрый вариант, если стяжка уже залита. Подходит большинству участков.',
+  embed:    'На закладные — арматурные элементы заливаются заранее. Идеально для новых участков с заливкой.',
+  concrete: 'Бетонирование — рытьё ям и заливка под каждым столбом. Универсальный способ для грунта.',
+  consult:  'Обсудить с инженером — выезд на участок, изучение грунта и геометрии. Подходит для сложных рельефов.',
+};
+
+// Хелпер для toggle-yn (показ/скрытие sub-row)
+function setupToggle(groupId, subEl, onChange) {
+  const g = document.getElementById(groupId);
+  if (!g) return;
+  g.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    g.querySelectorAll('button').forEach(bb => bb.classList.remove('selected'));
+    b.classList.add('selected');
+    // Если в кнопке указано не "0" — открываем sub-row
+    const isOn = b.dataset.gate === '1' || b.dataset.wicket === '1';
+    if (subEl) {
+      if (isOn) subEl.classList.add('visible');
+      else subEl.classList.remove('visible');
+    }
+    if (typeof onChange === 'function') onChange();
+    updateCalc();
+  }));
+}
+
+// Хелпер для группы ширины с поддержкой "custom" — показывает num-input
+function setupWidthGroup(groupId, customInputEl, customValEl) {
+  const g = document.getElementById(groupId);
+  if (!g) return;
+  g.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    g.querySelectorAll('button').forEach(bb => bb.classList.remove('selected'));
+    b.classList.add('selected');
+    const isCustom = b.dataset.gw === 'custom' || b.dataset.ww === 'custom';
+    if (customInputEl) customInputEl.style.display = isCustom ? 'flex' : 'none';
+    updateCalc();
+  }));
+}
+
+// Чтение текущей ширины ворот / калитки
+function readGateWidth()   { return 0; } // блок удалён
+function readWicketWidth() { return 0; } // блок удалён
+// Чтение выбранного декора
+function readDecorType() {
+  const btn = document.querySelector('#decorTypeGroup .selected');
+  return btn ? btn.dataset.decor : 'forest';
+}
 const fenceGrid = document.getElementById('fenceGrid');
 
 function setupGroup(id) {
@@ -3259,7 +3660,7 @@ function setupGroup(id) {
     updateCalc();
   }));
 }
-setupGroup('lightGroup'); setupGroup('heightGroup'); setupGroup('mountGroup');
+setupGroup('lightGroup'); setupGroup('lightSidesGroup'); setupGroup('heightGroup'); setupGroup('mountGroup');
 
 function fmt(n) { return Math.round(n).toLocaleString('ru-RU').replace(/,/g,' ') + ' ₽'; }
 
@@ -3296,7 +3697,7 @@ function animatePriceChange(el, newVal) {
   el._priceRAF = requestAnimationFrame(tick);
 }
 
-const PRICES = { blind: 34900, trans: 49900, main: 69900, post: 24900 };
+const PRICES = { panel: 54150, post: 18900, decor: 24840, light: 8650 };
 
 // Композиция: пользователь указал желаемое число секций с рисунком (art)
 // Алгоритм: art секций — по центру, по 1 переходной с каждой стороны (если есть место), глухие — по краям.
@@ -3335,12 +3736,15 @@ function arrangeModules(sections, blindN, transN, mainN) {
 // SVG-иконка тайла: глухой / переходный / с рисунком. НЕ зависит от mode —
 // фон/glow управляются CSS-классами обёртки, чтобы при смене подсветки была плавная transition.
 function tileSvg(type, mode) {
-  // Ламели всегда тёмные силуэты (читаются и в темноте, и на свету)
+  // Ламели всегда тёмные силуэты
   const lath = '#0a0907';
 
   let content = '';
+  let viewW = 100, viewH = 180;
+  // По умолчанию preserve="none" — для глухой/переходной (вертикальные ламели — растяжение ОК)
+  // Для декоров — meet (сохранение пропорций)
+  let preserve = 'none';
   if (type === 'blind') {
-    // ГЛУХОЙ — плотные равномерные вертикальные ламели (8 штук)
     let laths = '';
     const count = 8;
     const margin = 8;
@@ -3350,11 +3754,10 @@ function tileSvg(type, mode) {
     const gap = totalGap / (count - 1);
     for (let i = 0; i < count; i++) {
       const x = margin + i * (3 + gap);
-      laths += `<rect x="${x}" y="8" width="3" height="138" fill="${lath}" rx="1"/>`;
+      laths += `<rect x="${x}" y="8" width="3" height="${viewH-12}" fill="${lath}" rx="1"/>`;
     }
     content = laths;
   } else if (type === 'trans') {
-    // ПЕРЕХОДНЫЙ — реже ламели (6 штук) + ветка по центру
     let laths = '';
     const count = 6;
     const margin = 8;
@@ -3362,57 +3765,57 @@ function tileSvg(type, mode) {
     const gap = (available - count * 3) / (count - 1);
     for (let i = 0; i < count; i++) {
       const x = margin + i * (3 + gap);
-      laths += `<rect x="${x}" y="8" width="3" height="138" fill="${lath}" rx="1"/>`;
+      laths += `<rect x="${x}" y="8" width="3" height="${viewH-12}" fill="${lath}" rx="1"/>`;
     }
     const branch = `
-      <path d="M 50 146 L 50 60" stroke="${lath}" stroke-width="2" stroke-linecap="round" fill="none"/>
-      <path d="M 50 110 L 40 96" stroke="${lath}" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-      <path d="M 50 90 L 60 78" stroke="${lath}" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-      <path d="M 50 70 L 43 60" stroke="${lath}" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <path d="M 50 ${viewH-4} L 50 70" stroke="${lath}" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M 50 130 L 40 116" stroke="${lath}" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <path d="M 50 110 L 60 96" stroke="${lath}" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <path d="M 50 90 L 43 80" stroke="${lath}" stroke-width="1.5" stroke-linecap="round" fill="none"/>
     `;
     content = laths + branch;
   } else {
-    // С РИСУНКОМ — лось
-    const moose = `
-      <g fill="${lath}">
-        <ellipse cx="50" cy="92" rx="28" ry="9"/>
-        <path d="M 68 86 L 74 70 L 82 62 L 82 56 L 76 52 L 70 64 L 62 84 Z"/>
-        <ellipse cx="82" cy="56" rx="11" ry="5"/>
-        <circle cx="78" cy="54" r="1.2" fill="#1a1814" opacity="0.7"/>
-        <circle cx="92" cy="58" r="1" fill="#1a1814" opacity="0.6"/>
-        <path d="M 76 50 L 73 44 L 78 47 Z"/>
-        <path d="M 84 50 L 87 44 L 82 47 Z"/>
-        <path d="M 78 48 Q 64 36 50 32 L 44 28 L 44 32 Q 56 38 68 44 L 76 48 Z"/>
-        <path d="M 56 34 L 52 26 L 56 26 L 60 34 Z"/>
-        <path d="M 50 32 L 46 22 L 50 22 L 54 32 Z"/>
-        <path d="M 62 38 L 60 30 L 64 30 L 66 38 Z"/>
-        <path d="M 84 48 Q 92 42 98 38 L 100 34 L 96 34 Q 92 40 88 44 L 84 46 Z"/>
-        <path d="M 92 42 L 96 34 L 98 36 L 94 44 Z"/>
-        <path d="M 96 38 L 100 32 L 100 36 L 98 40 Z"/>
-        <ellipse cx="72" cy="74" rx="2.5" ry="4"/>
-        <rect x="32" y="98" width="4.5" height="24" rx="1.5"/>
-        <rect x="40" y="98" width="4.5" height="24" rx="1.5"/>
-        <rect x="56" y="98" width="4.5" height="24" rx="1.5"/>
-        <rect x="64" y="98" width="4.5" height="24" rx="1.5"/>
-        <rect x="30" y="120" width="9" height="3" rx="1"/>
-        <rect x="54" y="120" width="9" height="3" rx="1"/>
-        <path d="M 22 88 L 16 84 L 18 92 Z"/>
-      </g>
-    `;
-    content = moose;
+    // С ДЕКОРОМ — сохранение пропорций (meet), сцены не искажаются.
+    let decor = 'a';
+    try {
+      const t = readDecorType();
+      if (t && t.startsWith('forest_')) decor = t.split('_')[1];
+    } catch(e) {}
+    content = forestSceneSvg(decor, lath);
+    preserve = 'xMidYMid meet';
   }
 
-  // Шапка стойки наверху и земля внизу
-  const cap = `<rect x="0" y="0" width="100" height="4" fill="#2a2620" rx="1"/>`;
-  const ground = `<rect x="0" y="146" width="100" height="4" fill="#0a0907" rx="1"/>`;
+  const cap = `<rect x="0" y="0" width="${viewW}" height="3" fill="#2a2620" rx="1"/>`;
+  const ground = `<rect x="0" y="${viewH-3}" width="${viewW}" height="3" fill="#0a0907" rx="1"/>`;
 
-  // SVG прозрачный — фон/подсветка рисуются CSS-подложкой .tile-inner::before
-  return `<svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+  return `<svg viewBox="0 0 ${viewW} ${viewH}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="${preserve}">
     ${cap}
     ${content}
     ${ground}
   </svg>`;
 }
+
+// SVG-силуэты реальных животных (источник: pixabay/потрейс)
+const FOREST_DEER_SVG = `<g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none"> <path d="M7639 12751 c-102 -14 -293 -224 -380 -418 -47 -105 -47 -106 -63 -146 -9 -21 -25 -100 -37 -175 -26 -168 -25 -164 -46 -160 -31 6 -41 97 -48 413 -7 304 -14 371 -41 382 -17 6 -50 -21 -70 -58 -33 -65 -74 -345 -74 -510 0 -148 35 -340 105 -571 31 -103 4 -113 -107 -39 -41 27 -97 74 -125 104 -83 87 -186 310 -218 467 -22 114 -44 190 -61 218 -18 28 -55 29 -80 1 -17 -19 -19 -37 -18 -148 1 -79 7 -152 18 -196 34 -144 117 -382 154 -443 68 -112 259 -312 517 -542 33 -29 93 -85 134 -123 90 -83 206 -176 401 -322 283 -211 390 -303 633 -544 175 -172 215 -221 253 -307 49 -111 58 -145 41 -161 -13 -13 -22 -13 -78 1 -88 23 -127 49 -256 169 -131 123 -175 150 -342 211 -143 53 -232 99 -308 161 -66 54 -89 62 -113 40 -31 -28 -33 -89 -10 -255 39 -285 68 -409 120 -510 51 -101 211 -292 281 -336 51 -32 129 -51 237 -59 252 -18 296 -89 205 -331 -23 -61 -72 -211 -108 -335 -86 -291 -122 -397 -148 -436 -27 -41 -103 -81 -232 -124 l-100 -34 -275 0 c-232 0 -291 3 -380 20 -82 15 -145 20 -285 19 -171 -1 -189 -3 -371 -42 -349 -75 -474 -84 -750 -58 -585 57 -1696 52 -2499 -10 -137 -11 -357 -17 -700 -18 -492 -2 -501 -3 -570 -25 -95 -31 -286 -126 -420 -207 -204 -124 -252 -148 -525 -260 l-115 -47 -170 -171 c-237 -239 -405 -442 -433 -525 -19 -54 -51 -282 -86 -602 -9 -75 -20 -148 -25 -163 -6 -14 -14 -76 -17 -136 -7 -106 -6 -110 13 -110 11 0 27 8 34 17 8 9 70 53 139 98 69 45 132 91 141 101 9 11 40 61 68 112 50 87 54 92 85 92 40 0 55 18 142 164 86 146 98 143 109 -28 9 -154 111 -618 210 -956 76 -260 82 -304 61 -430 -19 -110 -68 -276 -96 -323 -11 -18 -34 -59 -52 -92 -38 -70 -110 -145 -194 -200 -61 -41 -270 -149 -384 -199 -78 -34 -99 -52 -153 -131 -40 -59 -41 -61 -39 -140 4 -139 32 -700 47 -945 43 -655 44 -866 9 -1187 -33 -296 -38 -522 -11 -570 9 -18 26 -37 38 -43 17 -10 25 -6 59 32 35 37 41 41 54 28 15 -17 42 -126 51 -214 9 -77 48 -192 76 -222 45 -48 246 -94 410 -94 123 0 156 11 175 60 8 20 33 54 54 74 28 26 40 46 40 65 0 52 -132 177 -250 236 -127 63 -205 148 -258 279 -22 54 -24 79 -32 320 -5 143 -16 456 -26 694 -15 374 -16 464 -5 665 18 337 19 343 72 390 28 26 131 82 289 159 408 200 430 210 437 193 9 -24 -90 -242 -159 -351 -90 -143 -89 -146 177 -464 450 -538 758 -971 953 -1340 19 -37 42 -104 53 -154 25 -112 57 -180 88 -184 29 -5 61 24 61 55 0 19 5 24 21 21 22 -3 35 -30 93 -189 32 -87 100 -152 204 -192 63 -25 203 -47 299 -47 88 0 117 9 181 57 30 23 33 29 27 60 -5 28 -1 41 19 68 34 44 33 55 -7 91 -57 54 -102 81 -258 164 -85 44 -180 100 -210 124 -68 53 -116 123 -125 182 -8 53 0 43 -229 326 -212 264 -290 364 -487 633 -209 284 -257 387 -243 530 8 82 29 136 68 172 17 17 113 89 212 160 280 203 547 413 666 523 46 43 249 282 288 340 21 30 60 96 86 145 70 131 113 202 128 208 6 2 37 -4 67 -14 62 -21 199 -49 375 -78 365 -60 299 -56 895 -56 546 1 593 3 980 40 347 34 592 54 605 48 8 -2 17 -13 20 -22 3 -10 -13 -112 -35 -227 -22 -115 -42 -222 -45 -239 -3 -16 -12 -68 -21 -115 -21 -117 -68 -406 -94 -575 -11 -77 -25 -160 -30 -185 -5 -25 -14 -110 -20 -190 -6 -80 -15 -199 -20 -266 -12 -148 -73 -609 -101 -759 -30 -160 -64 -291 -96 -365 -24 -57 -27 -78 -28 -176 0 -80 4 -116 14 -128 18 -22 37 -6 45 39 15 77 49 52 66 -49 12 -71 11 -78 -13 -153 -33 -102 -41 -165 -32 -266 7 -73 11 -85 39 -113 53 -53 248 -95 451 -98 141 -1 159 6 185 74 11 30 29 53 54 69 20 13 36 30 36 37 0 17 -58 83 -216 247 l-134 139 0 361 c0 378 2 404 45 607 15 68 41 208 60 310 l33 185 89 180 c48 99 109 230 135 290 83 197 168 406 168 414 0 12 30 22 42 15 20 -12 191 -301 262 -441 43 -86 47 -100 121 -348 76 -258 110 -357 152 -445 72 -151 104 -254 128 -400 49 -301 77 -535 85 -710 5 -107 12 -206 16 -220 18 -65 73 -81 102 -30 9 17 24 29 32 28 8 -2 32 -32 52 -68 l38 -65 0 -126 c0 -237 36 -284 256 -330 84 -17 118 -19 236 -13 147 7 158 12 158 62 0 10 14 38 31 62 28 39 30 45 17 68 -15 30 -185 185 -281 257 -83 63 -104 101 -152 280 -37 140 -89 299 -140 430 -68 176 -120 359 -204 710 -44 186 -61 295 -61 394 0 79 -13 185 -54 441 -74 465 -132 1351 -94 1435 16 35 55 57 173 95 153 50 230 94 475 268 154 110 198 149 226 201 13 25 42 68 64 95 21 28 54 76 72 108 87 155 274 413 549 758 154 193 191 247 277 395 207 357 292 614 307 935 6 148 42 429 56 444 5 6 33 16 61 23 102 26 280 131 308 182 6 12 11 80 11 161 l0 140 -40 74 c-41 73 -41 74 -41 179 0 90 4 116 26 174 14 37 40 108 57 156 31 92 46 109 78 89 53 -33 62 -2 24 84 -34 77 -33 115 7 159 17 20 34 53 37 72 7 40 19 49 76 58 33 5 53 20 117 85 110 113 167 200 234 357 32 76 81 179 109 228 83 145 97 210 49 241 -37 25 -106 6 -239 -66 -179 -98 -246 -129 -325 -149 -85 -21 -227 -85 -279 -125 -55 -41 -59 -17 -12 64 22 40 41 73 41 76 0 2 25 44 55 94 30 50 55 93 55 96 0 3 17 31 39 62 21 31 59 89 84 127 57 88 226 256 377 375 63 50 187 151 275 224 88 73 185 151 215 173 93 70 257 248 379 412 125 170 141 208 226 550 54 217 63 314 46 515 -12 145 -24 185 -66 212 -28 19 -50 10 -89 -37 -31 -37 -33 -43 -46 -194 -6 -66 -15 -168 -20 -227 -20 -219 -94 -439 -174 -517 -41 -40 -59 -36 -81 15 -45 109 -60 240 -74 658 -8 243 -11 271 -29 295 -25 34 -63 35 -79 0 -43 -90 -63 -260 -63 -552 0 -180 4 -240 22 -340 12 -69 22 -168 22 -227 1 -97 -1 -109 -26 -151 -33 -57 -164 -192 -241 -249 -87 -65 -83 -73 -142 282 -85 506 -120 641 -236 918 -61 145 -117 241 -149 257 -35 17 -64 -3 -68 -48 -3 -41 31 -171 87 -329 49 -138 70 -243 111 -540 17 -124 38 -269 47 -324 11 -71 14 -140 11 -250 -4 -142 -6 -155 -32 -202 -14 -27 -110 -141 -212 -254 -101 -113 -213 -245 -247 -294 -34 -48 -74 -106 -90 -127 -15 -22 -35 -39 -45 -39 -43 2 -156 190 -222 370 -43 116 -49 212 -21 345 41 199 36 266 -20 307 -24 19 -28 19 -56 4 -66 -33 -112 -116 -138 -245 -12 -60 -15 -126 -13 -282 l3 -205 42 -65 c42 -65 116 -215 169 -344 22 -54 28 -84 27 -131 -2 -67 -34 -163 -61 -186 -55 -47 -431 -41 -558 8 -33 13 -70 24 -81 24 -25 0 -67 41 -143 141 -84 109 -100 139 -100 184 0 63 26 156 64 231 19 38 55 114 81 169 l47 100 -2 216 c-1 271 -7 314 -50 352 -59 52 -74 23 -90 -173 -18 -225 -35 -292 -120 -464 -61 -124 -142 -236 -170 -236 -12 0 -55 29 -98 63 -108 89 -270 205 -457 329 -192 126 -291 204 -379 299 -77 83 -106 139 -113 217 -7 71 15 119 79 178 51 47 65 53 223 98 204 58 428 171 546 275 51 44 99 115 120 173 11 33 11 39 -6 58 -36 40 -157 15 -238 -50 -29 -22 -74 -58 -102 -80 -95 -77 -257 -142 -426 -175 -156 -29 -201 -17 -219 60 -12 51 4 223 31 330 28 112 114 282 223 437 51 73 101 147 110 165 29 57 17 146 -18 142 -6 -1 -32 -5 -57 -8z"/> </g>`;
+const FOREST_BEAR_SVG = `<g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none"> <path d="M5540 9934 c-100 -9 -632 -77 -892 -114 -345 -49 -459 -72 -573 -116 -51 -21 -106 -35 -127 -34 -48 1 -54 -2 -225 -126 -133 -97 -180 -122 -263 -139 -57 -12 -99 -38 -246 -153 -167 -130 -216 -162 -388 -254 -76 -40 -157 -93 -193 -125 -293 -257 -515 -924 -464 -1393 22 -201 61 -355 216 -845 30 -93 64 -207 76 -253 l22 -82 -43 -88 c-88 -180 -120 -297 -150 -557 -42 -360 -82 -436 -245 -466 -47 -9 -89 -7 -229 11 -94 12 -189 20 -212 17 -89 -10 -254 -119 -404 -267 -159 -157 -248 -295 -304 -473 -90 -285 -33 -636 171 -1047 218 -441 410 -603 598 -508 28 15 89 61 136 105 48 43 122 108 166 144 110 91 118 112 116 269 -1 69 -8 163 -16 210 -8 47 -14 86 -13 87 6 7 577 333 583 333 11 0 44 -272 43 -360 0 -48 -12 -104 -47 -220 -44 -143 -48 -163 -48 -260 0 -92 3 -111 24 -150 33 -61 135 -165 231 -234 l79 -57 103 10 c57 6 159 15 228 21 69 6 172 15 230 20 58 5 184 16 280 25 427 36 652 56 750 65 335 30 465 43 469 46 5 4 -54 144 -94 225 -46 90 -52 94 -154 94 -73 1 -103 6 -196 38 -104 36 -342 133 -357 146 -4 4 26 155 67 336 42 182 100 438 130 570 107 470 137 574 262 889 91 230 137 331 156 343 21 12 38 49 31 67 -7 20 -16 20 91 -3 165 -36 292 -44 585 -37 151 3 332 10 402 16 70 5 216 12 325 15 l198 7 -84 -52 c-113 -69 -183 -124 -262 -206 -137 -144 -203 -282 -244 -509 -26 -141 -18 -205 37 -298 34 -57 34 -67 3 -232 -41 -220 3 -500 169 -1068 25 -87 46 -166 46 -176 0 -10 7 -22 16 -25 35 -14 286 0 644 34 575 55 780 77 788 85 3 2 4 34 4 71 -1 48 -7 76 -24 107 -44 80 -130 106 -430 131 -265 22 -298 43 -298 188 0 130 64 324 177 538 65 122 180 319 199 339 11 12 27 1 105 -73 125 -119 287 -247 514 -406 359 -251 366 -261 369 -550 1 -163 2 -166 33 -230 17 -36 50 -85 73 -109 l41 -43 317 7 c174 4 324 9 332 10 8 2 155 6 325 10 171 3 321 8 335 10 14 2 118 7 233 10 115 4 210 12 213 17 4 5 -10 24 -31 40 -45 38 -57 66 -44 110 17 59 13 107 -11 133 -29 31 -46 36 -281 89 -327 74 -435 122 -560 245 -152 152 -228 355 -276 737 -14 111 -17 216 -17 524 0 409 10 533 55 705 28 109 56 158 144 255 42 47 95 112 117 144 68 99 151 287 187 424 l12 42 157 0 c346 0 704 63 1347 235 312 84 288 80 316 62 82 -52 502 -105 759 -95 108 4 122 7 234 51 124 49 182 86 253 159 81 84 80 113 -18 311 -86 173 -133 293 -149 378 -11 56 -11 87 4 203 l17 137 -44 82 -43 82 20 158 c18 145 18 160 4 191 -23 47 -67 64 -210 82 -68 8 -137 19 -155 23 -17 5 -118 55 -225 111 -267 140 -419 188 -728 229 -252 33 -330 40 -635 56 -860 45 -817 37 -1038 194 -234 165 -340 219 -512 263 -83 21 -112 23 -360 22 -168 0 -344 -6 -465 -17 -417 -36 -469 -39 -605 -34 -132 5 -149 8 -301 56 -98 30 -280 74 -465 111 -167 34 -393 86 -501 115 -168 46 -213 54 -310 58 -62 3 -133 3 -158 1z"/> </g>`;
+
+// 4 сцены FOREST — viewBox 100×180. Без ёлок. Олень/медведь крупно стоит на полукруглой земле.
+function forestSceneSvg(variant, lath) {
+  // Полукруглая земля — широкий эллипс, края выходят за тайл (обрезаются естественно).
+  const ground = `<ellipse cx="50" cy="180" rx="80" ry="22" fill="${lath}"/>`;
+
+  // ОЛЕНЬ — копыта на верху дуги (y≈158).
+  const deerCentered = `<svg x="6" y="28" width="88" height="130" viewBox="0 0 1180 1280" preserveAspectRatio="xMidYMid meet">${FOREST_DEER_SVG}</svg>`;
+  // МЕДВЕДЬ — quadrat viewBox 1280×1280. Делаем крупнее под пропорции тайла.
+  const bearCentered = `<svg x="6" y="50" width="88" height="108" viewBox="0 0 1280 1280" preserveAspectRatio="xMidYMid meet">${FOREST_BEAR_SVG}</svg>`;
+
+  if (variant === 'a') return ground + deerCentered;
+  if (variant === 'b') return ground + deerCentered;  // плейсхолдер до получения оленихи
+  if (variant === 'c') return ground + bearCentered;
+  return ground + bearCentered;  // плейсхолдер до получения лисы
+}
+
+// 4 сцены FOREST — viewBox 60×150 (узкий вертикальный)
 
 // ===================================================================
 // renderFence — ДИФФИНГ: добавляем/удаляем тайлы поштучно, не пересоздавая ряд
@@ -3434,18 +3837,24 @@ function makeTile(type, mode) {
 function setTileMode(el, type, mode) {
   const prevType = el.dataset.type;
   const prevMode = el.dataset.mode;
-  if (prevType === type && prevMode === mode) return;
+  const prevDecor = el.dataset.decor || '';
+  // Текущий декор актуален только для type === 'main'
+  let curDecor = '';
+  if (type === 'main') {
+    try { curDecor = readDecorType() || ''; } catch(e) {}
+  }
+  if (prevType === type && prevMode === mode && prevDecor === curDecor) return;
 
-  // Класс подсветки — смена через CSS-transition (плавно)
   if (prevMode !== mode) {
     el.classList.remove('glow-off','glow-warm','glow-cold','glow-rgb');
     el.classList.add(mode === 'off' ? 'glow-off' : 'glow-' + mode);
     el.dataset.mode = mode;
   }
-  // SVG внутри — обновляем ТОЛЬКО если изменился тип (mode на SVG не влияет)
-  if (prevType !== type) {
+  // SVG обновляем если изменился type ИЛИ decor (только для main-секций)
+  if (prevType !== type || (type === 'main' && prevDecor !== curDecor)) {
     el.querySelector('.tile-inner').innerHTML = tileSvg(type, mode);
     el.dataset.type = type;
+    el.dataset.decor = curDecor;
   }
 }
 
@@ -3627,63 +4036,103 @@ if (document.readyState === 'loading') {
 // Оставляем no-op чтобы старые вызовы не падали.
 
 function updateCalc() {
-  const sections = parseInt(lenInput.value);
-  const len = sections * 2;
-  const posts = sections + 1;
+  // === Длина в метрах (новый ввод) ===
+  let totalLen = parseFloat(lenMetersInput.value);
+  if (isNaN(totalLen) || totalLen < 5) totalLen = 5;
+  if (totalLen > 200) totalLen = 200;
 
-  // Лимитируем art-input по количеству секций (нельзя 6 рисунков на 4 секции)
-  const maxArt = Math.max(0, sections - 2);
+  // Ворота и калитка вычитаются из общей длины
+  const gateW   = readGateWidth();
+  const wicketW = readWicketWidth();
+  const usedByOpenings = gateW + wicketW;
+  // Защита: открытия не должны быть больше участка
+  const fenceLen = Math.max(0, totalLen - usedByOpenings);
+
+  // Количество стандартных секций = ceil(fenceLen / 2.5)
+  const sections = Math.max(0, Math.ceil(fenceLen / 2.5));
+  // Реальная длина забора, учтённая в секциях (для отображения)
+  const actualFenceLen = sections * 2.5;
+  // Общая длина для монтажа = totalLen
+  const len = totalLen;
+  // Столбы: на каждую секцию + 1 угловой + 1 на каждое открытие (ворота/калитка)
+  const openings = (gateW > 0 ? 1 : 0) + (wicketW > 0 ? 1 : 0);
+  const posts = sections + openings + 1;
+
+  // Лимитируем art-input по количеству секций
+  const maxArt = sections;
   if (parseInt(artInput.value) > maxArt) artInput.value = maxArt;
-  artInput.max = Math.min(6, Math.max(0, sections));
-  const requestedArt = parseInt(artInput.value);
+  artInput.max = Math.min(6, maxArt);
+  const decorCount = parseInt(artInput.value);
 
   // UI обновление
-  lenVal.innerHTML = sections + '<span class="unit">шт</span>';
-  artVal.innerHTML = requestedArt + '<span class="unit">шт</span>';
+  artVal.innerHTML = decorCount + '<span class="unit">шт</span>';
   if (fpSections) fpSections.textContent = sections;
   if (fpPosts) fpPosts.textContent = posts;
-  if (fpLength) fpLength.textContent = len;
-  if (sectionsNote) sectionsNote.textContent = `${sections} секций · ${posts} столбов · ${len} метров`;
+  if (fpLength) fpLength.textContent = Math.round(len * 10) / 10;
+  if (sectionsNote) sectionsNote.textContent = `${sections} секций · ${posts} столбов · ${len} м участка`;
+  if (lenSectionsHint) {
+    let hintText = `${sections} секц.`;
+    if (gateW > 0) hintText += ` + ворота ${gateW}м`;
+    if (wicketW > 0) hintText += ` + калитка ${wicketW}м`;
+    lenSectionsHint.textContent = hintText;
+  }
 
-  // Композиция
-  const { blindN, transN, mainN } = computeComposition(sections, requestedArt);
-
-  // Высота — множитель цены
+  // Высота — множитель цены (применяется только к панели)
   const hMul = parseFloat(document.querySelector('#heightGroup .selected').dataset.h);
-  const blindP = PRICES.blind * hMul;
-  const transP = PRICES.trans * hMul;
-  const mainP = PRICES.main * hMul;
-  const postP = PRICES.post;
+
+  // Цены позиций
+  const panelP = PRICES.panel * hMul;
+  const postP  = PRICES.post;
+  const decorP = PRICES.decor;
+  const lightP = PRICES.light;
 
   // Подсветка
   const lightBtn = document.querySelector('#lightGroup .selected');
-  const lightPerSec = parseFloat(lightBtn.dataset.light);
   const lightMode = lightBtn.dataset.mode;
-  const lightTotal = lightPerSec * sections;
+  let lightSides = 0;
+  if (lightMode !== 'off') {
+    const sidesBtn = document.querySelector('#lightSidesGroup .selected');
+    lightSides = sidesBtn ? parseInt(sidesBtn.dataset.sides) : 1;
+  }
+  const lightCount = sections * lightSides; // кол-во "линий" подсветки
+  const lightTotal = lightCount * lightP;
 
   // Монтаж
   const mountPerM = parseFloat(document.querySelector('#mountGroup .selected').dataset.mount);
-  const mountTotal = mountPerM * len;
+  // -1 = "Нужна консультация" — не учитываем в total
+  const mountTotal = mountPerM > 0 ? mountPerM * len : 0;
+  const mountIsConsult = mountPerM < 0;
 
-  // Обновление таблицы сметы
-  document.getElementById('qBlind').textContent = '× ' + blindN;
-  document.getElementById('vBlind').textContent = fmt(blindP * blindN);
-  document.getElementById('qTrans').textContent = '× ' + transN;
-  document.getElementById('vTrans').textContent = fmt(transP * transN);
-  document.getElementById('qMain').textContent = '× ' + mainN;
-  document.getElementById('vMain').textContent = fmt(mainP * mainN);
+  // Раскладка композиции для ВИЗУАЛИЗАТОРА:
+  // — все секции на самом деле "стандартные глухие" (тип blind),
+  // — но N из них имеют декоративную накладку (тип main для визуализатора).
+  // Это влияет ТОЛЬКО на отображение, не на цены.
+  const blindN = sections - decorCount;
+  const transN = 0; // переходных секций как отдельной позиции больше нет
+  const mainN  = decorCount;
+
+  // Обновление таблицы сметы — новые позиции
+  document.getElementById('qBlind').textContent = '× ' + sections;
+  document.getElementById('vBlind').textContent = fmt(panelP * sections);
+  document.getElementById('qTrans').textContent = decorCount > 0 ? '× ' + decorCount : '× 0';
+  document.getElementById('vTrans').textContent = fmt(decorP * decorCount);
+  document.getElementById('qMain').textContent = lightSides > 0 ? '× ' + lightCount : '× 0';
+  document.getElementById('vMain').textContent = fmt(lightTotal);
   document.getElementById('qPost').textContent = '× ' + posts;
   document.getElementById('vPost').textContent = fmt(postP * posts);
-  document.getElementById('qLed').textContent = lightPerSec > 0 ? '× ' + sections : '—';
-  document.getElementById('vLed').textContent = lightPerSec > 0 ? fmt(lightTotal) : '—';
-  document.getElementById('qMount').textContent = mountPerM > 0 ? len + ' м' : '—';
-  document.getElementById('vMount').textContent = mountPerM > 0 ? fmt(mountTotal) : '—';
+  // Старые строки vLed / vMount — используем под "Подсветка" и "Монтаж"
+  document.getElementById('qLed').textContent = lightSides > 0
+    ? (lightSides === 2 ? 'обе стороны' : 'одна сторона')
+    : '—';
+  document.getElementById('vLed').textContent = lightSides > 0 ? 'включено' : '—';
+  document.getElementById('qMount').textContent = mountIsConsult ? 'консультация' : (mountPerM > 0 ? len + ' м' : '—');
+  document.getElementById('vMount').textContent = mountIsConsult ? 'согласуется' : (mountPerM > 0 ? fmt(mountTotal) : '—');
 
-  const total = blindP * blindN + transP * transN + mainP * mainN + postP * posts + lightTotal + mountTotal;
+  const total = panelP * sections + postP * posts + decorP * decorCount + lightTotal + mountTotal;
   animatePriceChange(document.getElementById('totalPrice'), total);
   animatePriceChange(document.getElementById('vTotal'), total);
 
-  // Расстановка и рендер сетки тайлов
+  // Расстановка и рендер сетки тайлов (визуализатор)
   const arr = arrangeModules(sections, blindN, transN, mainN);
   renderFence(arr, lightMode);
 
@@ -3700,9 +4149,102 @@ function updateCalc() {
     }
   }
 }
-lenInput.addEventListener('input', updateCalc);
+// === Подключение всех групп Фазы 2 ===
+setupGroup('postInstallGroup');
+// Toggle ворот/калитки с показом sub-row
+// gate/wicket удалены
+// Группы ширины с поддержкой "Вручную"
+// gate/wicket width groups удалены
+// Группа типа декора — обновляет hint
+const decorGroup = document.getElementById('decorTypeGroup');
+const decorHintEl = document.getElementById('decorHint');
+if (decorGroup) {
+  decorGroup.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    decorGroup.querySelectorAll('button').forEach(bb => bb.classList.remove('selected'));
+    b.classList.add('selected');
+    if (decorHintEl) decorHintEl.textContent = DECOR_DESCRIPTIONS[b.dataset.decor] || '';
+    updateCalc();
+  }));
+}
+// Группа установки столбов — обновляет hint
+const postInstallEl = document.getElementById('postInstallGroup');
+const postInstallHintEl = document.getElementById('postInstallHint');
+if (postInstallEl) {
+  postInstallEl.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    if (postInstallHintEl) postInstallHintEl.textContent = POST_INSTALL_DESC[b.dataset.pi] || '';
+  }));
+}
+
+// Основное поле длины + кнопки ±2.5
+lenMetersInput.addEventListener('input', updateCalc);
+document.querySelectorAll('.num-step').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const delta = parseFloat(btn.dataset.delta) || 0;
+    let cur = parseFloat(lenMetersInput.value) || 0;
+    cur = Math.max(5, Math.min(200, cur + delta));
+    // Округляем до ближайших 0.5
+    cur = Math.round(cur * 2) / 2;
+    lenMetersInput.value = cur;
+    updateCalc();
+  });
+});
+
+// (слушатели ворот/калитки удалены вместе с блоками)
+
 artInput.addEventListener('input', updateCalc);
 updateCalc();
+
+// ============================================
+// КАТАЛОГ ДЕКОРОВ — рендер SVG в карточки + кнопки
+// ============================================
+(function initDecorCatalog() {
+  const cards = document.querySelectorAll('[data-decor-render]');
+  if (!cards.length) return;
+
+  // Используем ту же функцию forestSceneSvg + ту же CSS-окраску, что и в визуализаторе.
+  // Контейнер карточки — flex 3:4. SVG растягивается на 100%.
+  cards.forEach(node => {
+    const variant = node.dataset.decorRender;
+    try {
+      const sceneContent = forestSceneSvg(variant, '#0a0907');
+      // viewBox = 100×180, как у тайла. preserveAspectRatio=meet — карточка 3:4, без искажений.
+      node.insertAdjacentHTML('beforeend',
+        `<svg viewBox="0 0 100 180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style="position:absolute;inset:0;width:100%;height:100%">${sceneContent}</svg>`
+      );
+    } catch (e) {
+      console.warn('decor render failed for', variant, e);
+    }
+  });
+
+  // Кнопки на карточках
+  document.querySelectorAll('.coll-actions button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const decor = btn.dataset.decor;
+      const action = btn.dataset.action;
+      if (action === 'add') {
+        // 1. Включить тип декора в селекторе калькулятора
+        const decorBtn = document.querySelector(`#decorTypeGroup [data-decor="${decor}"]`);
+        if (decorBtn) decorBtn.click();
+        // 2. Увеличить кол-во декор-панелей минимум на 1 (и не больше 6)
+        const cur = parseInt(artInput.value) || 0;
+        artInput.value = Math.min(6, Math.max(1, cur + 1));
+        updateCalc();
+        // 3. Скролл к калькулятору + toast
+        const calcEl = document.getElementById('calc');
+        if (calcEl) calcEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (typeof window.lxShowToast === 'function') {
+          const label = decor.replace('forest_', 'FOREST · ').toUpperCase();
+          window.lxShowToast(`Декор ${label} добавлен в расчёт`);
+        }
+      } else if (action === 'preview') {
+        // "Посмотреть на моём участке" — пока заглушка
+        if (typeof window.lxShowToast === 'function') {
+          window.lxShowToast('Скоро: AR-предпросмотр на вашем участке');
+        }
+      }
+    });
+  });
+})();
 
 // ============================================
 // REVEAL / COUNT-UP / SCROLL / PARALLAX
@@ -3884,265 +4426,435 @@ onScrollFrame(); // initial
   });
 })();
 </script>
-
-<!-- ============================================
-     TOAST + MODALS (LUMINEX extras)
-     ============================================ -->
-<div class="toast-el" id="lxToast" role="status" aria-live="polite"></div>
-
-<div class="lx-backdrop" id="lxPdfBd"></div>
-<div class="lx-modal" id="lxPdfModal" role="dialog" aria-modal="true" aria-labelledby="lxPdfTitle">
-  <div class="lx-modal-header">
-    <div class="lx-eyebrow">— PDF-смета</div>
-    <h2 class="lx-title" id="lxPdfTitle">Получить смету на email</h2>
-    <button type="button" class="lx-close" id="lxPdfClose" aria-label="Закрыть">×</button>
-  </div>
-  <div class="lx-body" id="lxPdfBody">
-    <p class="lx-lead">Подробная смета в PDF с расчётом по позициям, спецификацией и сроками монтажа. Придёт на email в течение минуты.</p>
-    <form id="lxPdfForm" novalidate>
-      <div class="lx-field">
-        <label for="lxName">Имя <span class="req">*</span></label>
-        <input type="text" id="lxName" name="name" required autocomplete="name" placeholder="Как к вам обращаться">
-      </div>
-      <div class="lx-field">
-        <label for="lxPhone">Телефон <span class="req">*</span></label>
-        <input type="tel" id="lxPhone" name="phone" required autocomplete="tel" placeholder="+7 (___) ___-__-__">
-      </div>
-      <div class="lx-field">
-        <label for="lxEmail">Email <span class="req">*</span></label>
-        <input type="email" id="lxEmail" name="email" required autocomplete="email" placeholder="email@example.com">
-      </div>
-      <label class="lx-check">
-        <input type="checkbox" id="lxConsent" required>
-        <span>Согласен на обработку персональных данных согласно <a href="#" id="lxOpenPrivacy">политике конфиденциальности</a>. Данные используются только для отправки сметы и связи с вами.</span>
-      </label>
-      <label class="lx-check">
-        <input type="checkbox" id="lxMarketing">
-        <span>Хочу получать новости о коллекциях, акциях и кейсах LUMINEX (необязательно, отписка одним кликом).</span>
-      </label>
-    </form>
-  </div>
-  <div class="lx-footer" id="lxPdfFooter">
-    <button type="button" class="cta-btn" id="lxPdfSubmit">Отправить смету</button>
-    <p class="lx-note">Никакого спама. Данные не передаются третьим лицам.</p>
-  </div>
-</div>
-
-<div class="lx-backdrop" id="lxPrivacyBd"></div>
-<div class="lx-modal" id="lxPrivacyModal" role="dialog" aria-modal="true" aria-labelledby="lxPrivacyTitle">
-  <div class="lx-modal-header">
-    <div class="lx-eyebrow">— Документ</div>
-    <h2 class="lx-title" id="lxPrivacyTitle">Политика конфиденциальности</h2>
-    <button type="button" class="lx-close" id="lxPrivacyClose" aria-label="Закрыть">×</button>
-  </div>
-  <div class="lx-body">
-    <p class="lx-lead">Оставляя данные на сайте LUMINEX, вы подтверждаете согласие на их обработку в соответствии с Федеральным законом № 152-ФЗ «О персональных данных».</p>
-    <p class="lx-lead"><strong style="color:#e8e3d8">Что мы собираем:</strong> имя, телефон, email — только то, что вы сами указываете в формах.</p>
-    <p class="lx-lead"><strong style="color:#e8e3d8">Зачем:</strong> подготовка сметы, связь по проекту, отправка договора и КП. С вашего отдельного согласия — рассылка новостей.</p>
-    <p class="lx-lead"><strong style="color:#e8e3d8">Хранение:</strong> данные хранятся на защищённых серверах в РФ, доступ имеют только сотрудники LUMINEX, работающие с вашим заказом.</p>
-    <p class="lx-lead"><strong style="color:#e8e3d8">Ваши права:</strong> отозвать согласие, потребовать удаления или изменения данных. Напишите на privacy@luminex.example — обрабатываем запрос в течение 3 рабочих дней.</p>
-    <p class="lx-lead" style="margin-top:18px;font-size:12px;color:#7a7466">Полный текст политики доступен по запросу. Это краткая выжимка для понимания основных принципов.</p>
-  </div>
-  <div class="lx-footer">
-    <button type="button" class="cta-btn" id="lxPrivacyOk">Понятно</button>
-  </div>
-</div>
-
 <script>
-// ============================================
-// LUMINEX extras — изолированный модуль
-// Toast, Modals, EN-toggle, 3D-tilt, Magnetic.
-// Всё внутри try/catch — если что-то упадёт, остальное работает.
-// ============================================
-(function() {
-  'use strict';
 
-  // ---------- TOAST ----------
-  var toastEl = document.getElementById('lxToast');
-  var toastTimer = null;
-  window.lxShowToast = function(msg, dur) {
-    if (!toastEl) return;
-    dur = dur || 2800;
-    toastEl.innerHTML = '<span class="toast-dot"></span>' + msg;
-    toastEl.classList.add('visible');
-    if (toastTimer) clearTimeout(toastTimer);
-    toastTimer = setTimeout(function(){ toastEl.classList.remove('visible'); }, dur);
-  };
+/* ============================================================
+   TIMELINE WIDGET — 9 шагов, реальные фото времени суток
+   ============================================================ */
+(function(){
 
-  // ---------- MODAL helpers ----------
-  function openModal(modalId, bdId) {
-    var m = document.getElementById(modalId), bd = document.getElementById(bdId);
-    if (!m || !bd) return;
-    bd.classList.add('visible');
-    requestAnimationFrame(function(){ m.classList.add('visible'); });
-    document.body.style.overflow = 'hidden';
+// 9 шагов времени суток. Порядок соответствует <img> в .timeline-images.
+// Каждый шаг: метка для подписи, "mood" под подписью, признак "ночь" (для подсветки полоски).
+// Шаги расположены ХРОНОЛОГИЧЕСКИ от раннего утра до глубокой ночи через полночь.
+const STEPS = [
+  { hh:'04:00', mood:'Предрассвет',     night:true  },
+  { hh:'06:00', mood:'Рассвет',         night:false },
+  { hh:'08:00', mood:'Утро',            night:false },
+  { hh:'10:00', mood:'День',            night:false },
+  { hh:'14:00', mood:'Закат',           night:false },
+  { hh:'18:00', mood:'Сумерки',         night:true  },
+  { hh:'20:00', mood:'Подсветка',       night:true  },
+  { hh:'00:00', mood:'Ночь',            night:true  },
+  { hh:'02:00', mood:'Глубокая ночь',   night:true  },
+];
+const N = STEPS.length;          // 9
+const LAST = N - 1;              // 8 — индекс последнего шага
+// Мажорные тики на дорожке — узловые моменты (рассвет, день, закат, ночь)
+const MAJOR_STEPS = new Set([1, 3, 4, 6]);
+
+// === Элементы DOM ===
+const stageEl   = document.getElementById('timelineStage');
+const imagesEl  = document.getElementById('timelineImages');
+const imgs      = imagesEl ? Array.from(imagesEl.querySelectorAll('img')) : [];
+const trackEl   = document.getElementById('tlTrack');
+const handleEl  = document.getElementById('tlHandle');
+const fillEl    = document.getElementById('tlFill');
+const ticksEl   = document.getElementById('tlTicks');
+const timeEl    = document.getElementById('tlTime');
+const moodEl    = document.getElementById('tlMood');
+const hintEl    = document.getElementById('tlHint');
+const prevBtn   = document.getElementById('tlPrev');
+const nextBtn   = document.getElementById('tlNext');
+
+if(!trackEl || !handleEl || imgs.length === 0) return;
+
+// === Тики (9 точек) ===
+if(ticksEl){
+  for(let i=0; i<N; i++){
+    const tick = document.createElement('div');
+    tick.className = 'timeline-tick' + (MAJOR_STEPS.has(i)?' major':'');
+    tick.style.left = (i/LAST)*100 + '%';
+    ticksEl.appendChild(tick);
   }
-  function closeModal(modalId, bdId) {
-    var m = document.getElementById(modalId), bd = document.getElementById(bdId);
-    if (!m || !bd) return;
-    m.classList.remove('visible');
-    bd.classList.remove('visible');
-    setTimeout(function(){
-      if (!document.querySelector('.lx-modal.visible')) {
-        document.body.style.overflow = '';
-      }
-    }, 50);
+}
+
+// === Состояние ===
+let currentStep = 3;          // старт — "День" (10:00)
+let tlAutoplay  = true;
+let autoplayDir = 1;
+let tlDragging  = false;
+let autoplayTimer = null;
+
+// === Установка кадра + полоски ===
+function applyStep(i){
+  i = Math.max(0, Math.min(LAST, i));
+  currentStep = i;
+  const step = STEPS[i];
+
+  // Картинка
+  imgs.forEach((img, idx) => img.classList.toggle('is-active', idx === i));
+
+  // Полоска
+  const percent = (i/LAST)*100;
+  fillEl.style.width  = percent.toFixed(2) + '%';
+  handleEl.style.left = percent.toFixed(2) + '%';
+
+  // Ночной/дневной режим — для цвета handle и fill
+  fillEl.classList.toggle('night',  step.night);
+  handleEl.classList.toggle('night', step.night);
+  // Glow handle — ярче ночью когда забор подсвечен (20:00, 00:00, 02:00, 04:00)
+  const glow = step.night ? 0.85 : 0.15;
+  handleEl.style.setProperty('--glow', glow.toFixed(2));
+
+  // Подписи
+  if(timeEl) timeEl.textContent = step.hh;
+  if(moodEl) moodEl.textContent = step.mood;
+  handleEl.setAttribute('aria-valuenow', String(i));
+}
+
+// === Drag и навигация ===
+function eventToStep(e){
+  const ev = e.touches ? e.touches[0] : e;
+  const rect = trackEl.getBoundingClientRect();
+  const t = Math.max(0, Math.min(1, (ev.clientX - rect.left)/rect.width));
+  return Math.round(t * LAST);
+}
+function startDrag(e){
+  tlDragging = true;
+  stopAutoplay();
+  handleEl.classList.add('dragging');
+  e.preventDefault();
+}
+function onDrag(e){
+  if(!tlDragging) return;
+  applyStep(eventToStep(e));
+}
+function endDrag(){
+  tlDragging = false;
+  handleEl.classList.remove('dragging');
+}
+trackEl.addEventListener('mousedown',  (e) => { applyStep(eventToStep(e)); startDrag(e); });
+trackEl.addEventListener('touchstart', (e) => { applyStep(eventToStep(e)); startDrag(e); }, {passive:false});
+document.addEventListener('mousemove', onDrag);
+document.addEventListener('touchmove', onDrag, {passive:false});
+document.addEventListener('mouseup',   endDrag);
+document.addEventListener('touchend',  endDrag);
+
+function step(direction){
+  stopAutoplay();
+  applyStep(currentStep + direction);
+}
+if(prevBtn) prevBtn.addEventListener('click', () => step(-1));
+if(nextBtn) nextBtn.addEventListener('click', () => step(+1));
+
+handleEl.addEventListener('keydown', (e) => {
+  if(e.key === 'ArrowLeft'){  e.preventDefault(); step(-1); }
+  if(e.key === 'ArrowRight'){ e.preventDefault(); step(+1); }
+});
+
+// === Autoplay ===
+function easedStepDelay(idx){
+  // База 1100мс. У середины (день/закат) задержки больше — даём рассмотреть.
+  const BASE = 1100, AMP = 0.45;
+  const p = idx / LAST;
+  return BASE * (1 + AMP * (Math.sin(Math.PI * p) - 0.5) * 2);
+}
+function autoplayTick(){
+  if(!tlAutoplay) return;
+  let next = currentStep + autoplayDir;
+  if(next >= LAST){ next = LAST; autoplayDir = -1; }
+  else if(next <= 0){ next = 0; autoplayDir = +1; }
+  applyStep(next);
+  autoplayTimer = setTimeout(autoplayTick, easedStepDelay(next));
+}
+function stopAutoplay(){
+  tlAutoplay = false;
+  if(autoplayTimer){ clearTimeout(autoplayTimer); autoplayTimer = null; }
+  if(hintEl) hintEl.classList.add('hidden');
+}
+
+// === Старт по появлению секции в viewport ===
+function startTimeline(){
+  applyStep(currentStep);                            // 10:00, день
+  setTimeout(() => { if(tlAutoplay) autoplayTick(); }, 1200);
+  setTimeout(() => { if(tlAutoplay && hintEl) hintEl.classList.add('hidden'); }, 7000);
+}
+
+if(stageEl && 'IntersectionObserver' in window){
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){ startTimeline(); io.disconnect(); }
+    });
+  }, { threshold: 0.2 });
+  io.observe(stageEl);
+} else {
+  startTimeline();
+}
+
+// === Pause autoplay когда вкладка не видна — не молотим setTimeout впустую ===
+document.addEventListener('visibilitychange', () => {
+  if(document.hidden && autoplayTimer){
+    clearTimeout(autoplayTimer); autoplayTimer = null;
+  } else if(!document.hidden && tlAutoplay && !autoplayTimer){
+    autoplayTimer = setTimeout(autoplayTick, 600);
   }
-
-  // PDF modal wiring
-  try {
-    var pdfBtn = document.getElementById('lxOpenPdf');
-    var pdfClose = document.getElementById('lxPdfClose');
-    var pdfBd = document.getElementById('lxPdfBd');
-    if (pdfBtn) pdfBtn.addEventListener('click', function(){ openModal('lxPdfModal','lxPdfBd'); });
-    if (pdfClose) pdfClose.addEventListener('click', function(){ closeModal('lxPdfModal','lxPdfBd'); });
-    if (pdfBd) pdfBd.addEventListener('click', function(){ closeModal('lxPdfModal','lxPdfBd'); });
-  } catch(e) { console.warn('PDF modal wiring failed:', e); }
-
-  // Privacy modal wiring
-  try {
-    var prOpen = document.getElementById('lxOpenPrivacy');
-    var prClose = document.getElementById('lxPrivacyClose');
-    var prBd = document.getElementById('lxPrivacyBd');
-    var prOk = document.getElementById('lxPrivacyOk');
-    if (prOpen) prOpen.addEventListener('click', function(e){ e.preventDefault(); openModal('lxPrivacyModal','lxPrivacyBd'); });
-    if (prClose) prClose.addEventListener('click', function(){ closeModal('lxPrivacyModal','lxPrivacyBd'); });
-    if (prBd) prBd.addEventListener('click', function(){ closeModal('lxPrivacyModal','lxPrivacyBd'); });
-    if (prOk) prOk.addEventListener('click', function(){ closeModal('lxPrivacyModal','lxPrivacyBd'); });
-  } catch(e) { console.warn('Privacy modal wiring failed:', e); }
-
-  // Esc closes any open modal
-  document.addEventListener('keydown', function(e){
-    if (e.key !== 'Escape') return;
-    var open = document.querySelectorAll('.lx-modal.visible');
-    open.forEach(function(m){
-      var bdId = m.id === 'lxPdfModal' ? 'lxPdfBd' : 'lxPrivacyBd';
-      closeModal(m.id, bdId);
-    });
-  });
-
-  // PDF form validation
-  try {
-    var submit = document.getElementById('lxPdfSubmit');
-    if (submit) submit.addEventListener('click', function(){
-      var name = document.getElementById('lxName');
-      var phone = document.getElementById('lxPhone');
-      var email = document.getElementById('lxEmail');
-      var consent = document.getElementById('lxConsent');
-      var body = document.getElementById('lxPdfBody');
-      var footer = document.getElementById('lxPdfFooter');
-      [name,phone,email].forEach(function(f){ f && f.classList.remove('invalid'); });
-      var firstBad = null;
-      if (!name || !name.value.trim()) { name && name.classList.add('invalid'); firstBad = firstBad || name; }
-      var phoneDigits = phone ? phone.value.replace(/\D/g,'') : '';
-      if (phoneDigits.length < 10) { phone && phone.classList.add('invalid'); firstBad = firstBad || phone; }
-      var emailOk = email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value);
-      if (!emailOk) { email && email.classList.add('invalid'); firstBad = firstBad || email; }
-      if (!consent || !consent.checked) {
-        window.lxShowToast && window.lxShowToast('Подтвердите согласие на обработку данных');
-        return;
-      }
-      if (firstBad) {
-        firstBad.focus();
-        window.lxShowToast && window.lxShowToast('Заполните обязательные поля');
-        return;
-      }
-      // Success
-      if (body) {
-        body.innerHTML =
-          '<div class="lx-success">' +
-            '<div class="lx-success-icon">✓</div>' +
-            '<h3>Смета отправлена</h3>' +
-            '<p>Письмо с PDF придёт на <strong style="color:var(--amber)">' + email.value + '</strong><br>в течение минуты.</p>' +
-          '</div>';
-      }
-      if (footer) {
-        footer.innerHTML =
-          '<button type="button" class="cta-btn" id="lxPdfDone">Готово</button>' +
-          '<p class="lx-note">Если не пришло за 5 минут — напишите us@luminex.example</p>';
-        var done = document.getElementById('lxPdfDone');
-        if (done) done.addEventListener('click', function(){ closeModal('lxPdfModal','lxPdfBd'); });
-      }
-    });
-  } catch(e) { console.warn('PDF form failed:', e); }
-
-  // ---------- EN button → toast ----------
-  try {
-    var langBtns = document.querySelectorAll('.lang-switch button');
-    langBtns.forEach(function(btn){
-      btn.addEventListener('click', function(){
-        if (btn.dataset.lang === 'en') {
-          window.lxShowToast && window.lxShowToast('English version coming soon · версия в работе');
-        } else if (btn.dataset.lang === 'ru') {
-          langBtns.forEach(function(b){ b.classList.remove('active'); });
-          btn.classList.add('active');
-        }
-      });
-    });
-  } catch(e) { console.warn('Lang switch failed:', e); }
-
-  // ---------- 3D TILT on .pillar ----------
-  try {
-    var supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (supportsHover) {
-      var tiltEls = document.querySelectorAll('.pillar');
-      tiltEls.forEach(function(card){
-        card.classList.add('tilt-on');
-        var rafId = null;
-        card.addEventListener('mousemove', function(e){
-          var rect = card.getBoundingClientRect();
-          var x = (e.clientX - rect.left) / rect.width;
-          var y = (e.clientY - rect.top) / rect.height;
-          var ry = (x - 0.5) * 8;
-          var rx = (0.5 - y) * 8;
-          if (rafId) cancelAnimationFrame(rafId);
-          rafId = requestAnimationFrame(function(){
-            card.style.setProperty('--rx', rx.toFixed(2) + 'deg');
-            card.style.setProperty('--ry', ry.toFixed(2) + 'deg');
-          });
-        });
-        card.addEventListener('mouseenter', function(){ card.classList.add('tilting'); });
-        card.addEventListener('mouseleave', function(){
-          card.classList.remove('tilting');
-          card.style.setProperty('--rx','0deg');
-          card.style.setProperty('--ry','0deg');
-        });
-      });
-    }
-  } catch(e) { console.warn('Tilt failed:', e); }
-
-  // ---------- MAGNETIC on main CTA buttons ----------
-  try {
-    var supportsHover2 = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (supportsHover2) {
-      // Только главные CTA — без .ghost и не внутри модалок
-      var mags = document.querySelectorAll('.cta-btn:not(.ghost)');
-      mags.forEach(function(el){
-        // Пропускаем кнопки внутри модалок (там magnetic не нужен)
-        if (el.closest('.lx-modal')) return;
-        el.classList.add('mag-on');
-        el.addEventListener('mousemove', function(e){
-          var rect = el.getBoundingClientRect();
-          var cx = rect.left + rect.width/2;
-          var cy = rect.top + rect.height/2;
-          var dx = (e.clientX - cx) * 0.22;
-          var dy = (e.clientY - cy) * 0.22;
-          el.style.setProperty('--mx', dx.toFixed(1)+'px');
-          el.style.setProperty('--my', dy.toFixed(1)+'px');
-          el.classList.add('mag-active');
-        });
-        el.addEventListener('mouseleave', function(){
-          el.style.setProperty('--mx','0px');
-          el.style.setProperty('--my','0px');
-          el.classList.remove('mag-active');
-        });
-      });
-    }
-  } catch(e) { console.warn('Magnetic failed:', e); }
+});
 
 })();
-</script>
 
+</script>
+<script>
+
+/* ============================================================
+   DECOR CARDS — плейсхолдеры + hover ≥ 2 сек → radial reveal alt
+   ============================================================ */
+(function(){
+  const cards = document.querySelectorAll('.decor-card');
+  if (!cards.length) return;
+
+  // Простые SVG-плейсхолдеры. По 2 варианта на каждый дизайн —
+  // отличаются временем суток / расположением. Заменишь src на реальные фото.
+  const PLACEHOLDERS = {
+    forest_a: {
+      1: makeSVG({ palette: 'sunset_warm',  subject: 'deer_pair_firs',  sunPos: 'right' }),
+      2: makeSVG({ palette: 'night_cool',   subject: 'deer_pair_firs',  sunPos: 'moon'  }),
+    },
+    forest_b: {
+      1: makeSVG({ palette: 'morning_gold', subject: 'doe_fawn_birches', sunPos: 'left' }),
+      2: makeSVG({ palette: 'dusk_violet',  subject: 'doe_fawn_birches', sunPos: 'right' }),
+    },
+  };
+
+  // Применяем фон базовой картинки и строим мозаику для альтернативной.
+  // Мозаика — сетка плиток, каждая показывает свой кусок второй картинки
+  // через background-position. Каждой плитке выставляется CSS-переменная
+  // --d (transition-delay) для каскадного появления.
+  const COLS = 12;     // 12 колонок
+  const ROWS = 9;      // 9 строк (4:3 пропорции стейджа)
+
+  cards.forEach(card => {
+    const key = card.dataset.decor;
+    const variants = PLACEHOLDERS[key];
+    if (!variants) return;
+
+    const base   = card.querySelector('.dc-img-base');
+    const mosaic = card.querySelector('.dc-mosaic');
+    if (base)  base.style.backgroundImage = `url("${variants[1]}")`;
+    if (!mosaic) return;
+
+    mosaic.style.setProperty('--cols', COLS);
+    mosaic.style.setProperty('--rows', ROWS);
+
+    // Создаём плитки. Задержка появления — функция позиции с лёгким рандомом.
+    // Используем диагональ + jitter, чтобы волна шла из левого верхнего
+    // в правый нижний с естественным разбросом.
+    const altUrl = `url("${variants[2]}")`;
+    const tiles = [];
+    for (let r = 0; r < ROWS; r++){
+      for (let c = 0; c < COLS; c++){
+        const tile = document.createElement('div');
+        tile.className = 'dc-tile';
+
+        // background-position и size — чтобы плитка показывала свой кусок
+        // картинки. Background-size = весь стейдж (увеличенный), position
+        // сдвинут в нужную координату.
+        // Размер фона = (COLS×100%, ROWS×100%), позиция = -c/(COLS-1)*100%, ...
+        const bgSizeW = COLS * 100;
+        const bgSizeH = ROWS * 100;
+        const bgPosX  = (COLS === 1) ? 0 : (c / (COLS - 1)) * 100;
+        const bgPosY  = (ROWS === 1) ? 0 : (r / (ROWS - 1)) * 100;
+        tile.style.setProperty('--bg', altUrl);
+        tile.style.setProperty('--bg-size', `${bgSizeW}% ${bgSizeH}%`);
+        tile.style.setProperty('--bg-pos',  `${bgPosX}% ${bgPosY}%`);
+
+        // Задержка: диагональ + jitter. Шаг ~28мс по диагонали, jitter ±40мс.
+        const diag = c + r;                      // 0..(COLS+ROWS-2)
+        const jitter = (Math.random() - 0.5) * 80;
+        const delay = Math.max(0, diag * 28 + jitter);
+        tile.style.setProperty('--d', `${delay.toFixed(0)}ms`);
+
+        mosaic.appendChild(tile);
+        tiles.push(tile);
+      }
+    }
+  });
+
+  // Hover ≥ 0.4 сек → мозаика появляется. Уход курсора — обратно.
+  const HOVER_DELAY = 400;
+  const cardTimers = new WeakMap();
+
+  cards.forEach(card => {
+    function scheduleShow(){
+      if (cardTimers.get(card)) return;
+      const t = setTimeout(() => {
+        card.classList.add('show-alt');
+        cardTimers.delete(card);
+      }, HOVER_DELAY);
+      cardTimers.set(card, t);
+    }
+    function cancelAndHide(){
+      const t = cardTimers.get(card);
+      if (t){ clearTimeout(t); cardTimers.delete(card); }
+      card.classList.remove('show-alt');
+    }
+
+    card.addEventListener('mouseenter', scheduleShow);
+    card.addEventListener('mouseleave', cancelAndHide);
+    // Touch — тап переключает alt вкл/выкл (без таймера)
+    card.addEventListener('touchstart', () => {
+      card.classList.toggle('show-alt');
+    }, { passive: true });
+  });
+
+  // ====== SVG-плейсхолдеры ======
+  function makeSVG(opts){
+    const W = 1600, H = 1200;   // 4:3
+    const treeColor = '#080604';
+
+    // Палитры (sky_top → sky_bottom, ground tint)
+    const palettes = {
+      sunset_warm:   { sky:['#3a3858','#e89868'], ground:'#1a0e08', sun:'#ffd49a', sunAlpha:0.9 },
+      night_cool:    { sky:['#0a0c20','#2a2848'], ground:'#04060c', sun:'#cfd8ff', sunAlpha:0.55 },
+      morning_gold:  { sky:['#4a5878','#f0c890'], ground:'#1a1208', sun:'#fff0c0', sunAlpha:0.85 },
+      dusk_violet:   { sky:['#2a2a4a','#a86878'], ground:'#100810', sun:'#ffb898', sunAlpha:0.7  },
+    };
+    const p = palettes[opts.palette] || palettes.sunset_warm;
+    const isNight = opts.palette === 'night_cool';
+
+    // Линия горизонта (земля занимает нижние 16%)
+    const GROUND_H = Math.round(H * 0.16);
+    const HORIZON  = H - GROUND_H;
+
+    // Позиция солнца/луны
+    let sunX = W * 0.78, sunY = H * 0.30, sunR = 230;
+    if (opts.sunPos === 'left')  { sunX = W * 0.22; sunY = H * 0.32; }
+    if (opts.sunPos === 'moon')  { sunX = W * 0.72; sunY = H * 0.18; sunR = 140; }
+
+    // Звёзды для ночной сцены — детерминированный псевдо-рандом
+    let stars = '';
+    if (isNight){
+      let seed = 1337;
+      const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+      for (let i = 0; i < 36; i++){
+        const sx = Math.round(rnd() * W);
+        const sy = Math.round(rnd() * H * 0.55);
+        const sr = (1 + rnd() * 1.5).toFixed(1);
+        const op = (0.5 + rnd() * 0.45).toFixed(2);
+        stars += `<circle cx="${sx}" cy="${sy}" r="${sr}" fill="#fff" opacity="${op}"/>`;
+      }
+    }
+
+    // Сцена — дальний план (на горизонте) + ближний крупный + герои
+    let scene = '';
+    if (opts.subject === 'deer_pair_firs') {
+      // Дальние ёлки — мелкие на линии горизонта
+      for (let i = 0; i < 22; i++){
+        const x = 40 + i * 75;
+        const h = 240 + ((i * 37) % 5) * 40;
+        scene += firTree(x, HORIZON - h * 0.55, 90, h * 0.55, treeColor);
+      }
+      // Ближние крупные ёлки
+      for (let i = 0; i < 9; i++){
+        const x = 80 + i * 190;
+        const h = 480 + ((i * 53) % 4) * 70;
+        scene += firTree(x, HORIZON - h + 70, 220, h, treeColor);
+      }
+      // Олени — крупные, частично на фоне ёлок, частично на фоне неба
+      scene += deerSilhouette(W * 0.38, HORIZON + 40, 2.6, treeColor);
+      scene += deerSilhouette(W * 0.55, HORIZON + 85, 1.5, treeColor);
+    } else if (opts.subject === 'doe_fawn_birches') {
+      // Берёзы — стройные, дальний план
+      for (let i = 0; i < 18; i++){
+        const x = 60 + i * 92;
+        const h = 280 + ((i * 23) % 4) * 40;
+        scene += birchTree(x, HORIZON - h * 0.6, 60, h * 0.6, treeColor);
+      }
+      // Берёзы — ближний крупный план
+      for (let i = 0; i < 8; i++){
+        const x = 100 + i * 200;
+        const h = 500 + ((i * 31) % 3) * 70;
+        scene += birchTree(x, HORIZON - h + 50, 140, h, treeColor);
+      }
+      scene += deerSilhouette(W * 0.36, HORIZON + 50, 2.3, treeColor);
+      scene += deerSilhouette(W * 0.50, HORIZON + 95, 1.3, treeColor);
+      // Птица в небе
+      scene += birdSilhouette(W * 0.68, H * 0.24, 70, treeColor);
+    }
+
+    // Земля
+    const ground = `<rect x="0" y="${HORIZON}" width="${W}" height="${GROUND_H}" fill="${p.ground}"/>`;
+
+    const svg =
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="sk_${opts.palette}_${opts.sunPos}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="${p.sky[0]}"/>
+            <stop offset="100%" stop-color="${p.sky[1]}"/>
+          </linearGradient>
+          <radialGradient id="su_${opts.palette}_${opts.sunPos}" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stop-color="${p.sun}" stop-opacity="${p.sunAlpha}"/>
+            <stop offset="40%"  stop-color="${p.sun}" stop-opacity="${p.sunAlpha * 0.5}"/>
+            <stop offset="100%" stop-color="${p.sun}" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect x="0" y="0" width="${W}" height="${H}" fill="url(#sk_${opts.palette}_${opts.sunPos})"/>
+        ${stars}
+        <circle cx="${sunX}" cy="${sunY}" r="${sunR}" fill="url(#su_${opts.palette}_${opts.sunPos})"/>
+        ${ground}
+        ${scene}
+      </svg>`;
+    return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+  }
+
+  function firTree(cx, top, w, h, color){
+    // Простой треугольный силуэт ёлки
+    const points = [
+      [cx, top],
+      [cx - w/2, top + h*0.45],
+      [cx - w/3, top + h*0.45],
+      [cx - w/1.7, top + h*0.75],
+      [cx - w/2.5, top + h*0.75],
+      [cx - w/1.3, top + h],
+      [cx + w/1.3, top + h],
+      [cx + w/2.5, top + h*0.75],
+      [cx + w/1.7, top + h*0.75],
+      [cx + w/3, top + h*0.45],
+      [cx + w/2, top + h*0.45],
+    ].map(p => p.join(',')).join(' ');
+    return `<polygon points="${points}" fill="${color}"/>`;
+  }
+
+  function birchTree(cx, top, w, h, color){
+    // Стройное лиственное дерево: тонкий ствол + раскидистая крона
+    // Крона — три эллипса разного размера для органичности
+    const cyTop = top + h*0.28;
+    return `<rect x="${cx-3}" y="${top + h*0.35}" width="6" height="${h*0.65}" fill="${color}"/>
+            <ellipse cx="${cx}"     cy="${cyTop}"        rx="${w*0.55}" ry="${h*0.32}" fill="${color}"/>
+            <ellipse cx="${cx-w*0.25}" cy="${cyTop+h*0.06}" rx="${w*0.35}" ry="${h*0.22}" fill="${color}"/>
+            <ellipse cx="${cx+w*0.28}" cy="${cyTop-h*0.02}" rx="${w*0.30}" ry="${h*0.20}" fill="${color}"/>`;
+  }
+
+  function deerSilhouette(cx, cy, scale, color){
+    // Упрощённый силуэт оленя (тело + ноги + голова с рогами)
+    return `<g transform="translate(${cx},${cy}) scale(${scale})" fill="${color}">
+      <ellipse cx="0" cy="0" rx="44" ry="20"/>
+      <rect x="-32" y="0"  width="7" height="48"/>
+      <rect x="-16" y="0"  width="7" height="48"/>
+      <rect x="14"  y="0"  width="7" height="48"/>
+      <rect x="30"  y="0"  width="7" height="48"/>
+      <rect x="36" y="-30" width="6" height="34"/>
+      <ellipse cx="45" cy="-34" rx="10" ry="16"/>
+      <polygon points="42,-54 38,-72 46,-66 50,-78 54,-62 60,-72 56,-56"/>
+    </g>`;
+  }
+
+  function birdSilhouette(cx, cy, w, color){
+    return `<g transform="translate(${cx},${cy})" fill="${color}">
+      <path d="M${-w*0.5},0 Q${-w*0.25},${-w*0.25} 0,0 Q${w*0.25},${-w*0.25} ${w*0.5},0 Q${w*0.25},${w*0.08} 0,${w*0.04} Q${-w*0.25},${w*0.08} ${-w*0.5},0 Z"/>
+    </g>`;
+  }
+})();
+
+</script>
 </body>
 </html>
-
