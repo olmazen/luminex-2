@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>LUMINEX FOREST 2.5 — Архитектурная система ограждения</title>
+<title>FORRMA FOREST 2.5 — Архитектурная система ограждения</title>
 <meta name="description" content="FOREST 2.5 — премиум архитектурное ограждение со скрытой LED-подсветкой, художественной перфорацией и модульной конструкцией. Срок службы 25+ лет." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -90,6 +90,8 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
 .logo{display:flex;align-items:center;gap:8px;font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;letter-spacing:0.08em}
 .logo .dot{width:6px;height:6px;background:var(--amber);border-radius:50%;box-shadow:0 0 12px var(--amber)}
 .logo .sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.18em;margin-left:6px}
+.logo-img{height:22px;width:auto;display:block;user-select:none;-webkit-user-drag:none}
+.logo-img.footer-logo-img{height:20px}
 .nav-links{display:flex;gap:30px}
 .nav-links a{font-size:13px;color:var(--text-dim);letter-spacing:0.04em;transition:color 0.3s var(--ease);position:relative;padding:4px 0}
 .nav-links a:hover{color:var(--text)}
@@ -134,7 +136,7 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
 }
 .hero-bg-img.is-on{
   opacity:0;
-  transition:opacity 1.4s cubic-bezier(.4,0,.2,1);
+  transition:opacity 1.0s cubic-bezier(.4,0,.2,1);
   will-change:opacity;
 }
 .hero.is-lit .hero-bg-img.is-on{ opacity:1; }
@@ -157,7 +159,7 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
   content:''; position:absolute; inset:0; z-index:2;
   background:radial-gradient(60% 80% at 80% 55%, rgba(240,160,66,.13), transparent 70%);
   opacity:0;
-  transition:opacity 1.6s cubic-bezier(.4,0,.2,1);
+  transition:opacity 1.2s cubic-bezier(.4,0,.2,1);
   pointer-events:none;
 }
 .hero.is-lit .hero-bg::before{ opacity:1; }
@@ -322,7 +324,7 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
   position:absolute;inset:0;
   opacity:0;
   /* Долгая пара-фейд: длиннее одного фрейма наведения, плавный ease-in-out */
-  transition:opacity 1.6s cubic-bezier(.45,.05,.55,.95);
+  transition:opacity 0.8s cubic-bezier(.45,.05,.55,.95);
   pointer-events:none;
   will-change:opacity;
 }
@@ -350,7 +352,7 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
   pointer-events:none; z-index:1;
   background:radial-gradient(50% 55% at 50% 55%, rgba(240,160,66,.18), transparent 70%);
   opacity:0;
-  transition:opacity 1s var(--ease-elegant);
+  transition:opacity 0.6s var(--ease-elegant);
 }
 .stage[data-active="2"]::before,
 .stage[data-active="0"]::before,
@@ -2263,7 +2265,7 @@ input[type="range"]:hover::-moz-range-thumb{
 /* PRIVACY MODAL — полный текст политики            */
 /* ============================================== */
 .privacy-modal{
-  position:fixed;inset:0;z-index:200;
+  position:fixed;inset:0;z-index:9500;
   background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);
   display:flex;align-items:center;justify-content:center;
   padding:40px 20px;
@@ -2511,7 +2513,7 @@ input[type="range"]:hover::-moz-range-thumb{
   .hero-fence-hint{ font-size:9px; padding:6px 11px; letter-spacing:.18em }
 
   /* HEADER LOGO */
-  .logo{font-size:22px}
+  .logo{font-size:22px} .logo-img{height:18px} .logo-img.footer-logo-img{height:16px}
   .logo .sub{font-size:9px;letter-spacing:0.15em}
 
   /* SECTION TITLES — меньше на мобильных */
@@ -3526,7 +3528,7 @@ input[type="range"]:hover::-moz-range-thumb{
   <div class="container nav">
     <a href="#top" class="logo">
       <span class="dot"></span>
-      <span>LUMINEX</span>
+      <img src="uploads/forrma-logo.svg" alt="FORRMA" class="logo-img" />
       <span class="sub">FOREST 2.5</span>
     </a>
     <nav class="nav-links">
@@ -3550,7 +3552,7 @@ input[type="range"]:hover::-moz-range-thumb{
   </div>
 </header>
 
-<a href="tel:+74951234567" class="float-call" aria-label="Позвонить менеджеру">
+<a href="tel:+79272295828" class="float-call" aria-label="Позвонить менеджеру">
   <div class="fc-icon lx-icon-circle">
     <span class="lx-icon phone">
       <svg viewBox="0 0 24 24"><path d="M22 16.92V19.5C22 20.6 21.1 21.5 20 21.5C10 21 3 14 2.5 4C2.5 2.9 3.4 2 4.5 2H7C7.9 2 8.66 2.65 8.8 3.53L9.4 7.5C9.5 8.2 9.25 8.9 8.7 9.36L7.32 10.5C8.78 13.46 11.04 15.72 14 17.18L15.14 15.8C15.6 15.25 16.3 15 17 15.1L20.97 15.7C21.85 15.84 22.5 16.6 22.5 17.5"/></svg>
@@ -3567,90 +3569,11 @@ input[type="range"]:hover::-moz-range-thumb{
     </span>
   </div>
   <p>
-    Мы используем файлы cookie для улучшения работы сайта, аналитики и подбора релевантного контента. Продолжая использовать сайт, вы соглашаетесь с обработкой персональных данных в соответствии с <a href="#" onclick="openPrivacy(event)">политикой конфиденциальности</a> и <a href="#" onclick="openPrivacy(event)">152-ФЗ «О персональных данных»</a>.
+    Мы используем файлы cookie для улучшения работы сайта, аналитики и подбора релевантного контента. Нажимая «Принять», вы даёте согласие на обработку cookie в соответствии с <a href="politika.html" target="_blank" rel="noopener">Политикой обработки персональных данных</a> и Федеральным законом № 152-ФЗ.
   </p>
   <div class="cb-actions">
     <button class="cb-decline" id="cbDecline">Только необходимые</button>
     <button class="cb-accept" id="cbAccept">Принять все</button>
-  </div>
-</div>
-
-<!-- PRIVACY POLICY MODAL -->
-<div class="privacy-modal" id="privacyModal" role="dialog" aria-modal="true" aria-label="Политика конфиденциальности">
-  <div class="pm-content">
-    <button class="pm-close" onclick="closePrivacy()" aria-label="Закрыть">✕</button>
-    <h2>Политика конфиденциальности</h2>
-    <div class="pm-meta">Редакция от 1 мая 2026 г. · 152-ФЗ РФ</div>
-
-    <p>Настоящая политика конфиденциальности (далее — «Политика») разработана в соответствии с Федеральным законом от 27 июля 2006 г. № 152-ФЗ «О персональных данных» и определяет порядок обработки персональных данных и меры по обеспечению их безопасности, предпринимаемые ООО «ЛЮМИНЕКС СТУДИО» (далее — Оператор).</p>
-
-    <h3>1. Кто мы и как с нами связаться</h3>
-    <p><strong>Оператор:</strong> ООО «ЛЮМИНЕКС СТУДИО»<br>
-    <strong>Адрес:</strong> 115598, г. Москва, Каширское шоссе, д. 65, стр. 2<br>
-    <strong>Email:</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f59d9099999ab59980989c9b908ddb868180919c9a">[email&#160;protected]</a><br>
-    <strong>Телефон:</strong> +7 (495) 123-45-67</p>
-
-    <h3>2. Какие данные мы собираем</h3>
-    <ul>
-      <li>Имя, фамилия (при заполнении формы заявки)</li>
-      <li>Номер телефона и email (для обратной связи)</li>
-      <li>Текст обращения / описание проекта</li>
-      <li>IP-адрес, файлы cookie, данные браузера и устройства (для аналитики и улучшения сайта)</li>
-      <li>Адрес объекта замера (только при заказе выезда замерщика)</li>
-    </ul>
-
-    <h3>3. Цели обработки</h3>
-    <ul>
-      <li>Обработка заявок и подготовка коммерческих предложений</li>
-      <li>Связь с пользователем по оставленной заявке</li>
-      <li>Заключение и исполнение договора на изготовление и монтаж ограждения</li>
-      <li>Маркетинговая аналитика (агрегированно, без идентификации личности)</li>
-      <li>Информирование о статусе заказа и новых коллекциях (только с явного согласия)</li>
-    </ul>
-
-    <h3>4. Правовые основания</h3>
-    <p>Обработка осуществляется на основании ст. 6 152-ФЗ:</p>
-    <ul>
-      <li>Согласие субъекта персональных данных (галочка «Согласен» при отправке формы)</li>
-      <li>Исполнение договора, стороной которого является субъект</li>
-      <li>Достижение целей, предусмотренных международным договором РФ или законом</li>
-    </ul>
-
-    <h3>5. Сроки хранения</h3>
-    <p>Данные хранятся не дольше, чем требуется для целей обработки: для не реализованных заявок — 12 месяцев, для договорных обязательств — 5 лет в соответствии с НК РФ, для бухгалтерских документов — 5 лет.</p>
-
-    <h3>6. Передача третьим лицам</h3>
-    <p>Мы не продаём и не передаём ваши данные третьим лицам, за исключением:</p>
-    <ul>
-      <li>Логистических партнёров (только адрес доставки)</li>
-      <li>Платёжных сервисов (при оплате)</li>
-      <li>Государственных органов по обоснованному запросу</li>
-    </ul>
-
-    <h3>7. Ваши права</h3>
-    <p>Вы имеете право:</p>
-    <ul>
-      <li>Получить информацию об обработке ваших данных</li>
-      <li>Требовать уточнения, блокирования или уничтожения данных</li>
-      <li>Отозвать согласие в любой момент (письмом на <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9ff7faf3f3f0dff3eaf2f6f1fae7b1ecebeafbf6f0">[email&#160;protected]</a>)</li>
-      <li>Обжаловать действия Оператора в Роскомнадзор</li>
-    </ul>
-
-    <h3>8. Безопасность</h3>
-    <p>Мы применяем технические и организационные меры защиты: шифрование TLS, ограниченный доступ сотрудников, регулярный аудит. При утечке мы обязуемся уведомить Роскомнадзор в течение 24 часов и субъектов — в течение 72 часов в соответствии с поправками 152-ФЗ от 2023 г.</p>
-
-    <h3>9. Cookies</h3>
-    <p>Сайт использует следующие группы cookie:</p>
-    <ul>
-      <li><strong>Необходимые</strong> — для работы корзины, выбора языка, согласия на cookies. Не отключаемые.</li>
-      <li><strong>Аналитические</strong> — Яндекс Метрика для понимания посещаемости. Отключаемые в баннере.</li>
-      <li><strong>Маркетинговые</strong> — для ретаргетинга. Только при согласии «Принять все».</li>
-    </ul>
-
-    <h3>10. Изменения политики</h3>
-    <p>Мы можем обновлять Политику. Текущая редакция всегда доступна по ссылке в подвале сайта. При существенных изменениях уведомим вас email-рассылкой.</p>
-
-    <p style="margin-top:24px;font-size:12px;color:var(--text-mute);">Полный документ доступен для скачивания в формате PDF по запросу на <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dbb3beb7b7b49bb7aeb6b2b5bea3f5a8afaebfb2b4">[email&#160;protected]</a>.</p>
   </div>
 </div>
 
@@ -3672,7 +3595,7 @@ input[type="range"]:hover::-moz-range-thumb{
   <div class="hero-bg" id="heroBg">
     <img class="hero-bg-img is-off"
          src="uploads/hero-photo-01.webp"
-         alt="Забор LUMINEX FOREST"
+         alt="Забор FORRMA FOREST"
          loading="eager" fetchpriority="high" decoding="async">
     <img class="hero-bg-img is-on"
          src="uploads/hero-photo-02.webp"
@@ -3686,7 +3609,7 @@ input[type="range"]:hover::-moz-range-thumb{
   <div class="container hero-grid">
     <div class="hero-content">
       <div class="hero-top">
-        <div class="eyebrow">— LUMINEX FOREST 2.5 · Архитектурные ограждения с подсветкой</div>
+        <div class="eyebrow">— FORRMA FOREST 2.5 · Архитектурные ограждения с подсветкой</div>
         <h1>
           <span class="line"><span>Не забор.</span></span>
           <span class="line"><span>А <em>архитектура</em></span></span>
@@ -3981,7 +3904,7 @@ input[type="range"]:hover::-moz-range-thumb{
       <p>Ответим на технические вопросы, поможем подобрать модули под длину участка и пришлём 3D-визуализацию вашего забора до оплаты.</p>
     </div>
     <div class="cta-buttons">
-      <a href="tel:+74951234567" class="cta-btn">+7 (495) 123-45-67</a>
+      <a href="tel:+79272295828" class="cta-btn">+7 (927) 229-58-28</a>
       <a href="#contact" class="cta-btn ghost">Оставить заявку</a>
     </div>
   </div>
@@ -4002,11 +3925,7 @@ input[type="range"]:hover::-moz-range-thumb{
 
       <article class="pillar">
         <div class="pillar-img">
-          <div class="img-ph">
-            <span class="ph-num">PHOTO · 13</span>
-            <div class="ph-icon">❋</div>
-            <div class="ph-desc">Крупный план перфорации FOREST 2.5. Лесной узор с оленем в центре, мелкие детали ветвей, листья, силуэты животных. Видна работа лазера и качество кромки.</div>
-          </div>
+          <img src="uploads/PREM_13.webp" alt="Художественная перфорация FOREST 2.5 — крупный план перфорации с оленем" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" decoding="async">
         </div>
         <div class="pillar-body">
           <div class="ic">01 — Дизайн</div>
@@ -4022,11 +3941,7 @@ input[type="range"]:hover::-moz-range-thumb{
 
       <article class="pillar">
         <div class="pillar-img">
-          <div class="img-ph">
-            <span class="ph-num">PHOTO · 14</span>
-            <div class="ph-icon">☾</div>
-            <div class="ph-desc">Драматичный ночной кадр. Забор светится тёплым янтарём из-за перфорации. Видно, что свет идёт ИЗ-ЗА панели, а не от прожекторов. Эффект глубины и объёма.</div>
-          </div>
+          <img src="uploads/PREM_14.webp" alt="Скрытая LED-подсветка — драматичный ночной кадр забора с янтарным свечением" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" decoding="async">
         </div>
         <div class="pillar-body">
           <div class="ic">02 — Свет</div>
@@ -4042,11 +3957,7 @@ input[type="range"]:hover::-moz-range-thumb{
 
       <article class="pillar">
         <div class="pillar-img">
-          <div class="img-ph">
-            <span class="ph-num">PHOTO · 15</span>
-            <div class="ph-icon">▦</div>
-            <div class="ph-desc">Несколько одинаковых секций в ряд (вид сбоку или 3/4). Виден ритм стоек, единая высота, повторяющийся модуль. Аккуратные стыки. Показывает идею модульной системы.</div>
-          </div>
+          <img src="uploads/PREM_15.webp" alt="Модульная система FOREST 2.5 — несколько одинаковых секций в ряд, ритм стоек" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" decoding="async">
         </div>
         <div class="pillar-body">
           <div class="ic">03 — Инженерия</div>
@@ -4062,11 +3973,7 @@ input[type="range"]:hover::-moz-range-thumb{
 
       <article class="pillar">
         <div class="pillar-img">
-          <div class="img-ph">
-            <span class="ph-num">PHOTO · 16</span>
-            <div class="ph-icon">≋</div>
-            <div class="ph-desc">Вид со стороны участка. За забором — человек или ландшафт, читается как силуэт через ламели. Видно, что забор НЕ глухой: ветви/листва за ним просвечивают, воздух проходит. Тонкая приватность.</div>
-          </div>
+          <img src="uploads/PREM_16.webp" alt="Вид со стороны участка — силуэт через ламели, тонкая приватность" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" decoding="async">
         </div>
         <div class="pillar-body">
           <div class="ic">04 — Приватность</div>
@@ -4176,7 +4083,7 @@ input[type="range"]:hover::-moz-range-thumb{
     </div>
     <div class="cta-buttons">
       <a href="#contact" class="cta-btn">Заказать замер</a>
-      <a href="tel:+74951234567" class="cta-btn ghost">Позвонить</a>
+      <a href="tel:+79272295828" class="cta-btn ghost">Позвонить</a>
     </div>
   </div>
 </section>
@@ -4338,12 +4245,12 @@ input[type="range"]:hover::-moz-range-thumb{
   <div class="container">
     <div class="collections-head">
       <div>
-        <div class="eyebrow">— Реализованные проекты / 08</div>
+        <div class="eyebrow">— Галерея / 08</div>
         <h2 class="section-title" style="margin-top:18px;">
           <span>Как это</span>&nbsp;<em>выглядит вживую</em>
         </h2>
       </div>
-      <p class="lead-text">Фрагменты установленных FOREST 2.5 на частных участках. Разное время суток, погода, архитектура домов.</p>
+      <p class="lead-text">Концепции FOREST 2.5 в разной обстановке: время суток, погода, архитектура. Реальные проекты появятся здесь по мере сдачи.</p>
     </div>
 
     <div class="gallery-grid">
@@ -4549,7 +4456,7 @@ input[type="range"]:hover::-moz-range-thumb{
           </div>
         </div>
 
-        <p class="calc-disclaimer">Цена ориентировочная. Точную смету бесплатно пришлёт замерщик после выезда на участок.</p>
+        <p class="calc-disclaimer">Указанная стоимость носит информационный характер, не является публичной офертой по смыслу ст. 437 ГК РФ и может быть скорректирована после выезда замерщика. Окончательная цена фиксируется в договоре подряда.</p>
 
         <div class="calc-actions">
           <button type="button" class="cta-btn" id="pdfDrawerOpen">Получить точную смету</button>
@@ -4585,7 +4492,7 @@ input[type="range"]:hover::-moz-range-thumb{
       <div class="review">
         <span class="qm">”</span>
         <div class="stars">★ ★ ★ ★ ★</div>
-        <p class="text">Долго выбирали между разными производителями. У LUMINEX подкупили честная коммуникация и реальный замер с 3D-визуализацией до оплаты. Сделали индивидуальный рисунок с инициалами в орнаменте.</p>
+        <p class="text">Долго выбирали между разными производителями. У FORRMA подкупили честная коммуникация и реальный замер с 3D-визуализацией до оплаты. Сделали индивидуальный рисунок с инициалами в орнаменте.</p>
         <div class="author">
           <div class="avatar">М</div>
           <div class="info"><div class="name">Мария Стеблева</div><div class="loc">Custom · 32 м · Рублёвка</div></div>
@@ -4680,7 +4587,7 @@ input[type="range"]:hover::-moz-range-thumb{
           <span>Делаем сами,</span><br>
           <em>отвечаем сами</em>
         </h2>
-        <p class="lead">LUMINEX — производство и монтаж в одном лице. Без посредников и субподрядчиков. С 2017 года, 340+ объектов в России.</p>
+        <p class="lead">FORRMA — производство и монтаж в одном лице. Без посредников и субподрядчиков. С 2017 года, 340+ объектов в России.</p>
         <p>Свой цех в Подмосковье: лазер ЧПУ, окрасочная камера, сборка, склад. Свои монтажные бригады с авто и оборудованием. На крупных проектах — один менеджер ведёт вас от первого звонка до подписания акта приёма.</p>
         <p>Поэтому мы не «передадим заявку партнёру». Поэтому отвечаем за качество всей цепочки и можем дать 15 лет гарантии — это юридический договор, а не маркетинговое обещание.</p>
         <div class="about-stats">
@@ -4701,9 +4608,9 @@ input[type="range"]:hover::-moz-range-thumb{
       <h2><span>Получите смету</span><br><em>по своему участку</em></h2>
       <p class="desc">Ответим в течение рабочего дня. Расскажите примерную длину забора и предпочтения по дизайну — пришлём референсы похожих проектов и предварительную стоимость. Замер — бесплатно, никаких обязательств.</p>
       <div class="contact-info">
-        <div class="item"><span class="lbl">Телефон</span><span class="val"><a href="tel:+74951234567">+7 (495) 123-45-67</a></span></div>
-        <div class="item"><span class="lbl">Email</span><span class="val"><a href="/cdn-cgi/l/email-protection#462e232a2a29062a332b2f28233e68353233222f29"><span class="__cf_email__" data-cfemail="345c5158585b745841595d5a514c1a474041505d5b">[email&#160;protected]</span></a></span></div>
-        <div class="item"><span class="lbl">Шоурум и производство</span><span class="val">Москва, Каширское ш., 65с2</span></div>
+        <div class="item"><span class="lbl">Телефон</span><span class="val"><a href="tel:+79272295828">+7 (927) 229-58-28</a></span></div>
+        <div class="item"><span class="lbl">Email</span><span class="val"><a href="mailto:9272295828@mail.ru">9272295828@mail.ru</a></span></div>
+        <div class="item"><span class="lbl">Производство</span><span class="val">Саратовская обл., Балаковский район, тупик Безымянный, д. 1</span></div>
         <div class="item"><span class="lbl">Часы работы</span><span class="val">Пн–Сб 10:00–20:00</span></div>
       </div>
     </div>
@@ -4714,7 +4621,7 @@ input[type="range"]:hover::-moz-range-thumb{
       <div><textarea placeholder="Расскажите про проект: длина забора, коллекция, особенности участка..."></textarea></div>
       <label class="consent">
         <input type="checkbox" required id="formConsent">
-        <span>Я согласен на обработку моих персональных данных (имя, телефон, email) в соответствии с <a href="#" onclick="openPrivacy(event)">политикой конфиденциальности</a> и <a href="#" onclick="openPrivacy(event)">152-ФЗ «О персональных данных»</a> для связи со мной по заявке.</span>
+        <span>Я согласен на обработку моих персональных данных (имя, телефон, email) в соответствии с <a href="politika.html" target="_blank" rel="noopener">политикой конфиденциальности</a> и <a href="politika.html" target="_blank" rel="noopener">152-ФЗ «О персональных данных»</a> для связи со мной по заявке.</span>
       </label>
       <button type="submit">Отправить заявку</button>
     </form>
@@ -4734,7 +4641,7 @@ input[type="range"]:hover::-moz-range-thumb{
       <div class="fc-row"><span class="ck">✓</span> Производство 4–6 недель</div>
     </div>
     <div class="actions">
-      <a href="tel:+74951234567" class="cta-btn">+7 (495) 123-45-67</a>
+      <a href="tel:+79272295828" class="cta-btn">+7 (927) 229-58-28</a>
       <a href="#contact" class="cta-btn ghost">Заявка онлайн</a>
     </div>
   </div>
@@ -4745,7 +4652,7 @@ input[type="range"]:hover::-moz-range-thumb{
   <div class="container">
     <div class="foot-grid">
       <div class="foot-col">
-        <a href="#top" class="logo" style="font-size:24px;"><span class="dot"></span><span>LUMINEX</span></a>
+        <a href="#top" class="logo" style="font-size:24px;"><span class="dot"></span><img src="uploads/forrma-logo.svg" alt="FORRMA" class="logo-img footer-logo-img" /></a>
         <p class="foot-tagline">Заборы, которые превращают участок в архитектуру.</p>
       </div>
       <div class="foot-col">
@@ -4757,9 +4664,9 @@ input[type="range"]:hover::-moz-range-thumb{
       </div>
       <div class="foot-col">
         <h4>Контакты</h4>
-        <a href="tel:+74951234567">+7 (495) 123-45-67</a>
-        <a href="/cdn-cgi/l/email-protection#5d35383131321d31283034333825732e2928393432"><span class="__cf_email__" data-cfemail="1b737e7777745b776e7672757e6335686f6e7f7274">[email&#160;protected]</span></a>
-        <p>Москва, Каширское ш., 65с2</p>
+        <a href="tel:+79272295828">+7 (927) 229-58-28</a>
+        <a href="mailto:9272295828@mail.ru">9272295828@mail.ru</a>
+        <p>Саратовская обл., Балаковский р-н,<br>тупик Безымянный, д. 1</p>
       </div>
       <div class="foot-col">
         <h4>Соцсети</h4>
@@ -4770,18 +4677,43 @@ input[type="range"]:hover::-moz-range-thumb{
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 LUMINEX STUDIO · Все права защищены</span>
-      <span><a href="#" onclick="openPrivacy(event)" style="text-decoration:underline;text-underline-offset:3px;">Политика конфиденциальности</a> · Договор оферты</span>
+      <span>© 2026 FORRMA · Все права защищены</span>
+      <span><a href="politika.html" target="_blank" rel="noopener" style="text-decoration:underline;text-underline-offset:3px;">Политика конфиденциальности</a> · Договор оферты</span>
     </div>
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
+// ============================================
+// PRIVACY MODAL — объявляем САМЫМ ПЕРВЫМ через window.*
+// Чтобы onclick="openPrivacy(event)" работал даже если что-то ниже упадёт
+// ============================================
+window.openPrivacy = function(e) {
+  if (e) e.preventDefault();
+  const m = document.getElementById('privacyModal');
+  if (m) {
+    m.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  return false;
+};
+window.closePrivacy = function() {
+  const m = document.getElementById('privacyModal');
+  if (m) {
+    m.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+};
+document.addEventListener('keydown', (e) => {
+  const m = document.getElementById('privacyModal');
+  if (e.key === 'Escape' && m && m.classList.contains('open')) window.closePrivacy();
+});
+
 // ============================================
 // COOKIE BANNER (152-ФЗ)
 // ============================================
 const cookieBanner = document.getElementById('cookieBanner');
-const COOKIE_KEY = 'luminex_cookie_consent';
+const COOKIE_KEY = 'forrma_cookie_consent';
 
 function showCookieBanner() {
   try {
@@ -4808,21 +4740,8 @@ if (cbDeclineBtn) cbDeclineBtn.addEventListener('click', declineCookies);
 showCookieBanner();
 
 // ============================================
-// PRIVACY MODAL
+// PRIVACY MODAL — обработчики уже объявлены наверху через window.*
 // ============================================
-const privacyModal = document.getElementById('privacyModal');
-function openPrivacy(e) {
-  if (e) e.preventDefault();
-  privacyModal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closePrivacy() {
-  privacyModal.classList.remove('open');
-  document.body.style.overflow = '';
-}
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && privacyModal.classList.contains('open')) closePrivacy();
-});
 
 // ============================================
 // FORM SUBMIT — с проверкой согласия (152-ФЗ)
@@ -6462,7 +6381,7 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
       <label class="pdf-consent">
         <input type="checkbox" id="pdfConsent" checked>
-        <span>Согласен на обработку <a href="#" target="_blank" rel="noopener">персональных данных</a> и получение информации о заказе.</span>
+        <span>Согласен на обработку <a href="politika.html" target="_blank" rel="noopener">персональных данных</a> в соответствии с Политикой обработки ПДн и получение информации о заказе.</span>
       </label>
 
       <button type="submit" class="pdf-submit" id="pdfSubmit">
@@ -6639,7 +6558,7 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
         <!-- ═══ ШАПКА ═══ -->
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;">
-          <div style="font-size:28px;font-weight:700;color:#f0a042;letter-spacing:6px;">LUMINEX</div>
+          <div style="font-size:28px;font-weight:700;color:#f0a042;letter-spacing:6px;">FORRMA</div>
           <div style="text-align:right;">
             <div style="font-size:11px;color:#f0a042;letter-spacing:2.5px;font-weight:700;font-family:'JetBrains Mono',monospace;">СМЕТА № ${Date.now().toString().slice(-6)}</div>
             <div style="font-size:12px;color:#8a8478;margin-top:6px;font-family:'JetBrains Mono',monospace;">${new Date().toLocaleDateString('ru-RU')}</div>
@@ -6760,8 +6679,8 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
         <div style="border-top:0.5px solid #2a2620;padding-top:18px;">
           <div style="font-size:11px;color:#8a8478;font-style:italic;line-height:1.6;margin-bottom:14px;">Цена ориентировочная. Точную смету бесплатно пришлёт замерщик после выезда на участок. Предложение действует 14 дней с даты выдачи.</div>
           <div style="display:flex;justify-content:space-between;">
-            <div style="font-size:11px;color:#f0a042;font-weight:700;letter-spacing:2.5px;font-family:'JetBrains Mono',monospace;">LUMINEX · luminex.ru</div>
-            <div style="font-size:11px;color:#8a8478;font-family:'JetBrains Mono',monospace;">+7 (495) 000-00-00 · 9:00–21:00 МСК</div>
+            <div style="font-size:11px;color:#f0a042;font-weight:700;letter-spacing:2.5px;font-family:'JetBrains Mono',monospace;">FORRMA · forrma.ru</div>
+            <div style="font-size:11px;color:#8a8478;font-family:'JetBrains Mono',monospace;">+7 (927) 229-58-28 · 9:00–21:00 МСК</div>
           </div>
         </div>
 
@@ -6907,7 +6826,7 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
         const blobUrl = URL.createObjectURL(pdfBlob);
         const dl = document.getElementById('pdfDownload');
         dl.href = blobUrl;
-        dl.setAttribute('download', 'luminex-smeta-' + lead.name + '.pdf');
+        dl.setAttribute('download', 'forrma-smeta-' + lead.name + '.pdf');
 
         // Переход на success — гарантированно, без зависимости от Formspree.
         const showSuccess = () => {
@@ -6930,7 +6849,7 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
         // всё равно скачает PDF, и мы покажем success.
         try {
           const formData = new FormData();
-          formData.append('_subject', 'LUMINEX — заявка от ' + lead.name);
+          formData.append('_subject', 'FORRMA — заявка от ' + lead.name);
           formData.append('name',  lead.name);
           formData.append('phone', lead.phone);
           formData.append('email', lead.email);
@@ -6944,7 +6863,7 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
             'Стороны подсветки: ' + est.ledQ + ' → ' + est.ledV + '\n' +
             'Монтаж: ' + est.mountQ + ' → ' + est.mountV
           );
-          formData.append('estimate_pdf', pdfBlob, 'luminex-smeta-' + Date.now() + '.pdf');
+          formData.append('estimate_pdf', pdfBlob, 'forrma-smeta-' + Date.now() + '.pdf');
 
           fetch('https://formspree.io/f/xeedljbr', {
             method: 'POST',
@@ -7073,6 +6992,22 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
   hot.addEventListener('pointerleave', e => {
     if (e.pointerType === 'mouse') setLit(false);
   });
+
+  // ─── Доп. триггер: наведение на CTA "Узнать цену моего забора"
+  // По UX: пользователь читает текст слева, видит кнопку — и hero оживает,
+  // подсказывая что забор и есть продукт.
+  const ctaBtn = document.querySelector('.hero-actions .cta-btn:not(.ghost)');
+  if (ctaBtn) {
+    ctaBtn.addEventListener('pointerenter', (e) => {
+      if (e.pointerType === 'mouse') setLit(true);
+    });
+    ctaBtn.addEventListener('pointerleave', (e) => {
+      if (e.pointerType === 'mouse') setLit(false);
+    });
+    // Фокус с клавиатуры — тоже подсветим
+    ctaBtn.addEventListener('focus', () => setLit(true));
+    ctaBtn.addEventListener('blur',  () => setLit(false));
+  }
 
   // Touch / click — toggle с авто-выключением
   hot.addEventListener('click', () => {
