@@ -1108,6 +1108,120 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
   font-size:11px; line-height:1.55; color:var(--text-mute);
 }
 
+/* ──────────────────────────────────────────────────────────
+   Progress state — пока генерируется PDF и отправляется лид.
+   Показывается с анимированными этапами и обратным отсчётом.
+   ────────────────────────────────────────────────────────── */
+.pdf-progress{
+  display:none;
+  flex-direction:column; align-items:center;
+  padding:48px 36px 40px;
+}
+.pdf-drawer.is-progress .pdf-form,
+.pdf-drawer.is-progress .pdf-summary,
+.pdf-drawer.is-progress .pdf-foot-note{ display:none; }
+.pdf-drawer.is-progress .pdf-progress{ display:flex; }
+
+.pdf-progress .pp-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--amber); margin-bottom:16px;
+}
+.pdf-progress h4{
+  font-family:'Cormorant Garamond',serif; font-weight:400;
+  font-size:30px; line-height:1.1; color:var(--text);
+  text-align:center; margin-bottom:6px;
+}
+.pdf-progress h4 em{
+  font-style:italic;
+  background:linear-gradient(120deg,var(--amber-glow),var(--amber-deep));
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.pdf-progress .pp-sub{
+  color:var(--text-dim); font-size:13px; line-height:1.55;
+  text-align:center; margin-bottom:32px; max-width:300px;
+  transition:opacity .3s ease;
+}
+
+/* Обратный отсчёт — крупная цифра */
+.pdf-progress .pp-timer{
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:64px; line-height:1; color:var(--amber-bright);
+  margin-bottom:4px;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-0.02em;
+  position:relative;
+}
+.pdf-progress .pp-timer-unit{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--text-mute); margin-bottom:32px;
+}
+
+/* Цепочка этапов */
+.pdf-progress .pp-steps{
+  width:100%; max-width:300px;
+  display:flex; flex-direction:column; gap:0;
+  margin-bottom:8px;
+}
+.pdf-progress .pp-step{
+  display:flex; align-items:center; gap:14px;
+  padding:11px 0;
+  opacity:.4;
+  transition:opacity .4s ease;
+  position:relative;
+}
+.pdf-progress .pp-step.is-active{ opacity:1; }
+.pdf-progress .pp-step.is-done{ opacity:.7; }
+
+.pdf-progress .pp-dot{
+  width:10px; height:10px; flex-shrink:0;
+  border-radius:50%; border:1px solid var(--line);
+  background:transparent;
+  transition:all .4s ease;
+  position:relative;
+}
+.pdf-progress .pp-step.is-active .pp-dot{
+  border-color:var(--amber);
+  background:var(--amber);
+  box-shadow:0 0 0 4px rgba(240,160,66,.15);
+  animation:ppPulse 1.4s ease-in-out infinite;
+}
+.pdf-progress .pp-step.is-done .pp-dot{
+  border-color:var(--amber-deep);
+  background:var(--amber-deep);
+}
+.pdf-progress .pp-step.is-done .pp-dot::after{
+  content:'';
+  position:absolute; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 6.5l2 2 4-4.5' stroke='%230a0907' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-size:contain; background-repeat:no-repeat;
+}
+@keyframes ppPulse{
+  0%,100%{ box-shadow:0 0 0 4px rgba(240,160,66,.15); }
+  50%   { box-shadow:0 0 0 8px rgba(240,160,66,.05); }
+}
+
+/* Соединительные линии между точками */
+.pdf-progress .pp-step:not(:last-child)::before{
+  content:''; position:absolute;
+  left:4.5px; top:30px; width:1px; height:14px;
+  background:var(--line);
+}
+.pdf-progress .pp-step.is-done:not(:last-child)::before{
+  background:var(--amber-deep);
+}
+
+.pdf-progress .pp-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px; letter-spacing:.06em;
+  color:var(--text);
+}
+.pdf-progress .pp-step:not(.is-active):not(.is-done) .pp-label{
+  color:var(--text-mute);
+}
+
 /* Success state */
 .pdf-success{
   display:none;
@@ -6348,7 +6462,7 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
       <label class="pdf-consent">
         <input type="checkbox" id="pdfConsent" checked>
-        <span>Согласен на обработку <a href="#" target="_blank" rel="noopener">персональных данных</a> и получение сметы в WhatsApp / Telegram.</span>
+        <span>Согласен на обработку <a href="#" target="_blank" rel="noopener">персональных данных</a> и получение информации о заказе.</span>
       </label>
 
       <button type="submit" class="pdf-submit" id="pdfSubmit">
@@ -6356,8 +6470,37 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
         <span class="label">Получить PDF смету</span>
       </button>
 
-      <p class="pdf-foot-note">PDF приходит в течение 30 секунд на телефон в Telegram / WhatsApp. Менеджер свяжется в рабочее время (9:00–21:00 МСК), чтобы уточнить детали и предложить дату замера.</p>
+      <p class="pdf-foot-note">PDF будет готов через несколько секунд — сможете сразу скачать. Менеджер свяжется в рабочее время (9:00–21:00 МСК), чтобы уточнить детали и предложить дату замера.</p>
     </form>
+
+    <!-- Progress state — пока генерируется PDF -->
+    <div class="pdf-progress" id="pdfProgress">
+      <div class="pp-eyebrow">— Готовим вашу смету</div>
+      <h4>Несколько секунд<br><em>и готово</em></h4>
+      <p class="pp-sub" id="ppSub">Подсчитываем стоимость и собираем PDF…</p>
+
+      <div class="pp-timer" id="ppTimer">8</div>
+      <div class="pp-timer-unit">секунд</div>
+
+      <div class="pp-steps" id="ppSteps">
+        <div class="pp-step" data-step="1">
+          <div class="pp-dot"></div>
+          <div class="pp-label">Собираем данные</div>
+        </div>
+        <div class="pp-step" data-step="2">
+          <div class="pp-dot"></div>
+          <div class="pp-label">Рендерим смету</div>
+        </div>
+        <div class="pp-step" data-step="3">
+          <div class="pp-dot"></div>
+          <div class="pp-label">Подписываем PDF</div>
+        </div>
+        <div class="pp-step" data-step="4">
+          <div class="pp-dot"></div>
+          <div class="pp-label">Готовим к скачиванию</div>
+        </div>
+      </div>
+    </div>
 
     <!-- Success state -->
     <div class="pdf-success" id="pdfSuccess">
@@ -6365,7 +6508,7 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
         <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
       </div>
       <h4>Готово, <span id="pdfSuccessName">Александр</span>!</h4>
-      <p>PDF со сметой отправили в Telegram / WhatsApp на номер <strong id="pdfSuccessPhone">+7 ...</strong>. Если не пришёл — нажмите кнопку ниже.</p>
+      <p>Ваша PDF-смета готова. Нажмите кнопку ниже, чтобы скачать её на устройство. Менеджер свяжется в рабочее время, чтобы предложить дату замера.</p>
       <a href="#" class="dl-btn" id="pdfDownload">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12m0 0l-5-5m5 5l5-5M4 20h16"/></svg>
         Скачать PDF
@@ -6482,105 +6625,180 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
   // Размер ровно как A4 при 96dpi → 794×1123 px. При html2canvas с scale=2 даёт
   // хорошее качество.
   function buildEstimateHTML(lead, est) {
+    // Все размеры из единой сетки — отступы кратны 8px,
+    // шрифты подбираются по золотому правилу (1.25x).
     return `
       <div id="estimateRoot" style="
         position:fixed; left:-9999px; top:0;
-        width:1100px; background:#0a0907; color:#ece8df;
+        width:1100px;
+        background:#0a0907; color:#ece8df;
         font-family:'Inter Tight','Helvetica Neue',Arial,sans-serif;
-        padding:58px; box-sizing:border-box; font-size:17px; line-height:1.45;
+        padding:64px; box-sizing:border-box;
+        font-size:15px; line-height:1.5;
       ">
-        <!-- Шапка -->
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;">
-          <div style="font-size:30px;font-weight:700;color:#f0a042;letter-spacing:8px;">LUMINEX</div>
+
+        <!-- ═══ ШАПКА ═══ -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;">
+          <div style="font-size:28px;font-weight:700;color:#f0a042;letter-spacing:6px;">LUMINEX</div>
           <div style="text-align:right;">
-            <div style="font-size:13px;color:#f0a042;letter-spacing:3px;font-weight:700;font-family:'JetBrains Mono',monospace;">СМЕТА № ${Date.now().toString().slice(-6)}</div>
-            <div style="font-size:14px;color:#8a8478;margin-top:5px;font-family:'JetBrains Mono',monospace;">${new Date().toLocaleDateString('ru-RU')}</div>
+            <div style="font-size:11px;color:#f0a042;letter-spacing:2.5px;font-weight:700;font-family:'JetBrains Mono',monospace;">СМЕТА № ${Date.now().toString().slice(-6)}</div>
+            <div style="font-size:12px;color:#8a8478;margin-top:6px;font-family:'JetBrains Mono',monospace;">${new Date().toLocaleDateString('ru-RU')}</div>
           </div>
         </div>
 
-        <!-- HERO -->
-        <div style="width:100%;height:220px;background-image:url('${IMG_HERO}');background-size:cover;background-position:center;border-radius:3px;margin-bottom:22px;position:relative;overflow:hidden;">
-          <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(10,9,7,0.85));"></div>
-          <div style="position:absolute;bottom:14px;left:18px;font-family:'Cormorant Garamond',serif;font-size:18px;color:rgba(255,255,255,0.9);font-style:italic;letter-spacing:0.5px;">FOREST · 2.5 — тёплая LED-подсветка</div>
+        <!-- ═══ HERO ═══ -->
+        <div style="width:100%;height:360px;border-radius:4px;margin-bottom:48px;position:relative;overflow:hidden;background:#1a1814;">
+          <img src="${IMG_HERO}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" />
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(10,9,7,0.9));"></div>
+          <div style="position:absolute;bottom:20px;left:24px;font-family:'Cormorant Garamond',serif;font-size:18px;color:rgba(255,255,255,0.92);font-style:italic;letter-spacing:0.5px;">FOREST · 2.5 — тёплая LED-подсветка</div>
         </div>
 
-        <!-- Клиент + Проект -->
-        <div style="display:flex;gap:32px;margin-bottom:20px;">
+        <!-- ═══ КЛИЕНТ + ПРОЕКТ ═══ -->
+        <div style="display:flex;gap:48px;margin-bottom:48px;">
           <div style="flex:1;">
-            <div style="font-size:13px;color:#f0a042;letter-spacing:3px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:8px;">— КЛИЕНТ</div>
-            <div style="font-size:24px;font-weight:600;letter-spacing:-0.3px;">${lead.name}</div>
-            <div style="font-size:17px;margin-top:4px;">${lead.phone}</div>
-            <div style="font-size:15px;color:#8a8478;margin-top:4px;font-family:'JetBrains Mono',monospace;">${lead.email}</div>
+            <div style="font-size:10px;color:#f0a042;letter-spacing:2.5px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:10px;">— КЛИЕНТ</div>
+            <div style="font-size:20px;font-weight:600;letter-spacing:-0.2px;margin-bottom:6px;">${lead.name}</div>
+            <div style="font-size:14px;font-family:'JetBrains Mono',monospace;margin-bottom:4px;">${lead.phone}</div>
+            <div style="font-size:13px;color:#8a8478;font-family:'JetBrains Mono',monospace;">${lead.email}</div>
           </div>
           <div style="flex:1;">
-            <div style="font-size:13px;color:#f0a042;letter-spacing:3px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:8px;">— ПРОЕКТ</div>
-            <div style="font-size:24px;font-weight:600;letter-spacing:-0.3px;">${est.meta}</div>
-            <div style="font-size:17px;margin-top:4px;">LED 2700K · тёплый</div>
-            <div style="font-size:15px;color:#8a8478;margin-top:4px;">FOREST · A — олень с оленёнком</div>
+            <div style="font-size:10px;color:#f0a042;letter-spacing:2.5px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:10px;">— ПРОЕКТ</div>
+            <div style="font-size:20px;font-weight:600;letter-spacing:-0.2px;margin-bottom:6px;">${est.meta}</div>
+            <div style="font-size:14px;margin-bottom:4px;">LED 2700K · тёплый</div>
+            <div style="font-size:13px;color:#8a8478;">FOREST · A — олень с оленёнком</div>
           </div>
         </div>
 
-        <!-- Цена + Срок -->
-        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px;border-top:1px solid rgba(240,160,66,0.18);padding-top:18px;">
+        <!-- ═══ ИТОГ + СРОК ═══ -->
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px;">
           <div>
-            <div style="font-size:13px;color:#f0a042;letter-spacing:3px;font-weight:700;font-family:'JetBrains Mono',monospace;">— ИТОГОВАЯ СТОИМОСТЬ</div>
-            <div style="font-family:'Cormorant Garamond',serif;font-size:78px;font-weight:300;line-height:1;color:#ffb95a;margin-top:8px;white-space:nowrap;">${est.total}</div>
+            <div style="font-size:10px;color:#f0a042;letter-spacing:2.5px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:8px;">— ИТОГОВАЯ СТОИМОСТЬ</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;line-height:1;color:#ffb95a;letter-spacing:-1px;white-space:nowrap;">${est.total}</div>
           </div>
-          <div style="text-align:right;">
-            <div style="font-size:13px;color:#f0a042;letter-spacing:3px;font-weight:700;font-family:'JetBrains Mono',monospace;">— СРОК</div>
-            <div style="font-size:27px;font-weight:600;margin-top:8px;">14–21 день</div>
-            <div style="font-size:14px;color:#8a8478;margin-top:3px;">с подписания</div>
+          <div style="text-align:right;padding-bottom:8px;">
+            <div style="font-size:10px;color:#f0a042;letter-spacing:2.5px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:8px;">— СРОК</div>
+            <div style="font-size:24px;font-weight:600;letter-spacing:-0.3px;">14–21 день</div>
+            <div style="font-size:12px;color:#8a8478;margin-top:4px;">с подписания</div>
           </div>
         </div>
 
-        <div style="height:1px;background:linear-gradient(90deg,#f0a042,transparent);margin-bottom:18px;"></div>
+        <!-- Разделитель -->
+        <div style="height:1px;background:linear-gradient(90deg,#f0a042,transparent);margin-bottom:32px;"></div>
 
-        <!-- Детализация -->
-        <div style="font-size:13px;color:#f0a042;letter-spacing:3px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:12px;">— ДЕТАЛИЗАЦИЯ</div>
-        <table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
-          <tr style="border-bottom:0.5px solid #2a2620;"><td style="padding:7px 0;font-size:17px;">Стандартная панель 2360×1800 мм</td><td style="text-align:right;padding:9px 0;font-size:15px;color:#8a8478;font-family:'JetBrains Mono',monospace;">${est.blindQ}</td><td style="text-align:right;padding:7px 0;font-size:17px;width:90px;white-space:nowrap;">${est.blindV}</td></tr>
-          <tr style="border-bottom:0.5px solid #2a2620;"><td style="padding:7px 0;font-size:17px;">Декоративная панель с узором</td><td style="text-align:right;padding:9px 0;font-size:15px;color:#8a8478;font-family:'JetBrains Mono',monospace;">${est.transQ}</td><td style="text-align:right;padding:7px 0;font-size:17px;white-space:nowrap;">${est.transV}</td></tr>
-          <tr style="border-bottom:0.5px solid #2a2620;"><td style="padding:7px 0;font-size:17px;">Скрытая LED-подсветка</td><td style="text-align:right;padding:9px 0;font-size:15px;color:#8a8478;font-family:'JetBrains Mono',monospace;">${est.mainQ}</td><td style="text-align:right;padding:7px 0;font-size:17px;">${est.mainV}</td></tr>
-          <tr style="border-bottom:0.5px solid #2a2620;"><td style="padding:7px 0;font-size:17px;">Столб 140×140 мм + крепёж</td><td style="text-align:right;padding:9px 0;font-size:15px;color:#8a8478;font-family:'JetBrains Mono',monospace;">${est.postQ}</td><td style="text-align:right;padding:7px 0;font-size:17px;">${est.postV}</td></tr>
-          <tr style="border-bottom:0.5px solid #2a2620;"><td style="padding:7px 0;font-size:17px;">Сторон подсветки</td><td style="text-align:right;padding:9px 0;font-size:15px;color:#8a8478;font-family:'JetBrains Mono',monospace;">${est.ledQ}</td><td style="text-align:right;padding:7px 0;font-size:17px;color:#8a8478;">${est.ledV}</td></tr>
-          <tr style="border-bottom:1px solid #f0a042;"><td style="padding:7px 0;font-size:17px;">Монтаж под ключ</td><td style="text-align:right;padding:9px 0;font-size:15px;color:#8a8478;font-family:'JetBrains Mono',monospace;">${est.mountQ}</td><td style="text-align:right;padding:7px 0;font-size:17px;">${est.mountV}</td></tr>
-          <tr><td style="padding:14px 0 0;font-size:18px;color:#f0a042;font-weight:700;letter-spacing:1.5px;">ИТОГО</td><td></td><td style="text-align:right;padding:14px 0 0;font-family:'Cormorant Garamond',serif;font-size:34px;color:#ffb95a;white-space:nowrap;">${est.total}</td></tr>
+        <!-- ═══ ДЕТАЛИЗАЦИЯ ═══ -->
+        <div style="font-size:10px;color:#f0a042;letter-spacing:2.5px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:16px;">— ДЕТАЛИЗАЦИЯ</div>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:48px;">
+          <tr style="border-bottom:0.5px solid #2a2620;">
+            <td style="padding:14px 0;font-size:14px;">Стандартная панель 2360×1800 мм</td>
+            <td style="text-align:right;padding:14px 16px;font-size:13px;color:#8a8478;font-family:'JetBrains Mono',monospace;white-space:nowrap;">${est.blindQ}</td>
+            <td style="text-align:right;padding:14px 0;font-size:14px;font-family:'JetBrains Mono',monospace;white-space:nowrap;width:120px;">${est.blindV}</td>
+          </tr>
+          <tr style="border-bottom:0.5px solid #2a2620;">
+            <td style="padding:14px 0;font-size:14px;">Декоративная панель с узором</td>
+            <td style="text-align:right;padding:14px 16px;font-size:13px;color:#8a8478;font-family:'JetBrains Mono',monospace;white-space:nowrap;">${est.transQ}</td>
+            <td style="text-align:right;padding:14px 0;font-size:14px;font-family:'JetBrains Mono',monospace;white-space:nowrap;">${est.transV}</td>
+          </tr>
+          <tr style="border-bottom:0.5px solid #2a2620;">
+            <td style="padding:14px 0;font-size:14px;">Скрытая LED-подсветка</td>
+            <td style="text-align:right;padding:14px 16px;font-size:13px;color:#8a8478;font-family:'JetBrains Mono',monospace;white-space:nowrap;">${est.mainQ}</td>
+            <td style="text-align:right;padding:14px 0;font-size:14px;font-family:'JetBrains Mono',monospace;white-space:nowrap;">${est.mainV}</td>
+          </tr>
+          <tr style="border-bottom:0.5px solid #2a2620;">
+            <td style="padding:14px 0;font-size:14px;">Столб 140×140 мм + крепёж</td>
+            <td style="text-align:right;padding:14px 16px;font-size:13px;color:#8a8478;font-family:'JetBrains Mono',monospace;white-space:nowrap;">${est.postQ}</td>
+            <td style="text-align:right;padding:14px 0;font-size:14px;font-family:'JetBrains Mono',monospace;white-space:nowrap;">${est.postV}</td>
+          </tr>
+          <tr style="border-bottom:0.5px solid #2a2620;">
+            <td style="padding:14px 0;font-size:14px;">Сторон подсветки</td>
+            <td style="text-align:right;padding:14px 16px;font-size:13px;color:#8a8478;font-family:'JetBrains Mono',monospace;white-space:nowrap;">${est.ledQ}</td>
+            <td style="text-align:right;padding:14px 0;font-size:14px;color:#8a8478;white-space:nowrap;">${est.ledV}</td>
+          </tr>
+          <tr style="border-bottom:1px solid #f0a042;">
+            <td style="padding:14px 0;font-size:14px;">Монтаж под ключ</td>
+            <td style="text-align:right;padding:14px 16px;font-size:13px;color:#8a8478;font-family:'JetBrains Mono',monospace;white-space:nowrap;">${est.mountQ}</td>
+            <td style="text-align:right;padding:14px 0;font-size:14px;font-family:'JetBrains Mono',monospace;white-space:nowrap;">${est.mountV}</td>
+          </tr>
+          <tr>
+            <td style="padding:24px 0 0;font-size:13px;color:#f0a042;font-weight:700;letter-spacing:2px;font-family:'JetBrains Mono',monospace;vertical-align:bottom;">ИТОГО</td>
+            <td></td>
+            <td style="text-align:right;padding:20px 0 0;font-family:'Cormorant Garamond',serif;font-size:32px;color:#ffb95a;white-space:nowrap;line-height:1;">${est.total}</td>
+          </tr>
         </table>
 
-        <!-- Картинки + гарантии -->
-        <div style="display:flex;gap:14px;margin-bottom:20px;">
-          <div style="width:110px;">
-            <div style="width:150px;height:190px;background-image:url('${IMG_DECOR}');background-size:cover;background-position:center;border-radius:3px;border:1px solid #2a2620;"></div>
-            <div style="font-size:12px;color:#f0a042;letter-spacing:2.2px;font-weight:700;margin-top:6px;text-align:center;">FOREST · A</div>
-            <div style="font-size:12px;color:#8a8478;text-align:center;margin-top:3px;">Декоративная панель</div>
+        <!-- ═══ НИЖНИЙ БЛОК: картинки + гарантии ═══ -->
+        <div style="display:flex;gap:32px;margin-bottom:40px;align-items:flex-start;">
+          <!-- Картинка декора -->
+          <div style="width:140px;flex-shrink:0;">
+            <div style="width:140px;height:180px;border-radius:3px;border:1px solid #2a2620;overflow:hidden;">
+              <img src="${IMG_DECOR}" style="width:100%;height:100%;object-fit:cover;display:block;" />
+            </div>
+            <div style="font-size:10px;color:#f0a042;letter-spacing:2px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-top:10px;text-align:center;">FOREST · A</div>
+            <div style="font-size:10px;color:#8a8478;text-align:center;margin-top:3px;">Декоративная панель</div>
           </div>
-          <div style="width:110px;">
-            <div style="width:150px;height:190px;background-image:url('${IMG_LED}');background-size:cover;background-position:center;border-radius:3px;border:1px solid #2a2620;"></div>
-            <div style="font-size:12px;color:#f0a042;letter-spacing:2.2px;font-weight:700;margin-top:6px;text-align:center;">LED 2700K</div>
-            <div style="font-size:12px;color:#8a8478;text-align:center;margin-top:3px;">Тёплая подсветка</div>
+          <!-- Картинка LED -->
+          <div style="width:140px;flex-shrink:0;">
+            <div style="width:140px;height:180px;border-radius:3px;border:1px solid #2a2620;overflow:hidden;">
+              <img src="${IMG_LED}" style="width:100%;height:100%;object-fit:cover;display:block;" />
+            </div>
+            <div style="font-size:10px;color:#f0a042;letter-spacing:2px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-top:10px;text-align:center;">LED 2700K</div>
+            <div style="font-size:10px;color:#8a8478;text-align:center;margin-top:3px;">Тёплая подсветка</div>
           </div>
-          <div style="flex:1;padding-left:10px;">
-            <div style="font-size:13px;color:#f0a042;letter-spacing:3px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:8px;">— ВКЛЮЧЕНО В СТОИМОСТЬ</div>
-            <div style="font-size:15px;line-height:1.85;">
-              <div><span style="color:#f0a042;margin-right:8px;">·</span>Замер и 3D-визуализация проекта</div>
-              <div><span style="color:#f0a042;margin-right:8px;">·</span>Доставка по Москве и области</div>
-              <div><span style="color:#f0a042;margin-right:8px;">·</span>Монтаж бригадой 1–3 дня</div>
-              <div><span style="color:#f0a042;margin-right:8px;">·</span>Гарантия 5 лет на электронику</div>
-              <div><span style="color:#f0a042;margin-right:8px;">·</span>Гарантия 10 лет на металлоконструкции</div>
+          <!-- Гарантии -->
+          <div style="flex:1;padding-left:8px;">
+            <div style="font-size:10px;color:#f0a042;letter-spacing:2.5px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:14px;">— ВКЛЮЧЕНО В СТОИМОСТЬ</div>
+            <div style="font-size:13px;line-height:2;">
+              <div><span style="color:#f0a042;margin-right:10px;">·</span>Замер и 3D-визуализация проекта</div>
+              <div><span style="color:#f0a042;margin-right:10px;">·</span>Доставка по Москве и области</div>
+              <div><span style="color:#f0a042;margin-right:10px;">·</span>Монтаж бригадой 1–3 дня</div>
+              <div><span style="color:#f0a042;margin-right:10px;">·</span>Гарантия 5 лет на электронику</div>
+              <div><span style="color:#f0a042;margin-right:10px;">·</span>Гарантия 10 лет на металлоконструкции</div>
             </div>
           </div>
         </div>
 
-        <!-- Футер -->
-        <div style="border-top:0.5px solid #2a2620;padding-top:14px;">
-          <div style="font-size:13px;color:#8a8478;font-style:italic;line-height:1.5;margin-bottom:10px;">Цена ориентировочная. Точную смету бесплатно пришлёт замерщик после выезда на участок. Предложение действует 14 дней с даты выдачи.</div>
+        <!-- ═══ ФУТЕР ═══ -->
+        <div style="border-top:0.5px solid #2a2620;padding-top:18px;">
+          <div style="font-size:11px;color:#8a8478;font-style:italic;line-height:1.6;margin-bottom:14px;">Цена ориентировочная. Точную смету бесплатно пришлёт замерщик после выезда на участок. Предложение действует 14 дней с даты выдачи.</div>
           <div style="display:flex;justify-content:space-between;">
-            <div style="font-size:13px;color:#f0a042;font-weight:700;letter-spacing:2.5px;">LUMINEX · luminex.ru</div>
-            <div style="font-size:13px;color:#8a8478;font-family:'JetBrains Mono',monospace;">+7 (495) 000-00-00 · 9:00–21:00 МСК</div>
+            <div style="font-size:11px;color:#f0a042;font-weight:700;letter-spacing:2.5px;font-family:'JetBrains Mono',monospace;">LUMINEX · luminex.ru</div>
+            <div style="font-size:11px;color:#8a8478;font-family:'JetBrains Mono',monospace;">+7 (495) 000-00-00 · 9:00–21:00 МСК</div>
           </div>
         </div>
+
       </div>
     `;
+  }
+
+  // ═══ Управление прогресс-вью ═══════════════════════════════
+  function setStep(n) {
+    // Подсвечивает шаги 1..N. setStep(5) = все done.
+    const steps = document.querySelectorAll('#ppSteps .pp-step');
+    steps.forEach((el) => {
+      const idx = parseInt(el.dataset.step, 10);
+      el.classList.remove('is-active', 'is-done');
+      if (idx < n) el.classList.add('is-done');
+      else if (idx === n) el.classList.add('is-active');
+    });
+  }
+
+  function setSubtext(text) {
+    const el = document.getElementById('ppSub');
+    if (el) el.textContent = text;
+  }
+
+  function startCountdown(fromSec) {
+    const el = document.getElementById('ppTimer');
+    let remaining = fromSec;
+    if (el) el.textContent = remaining;
+    const interval = setInterval(() => {
+      remaining = Math.max(0, remaining - 1);
+      if (el) el.textContent = remaining;
+      if (remaining === 0) clearInterval(interval);
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+      if (el) el.textContent = '0';
+    };
   }
 
   form.addEventListener('submit', (e) => {
@@ -6592,11 +6810,15 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
       return;
     }
 
-    submitBtn.classList.add('loading');
-    submitBtn.disabled = true;
-    submitBtn.querySelector('.label').textContent = 'Готовим смету...';
+    // ───── ПЕРЕХОД В ПРОГРЕСС-ВЬЮ ─────
+    const progressStartTs = Date.now();
+    drawer.classList.add('is-progress');
+    drawer.scrollTop = 0;
+    setStep(1);
+    setSubtext('Подсчитываем стоимость и собираем PDF…');
+    const stopCountdown = startCountdown(8);
 
-    // Сбор данных
+    // ───── СБОР ДАННЫХ ─────
     const txt = (sel) => {
       const el = document.querySelector(sel);
       return el ? el.textContent.trim() : '—';
@@ -6617,94 +6839,139 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
       mountQ: txt('#qMount'),  mountV: txt('#vMount'),
     };
 
-    // Вставляем смету в DOM (за пределами экрана)
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = buildEstimateHTML(lead, est);
-    document.body.appendChild(wrapper);
-    const target = document.getElementById('estimateRoot');
+    // Небольшая пауза перед этапом 2 — чтобы пользователь успел увидеть переход
+    setTimeout(async () => {
+      try {
+        setStep(2);
+        setSubtext('Рисуем PDF на твоих фирменных шрифтах…');
 
-    // Ждём пока шрифты Google Fonts полностью загрузятся,
-    // иначе html2canvas снимет fallback (Times) вместо Cormorant.
-    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve())
-      .then(() => html2canvas(target, {
-      scale: 3,                      // больше качества
-      backgroundColor: '#0a0907',
-      useCORS: true,
-      logging: false,
-      width: 1100,
-      height: target.offsetHeight,
-    }).then((canvas) => {
-      // Удаляем временный DOM
-      wrapper.remove();
+        // Вставляем смету в DOM (за пределами экрана)
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = buildEstimateHTML(lead, est);
+        document.body.appendChild(wrapper);
+        const target = document.getElementById('estimateRoot');
+        if (!target) throw new Error('estimateRoot не создан');
 
-      const imgData = canvas.toDataURL('image/jpeg', 0.88);
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+        // Ждём шрифты и явную загрузку всех <img>
+        const imgs = Array.from(target.querySelectorAll('img'));
+        await Promise.all(imgs.map((img) => {
+          if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+          return new Promise((res) => {
+            img.onload = res;
+            img.onerror = () => { console.warn('img onerror', img.src.slice(0, 80)); res(); };
+          });
+        }));
+        if (document.fonts && document.fonts.ready) {
+          await document.fonts.ready;
+        }
 
-      // A4 = 210×297mm. Картинка вписывается по ширине; если она длиннее листа,
-      // jsPDF не разрежет — но мы уложились в 1123px (≈297мм при 96dpi).
-      const pdfW = 210;
-      const pdfH = canvas.height * pdfW / canvas.width;
-      pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, Math.min(pdfH, 297));
+        // Рендерим скриншот
+        const canvas = await html2canvas(target, {
+          scale: 1.5,
+          backgroundColor: '#0a0907',
+          useCORS: true,
+          allowTaint: true,
+          logging: false,
+          width: 1100,
+          height: target.offsetHeight,
+        });
 
-      const pdfBlob = pdf.output('blob');
+        wrapper.remove();
+        setStep(3);
+        setSubtext('Сохраняем PDF в твоей фирменной стилистике…');
 
-      // Отправка лида в Formspree с PDF-вложением
-      const formData = new FormData();
-      formData.append('name',  lead.name);
-      formData.append('phone', lead.phone);
-      formData.append('email', lead.email);
-      formData.append('Сумма', est.total);
-      formData.append('Параметры', est.meta);
-      formData.append('Детализация',
-        'Стандартные панели: ' + est.blindQ + ' → ' + est.blindV + '\n' +
-        'Декоративные панели: ' + est.transQ + ' → ' + est.transV + '\n' +
-        'LED-подсветка: ' + est.mainQ + ' → ' + est.mainV + '\n' +
-        'Столбы: ' + est.postQ + ' → ' + est.postV + '\n' +
-        'Стороны подсветки: ' + est.ledQ + ' → ' + est.ledV + '\n' +
-        'Монтаж: ' + est.mountQ + ' → ' + est.mountV
-      );
-      formData.append('Смета.pdf', pdfBlob, 'luminex-smeta-' + Date.now() + '.pdf');
+        const imgData = canvas.toDataURL('image/jpeg', 0.85);
+        if (!imgData || imgData.length < 1000) {
+          throw new Error('Canvas пустой (длина данных: ' + (imgData ? imgData.length : 0) + ')');
+        }
 
-      const finish = () => {
+        const { jsPDF } = window.jspdf;
+        if (!jsPDF) throw new Error('jsPDF не загружен');
+
+        const pdfW = 210;
+        const pdfH = canvas.height * pdfW / canvas.width;
+
+        // Если контент выше A4, делаем PDF под высоту контента — не сжимаем.
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: pdfH > 297 ? [pdfW, pdfH] : 'a4'
+        });
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, pdfH);
+        const pdfBlob = pdf.output('blob');
+
+        setStep(4);
+        setSubtext('Готовим PDF к скачиванию…');
+
+        // Готовим ссылку «Скачать» сразу — это работает независимо от Formspree.
         const blobUrl = URL.createObjectURL(pdfBlob);
         const dl = document.getElementById('pdfDownload');
         dl.href = blobUrl;
         dl.setAttribute('download', 'luminex-smeta-' + lead.name + '.pdf');
 
-        // Открываем PDF в новой вкладке
-        window.open(blobUrl, '_blank');
+        // Переход на success — гарантированно, без зависимости от Formspree.
+        const showSuccess = () => {
+          const elapsed = Date.now() - progressStartTs;
+          const wait = Math.max(0, 1500 - elapsed);
+          setTimeout(() => {
+            stopCountdown();
+            setStep(5);
+            setTimeout(() => {
+              drawer.classList.remove('is-progress');
+              if (okName) okName.textContent = lead.name;
+              if (okPhone) okPhone.textContent = lead.phone;
+              drawer.classList.add('is-success');
+              drawer.scrollTop = 0;
+            }, 400);
+          }, wait);
+        };
 
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
-        submitBtn.querySelector('.label').textContent = 'Получить PDF смету';
-        okName.textContent  = lead.name;
-        okPhone.textContent = lead.phone;
-        drawer.classList.add('is-success');
-        drawer.scrollTop = 0;
-      };
+        // Отправка в Formspree — НЕ блокируем UX. Если упадёт — пользователь
+        // всё равно скачает PDF, и мы покажем success.
+        try {
+          const formData = new FormData();
+          formData.append('_subject', 'LUMINEX — заявка от ' + lead.name);
+          formData.append('name',  lead.name);
+          formData.append('phone', lead.phone);
+          formData.append('email', lead.email);
+          formData.append('total_price', est.total);
+          formData.append('project_meta', est.meta);
+          formData.append('breakdown',
+            'Стандартные панели: ' + est.blindQ + ' → ' + est.blindV + '\n' +
+            'Декоративные панели: ' + est.transQ + ' → ' + est.transV + '\n' +
+            'LED-подсветка: ' + est.mainQ + ' → ' + est.mainV + '\n' +
+            'Столбы: ' + est.postQ + ' → ' + est.postV + '\n' +
+            'Стороны подсветки: ' + est.ledQ + ' → ' + est.ledV + '\n' +
+            'Монтаж: ' + est.mountQ + ' → ' + est.mountV
+          );
+          formData.append('estimate_pdf', pdfBlob, 'luminex-smeta-' + Date.now() + '.pdf');
 
-      fetch('https://formspree.io/f/xeedljbr', {
-        method: 'POST',
-        body: formData,
-        headers: { 'Accept': 'application/json' }
-      })
-      .then((res) => {
-        if (!res.ok) console.warn('[Formspree] Ответ не OK:', res.status);
-        finish();
-      })
-      .catch((err) => {
-        console.error('[Formspree] Ошибка отправки:', err);
-        finish();
-      });
-    }).catch((err) => {
-      console.error('[html2canvas] Ошибка:', err);
-      wrapper.remove();
-      submitBtn.classList.remove('loading');
-      submitBtn.disabled = false;
-      submitBtn.querySelector('.label').textContent = 'Получить PDF смету';
-      alert('Не удалось сгенерировать PDF. Проверьте подключение и попробуйте снова.');
-    }));
+          fetch('https://formspree.io/f/xeedljbr', {
+            method: 'POST',
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+          }).then((res) => {
+            console.log('[Formspree]', res.status);
+          }).catch((err) => {
+            console.warn('[Formspree] не отправилось:', err.message);
+          });
+        } catch (e) {
+          console.warn('[Formspree setup]', e);
+        }
+
+        // Показываем success независимо от формспри
+        showSuccess();
+
+      } catch (err) {
+        // Любая ошибка — алерт с реальным сообщением
+        console.error('[PDF generation]', err);
+        const wrapperEl = document.querySelector('#estimateRoot');
+        if (wrapperEl && wrapperEl.parentNode) wrapperEl.parentNode.remove();
+        stopCountdown();
+        drawer.classList.remove('is-progress');
+        alert('Ошибка при создании PDF:\n\n' + (err && err.message ? err.message : err) + '\n\nОткрой DevTools (F12) → Console и пришли скрин — там подробности.');
+      }
+    }, 600); // 600мс держим этап 1 для UX
   });
 
     // Download stub — в реальности этот href подставится с сервера
