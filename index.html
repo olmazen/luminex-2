@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>FORRMA FOREST 2.5 — Архитектурная система ограждения</title>
-<meta name="description" content="FOREST 2.5 — премиум архитектурное ограждение со скрытой LED-подсветкой, художественной перфорацией и модульной конструкцией. Срок службы 25+ лет." />
+<title>FORRMA — архитектурная система ограждений</title>
+<meta name="description" content="FORRMA — архитектурная система ограждений со скрытой LED-подсветкой, художественной перфорацией и модульной конструкцией. Развивается вместе с вашим домом." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="timeline/20.webp" fetchpriority="high">
@@ -97,6 +97,8 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
 .nav-links a:hover{color:var(--text)}
 .nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--amber);transition:width 0.4s var(--ease)}
 .nav-links a:hover::after{width:100%}
+.nav-links a.is-current{color:var(--amber)}
+.nav-links a.is-current::after{width:100%;background:var(--amber)}
 .nav-right{display:flex;align-items:center;gap:20px}
 .lang-switch{display:flex;gap:4px;font-family:'JetBrains Mono',monospace;font-size:11px;align-items:center}
 .lang-switch button{padding:6px 8px;color:var(--text-mute);letter-spacing:0.1em;transition:color 0.3s var(--ease)}
@@ -154,7 +156,7 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
   pointer-events:none;
   z-index:2;
 }
-/* Лёгкий «обогрев» вокруг подсвеченного забора — появляется в is-lit */
+/* Лёгкий «обогрев» вокруг подсвеченного ограждения — появляется в is-lit */
 .hero-bg::before{
   content:''; position:absolute; inset:0; z-index:2;
   background:radial-gradient(60% 80% at 80% 55%, rgba(240,160,66,.13), transparent 70%);
@@ -164,7 +166,7 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
 }
 .hero.is-lit .hero-bg::before{ opacity:1; }
 
-/* Hot-zone — невидимая область над забором, позиция считается JS */
+/* Hot-zone — невидимая область над ограждением, позиция считается JS */
 .hero-fence-hot{
   position:absolute;
   z-index:4;
@@ -208,7 +210,7 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
   gap:clamp(32px,5vw,80px);
   align-items:center;
   width:100%;
-  /* Grid не ловит события — иначе .container перекрывает hot-зону над забором */
+  /* Grid не ловит события — иначе .container перекрывает hot-зону над ограждением */
   pointer-events:none;
 }
 .hero-content{max-width:640px; pointer-events:auto}
@@ -576,9 +578,10 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
 /* ========== COLLECTIONS ========== */
 .collections-head{display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:60px;flex-wrap:wrap}
 .collections-head .lead-text{max-width:440px}
-.collections-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-@media (max-width:1000px){.collections-grid{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:600px){.collections-grid{grid-template-columns:1fr}}
+.collections-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+@media (max-width:1200px){.collections-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:900px){.collections-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.collections-grid{grid-template-columns:1fr}}
 .coll{
   border:1px solid var(--line);overflow:hidden;
   display:flex;flex-direction:column;
@@ -611,6 +614,12 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
   align-items: center;
   justify-content: center;
   perspective:1400px;
+  /* Переменные для 3D-tilt по курсору (управляются JS) */
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --mx: 50%;
+  --my: 50%;
+  --gloss: 0;
 }
 .coll-decor-img svg { display: block; width: 100%; height: 100%; }
 .coll-decor-img::before {
@@ -621,6 +630,22 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
   pointer-events: none;
   z-index:3;
 }
+/* Глянцевый блик — следует за курсором */
+.coll-decor-img::after{
+  content:'';
+  position:absolute; inset:0;
+  background:radial-gradient(
+    circle 380px at var(--mx) var(--my),
+    rgba(255,255,255,0.22) 0%,
+    rgba(255,255,255,0.08) 25%,
+    transparent 60%
+  );
+  opacity:var(--gloss);
+  transition:opacity .4s cubic-bezier(.4,0,.2,1);
+  pointer-events:none;
+  z-index:4;
+  mix-blend-mode:soft-light;
+}
 
 /* Двусторонняя карточка-серия: front = панель 01, back = панель 02 */
 .coll-decor-flip{
@@ -629,8 +654,19 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
   transition:transform 1s cubic-bezier(.65,0,.35,1);
   cursor:pointer;
   z-index:1;
+  /* 3D-tilt накладывается ПОВЕРХ rotate (для flip) через CSS-переменную */
+  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  will-change:transform;
 }
-.coll.is-flipped .coll-decor-flip{ transform:rotateY(180deg); }
+/* При flip — поворачиваем на 180° + сохраняем tilt */
+.coll.is-flipped .coll-decor-flip{
+  transform: rotateY(calc(180deg + var(--tilt-y))) rotateX(var(--tilt-x));
+}
+/* Когда мышь двигается по карточке — лёгкое сглаживание (60-80ms),
+   достаточно чтобы не дёргалось от каждого пикселя, но без задержки */
+.coll-decor-img.is-tilting .coll-decor-flip{
+  transition:transform 80ms linear;
+}
 .coll-face{
   position:absolute; inset:0;
   backface-visibility:hidden;
@@ -642,13 +678,15 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
 .coll-face img{
   width:100%; height:100%;
   object-fit:contain;
-  transform:scale(1.05);            /* +5% общий зум для обеих сторон */
+  transform:scale(1.0);
   user-select:none; -webkit-user-drag:none;
   pointer-events:none;
 }
-/* Лицевая (олень с рогами) — SVG чуть меньше других на ~7% после обработки, компенсируем */
-.coll-face.front img{ transform:scale(1.12); }
+/* PANEL_A_01 (олени) — квадратный SVG, заполняет контейнер сам */
+.coll-face.front img{ transform:scale(0.97); }
+/* PANEL_A_02 (лес/птица) — чуть приплюснут, для визуального равенства даём +4% */
 .coll-face.back{ transform:rotateY(180deg); }
+.coll-face.back img{ transform:scale(1.03); }
 
 /* Индикатор страниц 1 / 2 */
 .coll-flip-pager{
@@ -1306,11 +1344,11 @@ header.scrolled{padding:12px 0;background:rgba(10,9,7,0.85)}
 .faq-a p{color:var(--text-dim);font-size:15px;line-height:1.65;max-width:580px}
 
 /* ========== ABOUT ========== */
-.about-wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:80px;align-items:center}
+.about-wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:80px;align-items:start}
 @media (max-width:900px){.about-wrap{grid-template-columns:1fr;gap:50px}}
 .about-img{position:relative;aspect-ratio:4/5;border:1px solid var(--line);overflow:hidden}
 .about-img .img-ph{height:100%;border:none}
-.about-img::after{content:'EST. 2017 · MADE IN RUSSIA';position:absolute;bottom:24px;left:24px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.18em;color:var(--amber);background:rgba(10,9,7,0.75);backdrop-filter:blur(8px);padding:8px 14px;z-index:3}
+.about-img::after{content:'MADE IN RUSSIA · БАЛАКОВО';position:absolute;bottom:24px;left:24px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.18em;color:var(--amber);background:rgba(10,9,7,0.75);backdrop-filter:blur(8px);padding:8px 14px;z-index:3}
 .about-text p{font-size:16px;color:var(--text-dim);line-height:1.7;margin-bottom:20px;max-width:560px}
 .about-text p.lead{font-family:'Cormorant Garamond',serif;font-size:24px;font-style:italic;color:var(--text);line-height:1.4;margin-bottom:30px}
 .about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px;padding-top:40px;border-top:1px solid var(--line)}
@@ -2482,7 +2520,7 @@ input[type="range"]:hover::-moz-range-thumb{
     width:185%;
     height:auto;
     aspect-ratio: 2835 / 1582;
-    /* центр забора (73.6% x / 53.1% y) в центре контейнера */
+    /* центр ограждения (73.6% x / 53.1% y) в центре контейнера */
     left:-86.16%;          /* 50% − 0.736·185% */
     top:-18.5%;            /* пересчитано под aspect 1.25 */
     max-width:none;
@@ -2948,8 +2986,8 @@ input[type="range"]:hover::-moz-range-thumb{
    ============================================================ */
 .decor-cards{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
+  grid-template-columns:repeat(4, 1fr);
+  gap:12px;
   margin:0 0 14px;
   padding:0;
 }
@@ -2984,6 +3022,34 @@ input[type="range"]:hover::-moz-range-thumb{
 .decor-card:focus-visible{
   border-color:var(--amber);
   box-shadow:0 0 0 3px rgba(240,160,66,.25);
+}
+
+/* Заглушки FOREST · C / · D — приглушённые, не кликабельны */
+.decor-card.is-soon{
+  cursor:not-allowed;
+  opacity:.55;
+  pointer-events:none;
+  filter:grayscale(.5);
+}
+.decor-card.is-soon .dc-stage{
+  background:linear-gradient(135deg, #1a1814 0%, #0a0907 100%);
+}
+.decor-card.is-soon .dc-stage::before,
+.decor-card.is-soon .dc-stage::after{ display:none; }
+.dc-soon-badge{
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  font-family:'JetBrains Mono', monospace;
+  font-size:10px;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:rgba(240,160,66,.5);
+  padding:6px 14px;
+  border:1px solid rgba(240,160,66,.25);
+  border-radius:2px;
+  background:rgba(10,9,7,.85);
+  z-index:5;
 }
 
 /* Сцена под картинку — 4:3 */
@@ -3034,26 +3100,29 @@ input[type="range"]:hover::-moz-range-thumb{
 /* Лейбл под картинкой */
 .dc-label{
   display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:12px 14px 12px;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:2px;
+  padding:10px 12px;
   background:rgba(10,9,7,.55);
   border-top:1px solid rgba(240,160,66,.08);
 }
 .dc-tag{
   font-family:'JetBrains Mono', monospace;
-  font-size:11px;
-  letter-spacing:.28em;
+  font-size:10px;
+  letter-spacing:.22em;
   text-transform:uppercase;
   color:rgba(240,160,66,.85);
+  white-space:nowrap;
 }
 .decor-card.selected .dc-tag{ color:var(--amber); }
 .dc-meta{
   font-family:'JetBrains Mono', monospace;
-  font-size:9px;
-  letter-spacing:.18em;
+  font-size:8px;
+  letter-spacing:.14em;
   text-transform:uppercase;
   color:rgba(236,232,223,.4);
+  white-space:nowrap;
 }
 
 /* Маленький намёк что есть второй ракурс — лёгкая точка-индикатор */
@@ -3074,46 +3143,61 @@ input[type="range"]:hover::-moz-range-thumb{
   transform:scale(1.3);
 }
 
-@media (max-width:720px){
+@media (max-width:1100px){
+  .decor-cards{ grid-template-columns:repeat(3, 1fr); gap:10px; }
+}
+@media (max-width:820px){
+  .decor-cards{ grid-template-columns:repeat(2, 1fr); gap:10px; }
+}
+@media (max-width:380px){
   .decor-cards{ grid-template-columns:1fr; gap:12px; }
   .dc-label{ padding:10px 12px; }
   .dc-tag{ font-size:10px; }
 }
 
-/* === FOREST · A в калькуляторе: реальные SVG-панели вместо мозаики === */
-.decor-card[data-decor="forest_a"] .dc-stage{
+/* === FOREST (все варианты A/B/C/D) в калькуляторе: янтарный фон + квадрат === */
+.decor-card[data-decor^="forest_"] .dc-stage{
   aspect-ratio:1/1;
   background:linear-gradient(180deg, #ffcc7a 0%, #e0a042 55%, #a86420 100%);
 }
-.decor-card[data-decor="forest_a"] .dc-img-base{
-  background-image:url('uploads/PANEL_A_02.svg');
+/* ═══ Стили для всех 4 декоров FOREST (A, B, C, D) — одинаковая логика ═══ */
+.decor-card[data-decor^="forest_"] .dc-img-base{
   background-size:contain;
   background-position:center;
   background-repeat:no-repeat;
   background-color:transparent;
-  transform:scale(1.12);
+  transform:scale(0.97);
   transition:opacity .55s cubic-bezier(.4,0,.2,1);
 }
-.decor-card[data-decor="forest_a"] .dc-mosaic{ display:none; }
-.decor-card[data-decor="forest_a"] .dc-stage::before{
+.decor-card[data-decor^="forest_"] .dc-mosaic{ display:none; }
+.decor-card[data-decor^="forest_"] .dc-stage::before{
   content:'';
   position:absolute; inset:0;
-  background-image:url('uploads/PANEL_A_01.svg');
   background-size:contain;
   background-position:center;
   background-repeat:no-repeat;
-  transform:scale(1.05);
+  transform:scale(1.0);
   opacity:0;
-  transition:opacity .55s cubic-bezier(.4,0,.2,1);
-  z-index:2;
+  transition:opacity .35s cubic-bezier(.4,0,.2,1);
+  z-index:1;
   pointer-events:none;
 }
-.decor-card[data-decor="forest_a"]:hover .dc-stage::before,
-.decor-card[data-decor="forest_a"].show-alt .dc-stage::before{ opacity:1; }
-.decor-card[data-decor="forest_a"]:hover .dc-img-base,
-.decor-card[data-decor="forest_a"].show-alt .dc-img-base{ opacity:0; }
-/* Точка-индикатор второго ракурса — на янтарном фоне поярче */
-.decor-card[data-decor="forest_a"] .dc-stage::after{
+.decor-card[data-decor^="forest_"]:hover .dc-stage::before,
+.decor-card[data-decor^="forest_"].show-alt .dc-stage::before{ opacity:1; }
+.decor-card[data-decor^="forest_"]:hover .dc-img-base,
+.decor-card[data-decor^="forest_"].show-alt .dc-img-base{ opacity:0; }
+
+/* Индивидуальные SVG для каждого декора */
+.decor-card[data-decor="forest_a"] .dc-img-base{ background-image:url('uploads/PANEL_A_01.svg'); }
+.decor-card[data-decor="forest_a"] .dc-stage::before{ background-image:url('uploads/PANEL_A_02.svg'); }
+.decor-card[data-decor="forest_b"] .dc-img-base{ background-image:url('uploads/PANEL_B_01.svg'); }
+.decor-card[data-decor="forest_b"] .dc-stage::before{ background-image:url('uploads/PANEL_B_02.svg'); }
+.decor-card[data-decor="forest_c"] .dc-img-base{ background-image:url('uploads/PANEL_C_01.svg'); }
+.decor-card[data-decor="forest_c"] .dc-stage::before{ background-image:url('uploads/PANEL_C_02.svg'); }
+.decor-card[data-decor="forest_d"] .dc-img-base{ background-image:url('uploads/PANEL_D_01.svg'); }
+.decor-card[data-decor="forest_d"] .dc-stage::before{ background-image:url('uploads/PANEL_D_02.svg'); }
+
+.decor-card[data-decor^="forest_"] .dc-stage::after{
   background:rgba(10,9,7,.65); box-shadow:0 0 8px rgba(10,9,7,.4);
 }
 
@@ -3529,14 +3613,13 @@ input[type="range"]:hover::-moz-range-thumb{
     <a href="#top" class="logo">
       <span class="dot"></span>
       <img src="uploads/forrma-logo.svg" alt="FORRMA" class="logo-img" />
-      <span class="sub">FOREST 2.5</span>
+      <span class="sub">Система</span>
     </a>
     <nav class="nav-links">
       <a href="#daynight">День / Ночь</a>
       <a href="#tech">Конструкция</a>
       <a href="#pillars">Преимущества</a>
       <a href="#collections">Коллекции</a>
-      <a href="#gallery">Галерея</a>
       <a href="#calc">Калькулятор</a>
       <a href="#faq">Вопросы</a>
     </nav>
@@ -3582,7 +3665,6 @@ input[type="range"]:hover::-moz-range-thumb{
   <a href="#tech">Конструкция</a>
   <a href="#pillars">Преимущества</a>
   <a href="#collections">Коллекции</a>
-  <a href="#gallery">Галерея</a>
   <a href="#calc">Калькулятор</a>
   <a href="#faq">Вопросы</a>
   <a href="#about">О мастерской</a>
@@ -3595,7 +3677,7 @@ input[type="range"]:hover::-moz-range-thumb{
   <div class="hero-bg" id="heroBg">
     <img class="hero-bg-img is-off"
          src="uploads/hero-photo-01.webp"
-         alt="Забор FORRMA FOREST"
+         alt="Ограждение FORRMA FOREST"
          loading="eager" fetchpriority="high" decoding="async">
     <img class="hero-bg-img is-on"
          src="uploads/hero-photo-02.webp"
@@ -3609,18 +3691,17 @@ input[type="range"]:hover::-moz-range-thumb{
   <div class="container hero-grid">
     <div class="hero-content">
       <div class="hero-top">
-        <div class="eyebrow">— FORRMA FOREST 2.5 · Архитектурные ограждения с подсветкой</div>
+        <div class="eyebrow">— FORRMA · Архитектурная система ограждений</div>
         <h1>
-          <span class="line"><span>Не забор.</span></span>
+          <span class="line"><span>Не ограждение.</span></span>
           <span class="line"><span>А <em>архитектура</em></span></span>
           <span class="line"><span>вашего участка.</span></span>
         </h1>
       </div>
       <div class="hero-bottom">
-        <p>Модульный забор с лазерной перфорацией и встроенной LED-подсветкой. Заменяет глухой забор + садовое освещение + ландшафтный декор. Производим и монтируем сами — 4–6 недель от заявки до сдачи.</p>
+        <p>Модульное ограждение с лазерной перфорацией и встроенной LED-подсветкой. Заменяет глухое ограждение + садовое освещение + ландшафтный декор. Производим и монтируем сами — 4–6 недель от заявки до сдачи.</p>
         <div class="hero-actions">
-          <a href="#calc" class="cta-btn">Узнать цену моего забора</a>
-          <a href="#gallery" class="cta-btn ghost">Посмотреть фото</a>
+          <a href="#calc" class="cta-btn">Узнать цену моего ограждения</a>
         </div>
         <div class="hero-pills">
           <span class="pill"><span class="dot"></span>25 лет службы</span>
@@ -3704,26 +3785,26 @@ input[type="range"]:hover::-moz-range-thumb{
       <div>
         <div class="eyebrow">— День / Ночь / 01</div>
         <h2 class="section-title" style="margin-top:18px;">
-          <span>Один забор —</span><br>
+          <span>Один ограждение —</span><br>
           <em>две функции.</em>
         </h2>
       </div>
-      <p class="lead-text">Днём — приватность и архитектурный дизайн участка. Ночью — подсветка периметра, которая заменяет 8–12 садовых фонарей и кабельных трасс. Один блок питания 24V на весь забор. Перемотайте сутки — увидите, как один забор работает 24 часа.</p>
+      <p class="lead-text">Днём — приватность и архитектурный дизайн участка. Ночью — подсветка периметра, которая заменяет 8–12 садовых фонарей и кабельных трасс. Один блок питания 24V на весь ограждение. Перемотайте сутки — увидите, как один ограждение работает 24 часа.</p>
     </div>
 
     <div class="tl" id="tl">
       <!-- Слой фото -->
       <div class="tl-stage" id="tlStage">
         <div class="tl-images" id="tlImages">
-          <img src="timeline/04.webp" alt="Забор в 04:00" data-step="0" loading="lazy" decoding="async">
-          <img src="timeline/06.webp" alt="Забор в 06:00" data-step="1" loading="lazy" decoding="async">
-          <img src="timeline/08.webp" alt="Забор в 08:00" data-step="2" loading="lazy" decoding="async">
-          <img src="timeline/10.webp" alt="Забор в 10:00" data-step="3" loading="lazy" decoding="async">
-          <img src="timeline/14.webp" alt="Забор в 14:00" data-step="4" loading="lazy" decoding="async">
-          <img src="timeline/18.webp" alt="Забор в 18:00" data-step="5" loading="lazy" decoding="async">
-          <img src="timeline/20.webp" alt="Забор в 20:00" data-step="6" loading="eager" fetchpriority="high" decoding="async">
-          <img src="timeline/00.webp" alt="Забор в 00:00" data-step="7" loading="lazy" decoding="async">
-          <img src="timeline/02.webp" alt="Забор в 02:00" data-step="8" loading="lazy" decoding="async">
+          <img src="timeline/04.webp" alt="Ограждение в 04:00" data-step="0" loading="lazy" decoding="async">
+          <img src="timeline/06.webp" alt="Ограждение в 06:00" data-step="1" loading="lazy" decoding="async">
+          <img src="timeline/08.webp" alt="Ограждение в 08:00" data-step="2" loading="lazy" decoding="async">
+          <img src="timeline/10.webp" alt="Ограждение в 10:00" data-step="3" loading="lazy" decoding="async">
+          <img src="timeline/14.webp" alt="Ограждение в 14:00" data-step="4" loading="lazy" decoding="async">
+          <img src="timeline/18.webp" alt="Ограждение в 18:00" data-step="5" loading="lazy" decoding="async">
+          <img src="timeline/20.webp" alt="Ограждение в 20:00" data-step="6" loading="eager" fetchpriority="high" decoding="async">
+          <img src="timeline/00.webp" alt="Ограждение в 00:00" data-step="7" loading="lazy" decoding="async">
+          <img src="timeline/02.webp" alt="Ограждение в 02:00" data-step="8" loading="lazy" decoding="async">
         </div>
       </div>
 
@@ -3756,10 +3837,10 @@ input[type="range"]:hover::-moz-range-thumb{
         <div class="eyebrow">— Конструкция / 02</div>
         <h2 class="section-title" style="margin-top:18px;">
           <span>Из чего</span><br>
-          <em>состоит забор</em>
+          <em>состоит ограждение</em>
         </h2>
       </div>
-      <p class="lead-text">Четыре элемента. Все на болтах, никакой сварки. Любую деталь можно заменить через 10 лет без демонтажа всего забора. Гарантия 15 лет на металл, 5 на электронику.</p>
+      <p class="lead-text">Четыре элемента. Все на болтах, никакой сварки. Любую деталь можно заменить через 10 лет без демонтажа всего ограждения. Гарантия 15 лет на металл, 5 на электронику.</p>
     </div>
 
     <div class="tech-layout">
@@ -3768,7 +3849,7 @@ input[type="range"]:hover::-moz-range-thumb{
       <div class="stage" id="stage" data-active="">
         <div class="stage-frame">
           <div class="stage-img is-active" data-layer="0">
-            <img src="uploads/00-base.webp" alt="Собранный забор FOREST 2.5" loading="lazy" decoding="async">
+            <img src="uploads/00-base.webp" alt="Собранное ограждение FOREST 2.5" loading="lazy" decoding="async">
           </div>
           <div class="stage-img" data-layer="1">
             <img src="uploads/01-decor.webp" alt="Декоративная вставка" loading="lazy" decoding="async">
@@ -3847,7 +3928,7 @@ input[type="range"]:hover::-moz-range-thumb{
           </div>
           <div class="desc">
             <div class="desc-inner">
-              Разноширокие планки за декоративной вставкой. Создают приватность, но пропускают воздух — забор не работает как парус в ветреную погоду и не запирает участок. Ширина чередуется по ритму.
+              Разноширокие планки за декоративной вставкой. Создают приватность, но пропускают воздух — ограждение не работает как парус в ветреную погоду и не запирает участок. Ширина чередуется по ритму.
               <div class="desc-specs">
                 <div class="s">Ширина<span>40–180 мм</span></div>
                 <div class="s">Ветр. нагрузка<span>×0,3</span></div>
@@ -3901,7 +3982,7 @@ input[type="range"]:hover::-moz-range-thumb{
     </div>
     <div>
       <h3>Менеджер перезвонит за <em>5 минут</em></h3>
-      <p>Ответим на технические вопросы, поможем подобрать модули под длину участка и пришлём 3D-визуализацию вашего забора до оплаты.</p>
+      <p>Ответим на технические вопросы, поможем подобрать модули под длину участка и пришлём 3D-визуализацию вашего ограждения до оплаты.</p>
     </div>
     <div class="cta-buttons">
       <a href="tel:+79272295828" class="cta-btn">+7 (927) 229-58-28</a>
@@ -3916,9 +3997,9 @@ input[type="range"]:hover::-moz-range-thumb{
     <div class="pillars-head">
       <div class="eyebrow">— Преимущества / 03</div>
       <h2 class="section-title" style="margin-top:18px;">
-        <span>Почему </span><em>FOREST 2.5</em>
+        <span>Почему </span><em>FORRMA</em>
       </h2>
-      <p class="lead-text">Четыре вещи, которыми не может похвастаться обычный профнастил или штакетник за те же деньги.</p>
+      <p class="lead-text">FORRMA создана не просто закрывать участок. Она формирует пространство вокруг дома.</p>
     </div>
 
     <div class="pillars-grid">
@@ -3928,29 +4009,29 @@ input[type="range"]:hover::-moz-range-thumb{
           <img src="uploads/PREM_13.webp" alt="Художественная перфорация FOREST 2.5 — крупный план перфорации с оленем" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" decoding="async">
         </div>
         <div class="pillar-body">
-          <div class="ic">01 — Дизайн</div>
-          <h3>Художественная перфорация</h3>
-          <p>Участок узнают с улицы. Соседи приходят фотографировать. По данным риелторов — добавляет до 12% к стоимости дома при перепродаже. Любой рисунок: лес, флора, ваши инициалы — можно сделать на заказ.</p>
+          <div class="ic">01 — Модульность</div>
+          <h3>Развивается вместе с участком</h3>
+          <p>Система развивается вместе с участком. Подсветку, декоративные элементы и архитектурные акценты можно усиливать и дополнять со временем.</p>
           <div class="specs">
-            <div class="s">Сталь<span>2–3 мм</span></div>
-            <div class="s">Резка<span>лазер 0,1 мм</span></div>
-            <div class="s">Покрытие<span>Akzonobel</span></div>
+            <div class="s">Базовый модуль<span>стандарт</span></div>
+            <div class="s">Декоры<span>сменные</span></div>
+            <div class="s">LED<span>опционально</span></div>
           </div>
         </div>
       </article>
 
       <article class="pillar">
         <div class="pillar-img">
-          <img src="uploads/PREM_14.webp" alt="Скрытая LED-подсветка — драматичный ночной кадр забора с янтарным свечением" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" decoding="async">
+          <img src="uploads/PREM_14.webp" alt="Скрытая LED-подсветка — драматичный ночной кадр ограждения с янтарным свечением" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" decoding="async">
         </div>
         <div class="pillar-body">
-          <div class="ic">02 — Свет</div>
-          <h3>Скрытая LED-подсветка</h3>
-          <p>Освещает периметр участка без садовых фонарей — экономит до 87% на освещении. Не видно лампочек, никаких столбов и кабелей в земле. Один блок питания 24V на весь забор. Управление с телефона, поддержка умного дома.</p>
+          <div class="ic">02 — Архитектурный характер</div>
+          <h3>Каждая FORRMA выглядит индивидуально</h3>
+          <p>Разноширинные ламели и художественные панели создают уникальный внешний образ. Каждая FORRMA выглядит индивидуально.</p>
           <div class="specs">
-            <div class="s">Напряжение<span>24V · IP65</span></div>
-            <div class="s">Ресурс<span>50&nbsp;000 ч</span></div>
-            <div class="s">Управление<span>HomeKit/HA</span></div>
+            <div class="s">Ламели<span>40–180 мм</span></div>
+            <div class="s">Узоры<span>лазер 0,1 мм</span></div>
+            <div class="s">Покрытие<span>Akzonobel</span></div>
           </div>
         </div>
       </article>
@@ -3960,13 +4041,13 @@ input[type="range"]:hover::-moz-range-thumb{
           <img src="uploads/PREM_15.webp" alt="Модульная система FOREST 2.5 — несколько одинаковых секций в ряд, ритм стоек" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" decoding="async">
         </div>
         <div class="pillar-body">
-          <div class="ic">03 — Инженерия</div>
-          <h3>Модульная сборка</h3>
-          <p>Установка за 1 рабочий день — без сварки, шума и грязи. Если через 10 лет понадобится заменить одну секцию — открутили 4 болта и поставили новую. Регулируемые пазы прощают ошибки фундамента до ±16 мм.</p>
+          <div class="ic">03 — Приватность и воздух</div>
+          <h3>Закрывает, но не глушит</h3>
+          <p>FORRMA сохраняет ощущение пространства, обеспечивает приватность и поддерживает естественное движение воздуха.</p>
           <div class="specs">
-            <div class="s">Модуль<span>2000 мм</span></div>
-            <div class="s">Монтаж<span>1–3 дня</span></div>
-            <div class="s">Допуск<span>±16 мм</span></div>
+            <div class="s">Видимость<span>0%</span></div>
+            <div class="s">Ветровая нагрузка<span>×0,3</span></div>
+            <div class="s">Просвет<span>есть</span></div>
           </div>
         </div>
       </article>
@@ -3976,13 +4057,13 @@ input[type="range"]:hover::-moz-range-thumb{
           <img src="uploads/PREM_16.webp" alt="Вид со стороны участка — силуэт через ламели, тонкая приватность" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" decoding="async">
         </div>
         <div class="pillar-body">
-          <div class="ic">04 — Приватность</div>
-          <h3>Приватность без глухоты</h3>
-          <p>Соседи и прохожие не видят, что у вас на участке. При этом воздух свободно проходит — нет «парусности» в метель, не валит ветром. Сохраняется естественная вентиляция сада, не выгорают растения за глухой стенкой.</p>
+          <div class="ic">04 — Надёжность системы</div>
+          <h3>Сделано на 25+ лет</h3>
+          <p>Оцинкованная сталь, защитные покрытия, продуманная конструкция и единые стандарты качества FORRMA.</p>
           <div class="specs">
-            <div class="s">Ламели<span>40–180 мм</span></div>
-            <div class="s">Ветровая нагрузка<span>×0,3</span></div>
-            <div class="s">Видимость<span>0%</span></div>
+            <div class="s">Сталь<span>2–3 мм оцинк.</span></div>
+            <div class="s">Гарантия<span>15 лет</span></div>
+            <div class="s">Срок службы<span>25+ лет</span></div>
           </div>
         </div>
       </article>
@@ -4011,10 +4092,10 @@ input[type="range"]:hover::-moz-range-thumb{
           <span class="coll-tag">FOREST · A</span>
           <div class="coll-decor-flip" role="button" tabindex="0" aria-label="Перевернуть карточку — показать вторую панель серии">
             <div class="coll-face front">
-              <img src="uploads/PANEL_A_02.svg" alt="Forest A — олень-самец">
+              <img src="uploads/PANEL_A_01.svg" alt="Forest A — олень-самец с оленёнком">
             </div>
             <div class="coll-face back">
-              <img src="uploads/PANEL_A_01.svg" alt="Forest A — пейзаж с птицей">
+              <img src="uploads/PANEL_A_02.svg" alt="Forest A — пейзаж с птицей">
             </div>
           </div>
           <span class="coll-flip-pager" aria-live="polite">
@@ -4031,37 +4112,78 @@ input[type="range"]:hover::-moz-range-thumb{
         </div>
       </article>
 
-      <article class="coll coll-soon" data-decor-card="forest_b" aria-disabled="true">
-        <div class="coll-decor-img" data-decor-render="b">
+      <article class="coll coll-flip" data-decor-card="forest_b">
+        <div class="coll-decor-img">
           <span class="coll-tag">FOREST · B</span>
-          <div class="coll-soon-badge">
-            <span class="big">Скоро</span>
-            <span class="small">Серия B · 2026</span>
+          <div class="coll-decor-flip" role="button" tabindex="0" aria-label="Перевернуть карточку — показать вторую панель серии">
+            <div class="coll-face front">
+              <img src="uploads/PANEL_B_01.svg" alt="Forest B — ракурс 1">
+            </div>
+            <div class="coll-face back">
+              <img src="uploads/PANEL_B_02.svg" alt="Forest B — ракурс 2">
+            </div>
           </div>
+          <span class="coll-flip-pager" aria-live="polite">
+            <span class="ico"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 18v-6h6"/></svg></span>
+            <span class="pg" data-coll-pager>1 / 2</span>
+          </span>
         </div>
         <div class="coll-body">
           <h3>Forest · B</h3>
           <p class="desc">Олениха с оленёнком. Мягкий, лиричный сюжет — подходит для семейных участков и спокойной архитектуры.</p>
         </div>
         <div class="coll-actions one">
-          <button class="primary" disabled>В разработке</button>
+          <button class="primary" data-action="add" data-decor="forest_b">Рассчитать</button>
         </div>
       </article>
 
-      <article class="coll coll-soon" data-decor-card="forest_c" aria-disabled="true">
-        <div class="coll-decor-img" data-decor-render="c">
+      <article class="coll coll-flip" data-decor-card="forest_c">
+        <div class="coll-decor-img">
           <span class="coll-tag">FOREST · C</span>
-          <div class="coll-soon-badge">
-            <span class="big">Скоро</span>
-            <span class="small">Серия C · 2026</span>
+          <div class="coll-decor-flip" role="button" tabindex="0" aria-label="Перевернуть карточку — показать вторую панель серии">
+            <div class="coll-face front">
+              <img src="uploads/PANEL_C_01.svg" alt="Forest C — ракурс 1">
+            </div>
+            <div class="coll-face back">
+              <img src="uploads/PANEL_C_02.svg" alt="Forest C — ракурс 2">
+            </div>
           </div>
+          <span class="coll-flip-pager" aria-live="polite">
+            <span class="ico"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 18v-6h6"/></svg></span>
+            <span class="pg" data-coll-pager>1 / 2</span>
+          </span>
         </div>
         <div class="coll-body">
           <h3>Forest · C</h3>
           <p class="desc">Медведица с медвежонком и сова на дубе. Самый эпичный сюжет коллекции — для крупных участков с лесными мотивами.</p>
         </div>
         <div class="coll-actions one">
-          <button class="primary" disabled>В разработке</button>
+          <button class="primary" data-action="add" data-decor="forest_c">Рассчитать</button>
+        </div>
+      </article>
+
+      <article class="coll coll-flip" data-decor-card="forest_d">
+        <div class="coll-decor-img">
+          <span class="coll-tag">FOREST · D</span>
+          <div class="coll-decor-flip" role="button" tabindex="0" aria-label="Перевернуть карточку — показать вторую панель серии">
+            <div class="coll-face front">
+              <img src="uploads/PANEL_D_01.svg" alt="Forest D — ракурс 1">
+            </div>
+            <div class="coll-face back">
+              <img src="uploads/PANEL_D_02.svg" alt="Forest D — ракурс 2">
+            </div>
+          </div>
+          <span class="coll-flip-pager" aria-live="polite">
+            <span class="ico"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 18v-6h6"/></svg></span>
+            <span class="pg" data-coll-pager>1 / 2</span>
+          </span>
+        </div>
+        <div class="coll-body">
+          <h3>Forest · D</h3>
+          <p class="desc">Графический природный мотив — листья, ветви, лесная флора. Универсальный сюжет для современной архитектуры.</p>
+        </div>
+        <div class="coll-actions one">
+          <button class="primary" data-action="add" data-decor="forest_d">Рассчитать</button>
         </div>
       </article>
 
@@ -4079,7 +4201,7 @@ input[type="range"]:hover::-moz-range-thumb{
     </div>
     <div>
       <h3>Замер бесплатно <em>за 24 часа</em></h3>
-      <p>Замерщик приедет на участок, снимет геометрию, согласует с вами рисунок и пришлёт 3D-визуализацию вашего забора. Только после этого — оплата.</p>
+      <p>Замерщик приедет на участок, снимет геометрию, согласует с вами рисунок и пришлёт 3D-визуализацию вашего ограждения. Только после этого — оплата.</p>
     </div>
     <div class="cta-buttons">
       <a href="#contact" class="cta-btn">Заказать замер</a>
@@ -4104,78 +4226,19 @@ input[type="range"]:hover::-moz-range-thumb{
     <div class="seasons-grid">
       <div class="season" data-name="Зима">
         <div class="s-meta">−35°C</div>
-        <div class="img-ph">
-          <span class="ph-num">PHOTO · 21</span>
-          <div class="ph-icon">❄</div>
-          <div class="ph-desc">Забор зимой. Снег на земле и на крышке стоек. Включена подсветка, тёплый свет контрастирует с холодным синим вечером. Видны следы на снегу.</div>
-        </div>
+        <img src="uploads/VREMA_GODA_21.webp" alt="FORRMA зимой — снег, луна, тёплая LED-подсветка" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" decoding="async">
       </div>
       <div class="season" data-name="Весна">
         <div class="s-meta">+10°C</div>
-        <div class="img-ph">
-          <span class="ph-num">PHOTO · 22</span>
-          <div class="ph-icon">❀</div>
-          <div class="ph-desc">Забор весной. Молодая трава, первые цветы, серое мягкое небо. Дневной кадр без подсветки. Капли воды на стали после дождя.</div>
-        </div>
+        <img src="uploads/VREMA_GODA_22.webp" alt="FORRMA весной — первая зелень, голые ветки, мягкое небо" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" decoding="async">
       </div>
       <div class="season" data-name="Лето">
         <div class="s-meta">+30°C</div>
-        <div class="img-ph">
-          <span class="ph-num">PHOTO · 23</span>
-          <div class="ph-icon">☀</div>
-          <div class="ph-desc">Забор летом. Яркое полуденное солнце, насыщенная зелень, цветущий сад. Резкие тени от перфорации ложатся на дорожку из брусчатки.</div>
-        </div>
+        <img src="uploads/VREMA_GODA_23.webp" alt="FORRMA летом — зелень, гортензии, цветущий сад, ясное небо" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" decoding="async">
       </div>
       <div class="season" data-name="Осень">
         <div class="s-meta">+5°C</div>
-        <div class="img-ph">
-          <span class="ph-num">PHOTO · 24</span>
-          <div class="ph-icon">🍁</div>
-          <div class="ph-desc">Забор осенью. Опавшие листья, мокрая брусчатка, закатное небо. Подсветка только включается, контраст между остатками дня и тёплым свечением.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- BENEFITS — что вы получаете -->
-<section class="benefits">
-  <div class="container">
-    <div class="benefits-head">
-      <div class="eyebrow">— Что вы получаете / 06</div>
-      <h2 class="section-title" style="margin-top:18px;">
-        <span>Не</span>&nbsp;<em>трата —</em>&nbsp;<span>а вложение</span>
-      </h2>
-      <p class="lead-text">Архитектурное ограждение возвращается тремя путями: повышает стоимость дома, экономит на освещении и не требует обслуживания.</p>
-    </div>
-
-    <div class="benefits-grid">
-      <div class="benefit">
-        <div class="b-tag">КАПИТАЛИЗАЦИЯ</div>
-        <div class="b-num">+12<span class="sm">%</span></div>
-        <div class="b-title">к стоимости дома</div>
-        <div class="b-desc">Архитектурное ограждение премиум-класса увеличивает оценочную стоимость загородного дома при перепродаже, по данным риелторов Подмосковья.</div>
-      </div>
-
-      <div class="benefit">
-        <div class="b-tag">ОСВЕЩЕНИЕ</div>
-        <div class="b-num">−87<span class="sm">%</span></div>
-        <div class="b-title">расходов на фонари</div>
-        <div class="b-desc">Скрытая LED-подсветка забора заменяет периметральное освещение участка. Один блок 24V вместо 8–12 садовых фонарей и кабельных трасс.</div>
-      </div>
-
-      <div class="benefit">
-        <div class="b-tag">ОБСЛУЖИВАНИЕ</div>
-        <div class="b-num">0<span class="sm">&nbsp;₽</span></div>
-        <div class="b-title">за первые 5 лет</div>
-        <div class="b-desc">Гарантия покрывает 100% всего: металл, окраску, электронику, монтаж. Не нужно красить, чистить, подтягивать или менять лампочки — ничего.</div>
-      </div>
-
-      <div class="benefit">
-        <div class="b-tag">ВРЕМЯ</div>
-        <div class="b-num">1<span class="sm">&nbsp;день</span></div>
-        <div class="b-title">монтажа 12 метров</div>
-        <div class="b-desc">Бригада из двух человек собирает стандартный пролёт за рабочий день. Без сварки, без шума, без грязи. Соседи не успевают понять, что вы что-то делали.</div>
+        <img src="uploads/VREMA_GODA_24.webp" alt="FORRMA осенью — мокрая брусчатка, опавшие листья, закат" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" decoding="async">
       </div>
     </div>
   </div>
@@ -4189,10 +4252,10 @@ input[type="range"]:hover::-moz-range-thumb{
         <div class="eyebrow">— Производство и монтаж / 07</div>
         <h2 class="section-title" style="margin-top:18px;">
           <span>Делаем сами</span><br>
-          <em>в Подмосковье</em>
+          <em>в Балаково</em>
         </h2>
       </div>
-      <p class="lead-text">Свой цех, свой лазер, своя бригада монтажа. Никаких посредников и аутсорса — поэтому отвечаем за качество от листа стали до сданной работы. По запросу пришлём техдокументацию, расчёт фундамента и нагрузок.</p>
+      <p class="lead-text">Собственное производство в Балаково: подготовка металла, лазерная резка, окраска, сборка и контроль качества. Монтаж выполняют сертифицированные бригады по стандартам FORRMA — один подход к качеству на всех объектах. По запросу пришлём техдокументацию, расчёт фундамента и нагрузок.</p>
     </div>
 
     <div class="eng-grid">
@@ -4230,9 +4293,9 @@ input[type="range"]:hover::-moz-range-thumb{
           <div class="ph-desc">Цех / производство. Лазерный станок ЧПУ режет декоративную панель. Снопы искр или красный лазер. Промышленная съёмка, чисто, аккуратно — не "гараж".</div>
         </div>
         <div class="body">
-          <div class="meta">Производство · РФ</div>
+          <div class="meta">Производство · Балаково</div>
           <h4>Собственный цех</h4>
-          <p>Резка, окраска, сборка и контроль качества проходят на одной площадке под Москвой. Каждая партия маркируется, и её можно отследить от листа стали до сдачи объекта.</p>
+          <p>Подготовка металла, лазерная резка, окраска, сборка и контроль качества проходят на одной площадке в Балаково. Каждая партия маркируется, и её можно отследить от листа стали до сдачи объекта.</p>
         </div>
       </div>
 
@@ -4240,53 +4303,6 @@ input[type="range"]:hover::-moz-range-thumb{
   </div>
 </section>
 
-<!-- GALLERY -->
-<section class="gallery" id="gallery">
-  <div class="container">
-    <div class="collections-head">
-      <div>
-        <div class="eyebrow">— Галерея / 08</div>
-        <h2 class="section-title" style="margin-top:18px;">
-          <span>Как это</span>&nbsp;<em>выглядит вживую</em>
-        </h2>
-      </div>
-      <p class="lead-text">Концепции FOREST 2.5 в разной обстановке: время суток, погода, архитектура. Реальные проекты появятся здесь по мере сдачи.</p>
-    </div>
-
-    <div class="gallery-grid">
-      <div class="g-item g-1" data-label="ИСТРА · 2025 · ВЕЧЕР">
-        <div class="img-ph">
-          <span class="ph-num">PHOTO · 25</span>
-          <div class="ph-icon">▣</div>
-          <div class="ph-desc">Главный кадр галереи. Длинный пролёт забора FOREST 2.5 вдоль участка с современным коттеджем. Сумерки, подсветка включена. Самое сильное фото.</div>
-        </div>
-      </div>
-      <div class="g-item g-2" data-label="РУБЛЁВКА · 2024 · НОЧЬ">
-        <div class="img-ph"><span class="ph-num">PHOTO · 26</span><div class="ph-desc">Ракурс с улицы. Виден угловой стык двух секций, фонари вдоль дорожки.</div></div>
-      </div>
-      <div class="g-item g-3" data-label="СОЧИ · 2024 · ЗАКАТ">
-        <div class="img-ph"><span class="ph-num">PHOTO · 27</span><div class="ph-desc">Южный участок, пальмы и кипарисы. Закатное небо. Подсветка только включается.</div></div>
-      </div>
-      <div class="g-item g-4" data-label="СПБ · 2025">
-        <div class="img-ph"><span class="ph-num">PHOTO · 28</span><div class="ph-desc">Деталь крупным планом — узор фрезировки на фоне газона.</div></div>
-      </div>
-      <div class="g-item g-5" data-label="ИСТРА · 2025 · УТРО">
-        <div class="img-ph"><span class="ph-num">PHOTO · 29</span><div class="ph-desc">Утренний туман, силуэт забора растворяется в дымке.</div></div>
-      </div>
-      <div class="g-item g-6" data-label="МОСКВА · 2024">
-        <div class="img-ph"><span class="ph-num">PHOTO · 30</span><div class="ph-desc">Ракурс с тропинки изнутри участка. Видно, что забор НЕ глухой.</div></div>
-      </div>
-      <div class="g-item g-7" data-label="КАЗАНЬ · 2025">
-        <div class="img-ph"><span class="ph-num">PHOTO · 31</span><div class="ph-desc">Угол участка, поворот забора на 90°. Видна стойка-перегиб.</div></div>
-      </div>
-      <div class="g-item g-8" data-label="ЕКАТЕРИНБУРГ · 2024 · ЗИМА">
-        <div class="img-ph"><span class="ph-num">PHOTO · 32</span><div class="ph-desc">Широкий зимний кадр. Снег, забор работает.</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CALCULATOR -->
 <section class="calc" id="calc">
   <div class="container">
     <div class="tech-head">
@@ -4296,7 +4312,7 @@ input[type="range"]:hover::-moz-range-thumb{
           <span>Посчитайте</span>&nbsp;<em>свой проект</em>
         </h2>
       </div>
-      <p class="lead-text">Двигайте ползунок — увидите забор и узнаете цену. Шаг — 1 секция (2,5 метра). Цены реальные, без накруток на сайте.</p>
+      <p class="lead-text">Двигайте ползунок — увидите ограждение и узнаете цену. Шаг — 1 секция (2,5 метра). Цены реальные, без накруток на сайте.</p>
     </div>
 
     <div class="calc-wrap">
@@ -4360,6 +4376,26 @@ input[type="range"]:hover::-moz-range-thumb{
               </div>
               <div class="dc-label">
                 <span class="dc-tag">FOREST · B</span>
+                <span class="dc-meta">2&nbsp;ракурса</span>
+              </div>
+            </button>
+            <button class="decor-card" data-decor="forest_c" type="button">
+              <div class="dc-stage">
+                <div class="dc-img dc-img-base"></div>
+                <div class="dc-mosaic" aria-hidden="true"></div>
+              </div>
+              <div class="dc-label">
+                <span class="dc-tag">FOREST · C</span>
+                <span class="dc-meta">2&nbsp;ракурса</span>
+              </div>
+            </button>
+            <button class="decor-card" data-decor="forest_d" type="button">
+              <div class="dc-stage">
+                <div class="dc-img dc-img-base"></div>
+                <div class="dc-mosaic" aria-hidden="true"></div>
+              </div>
+              <div class="dc-label">
+                <span class="dc-tag">FOREST · D</span>
                 <span class="dc-meta">2&nbsp;ракурса</span>
               </div>
             </button>
@@ -4482,7 +4518,7 @@ input[type="range"]:hover::-moz-range-thumb{
       <div class="review">
         <span class="qm">”</span>
         <div class="stars">★ ★ ★ ★ ★</div>
-        <p class="text">Забор стал главным акцентом участка. Соседи приходят фотографировать в сумерках — серьёзно. Качество стали и сварки на уровне дорогих европейских брендов.</p>
+        <p class="text">Ограждение стал главным акцентом участка. Соседи приходят фотографировать в сумерках — серьёзно. Качество стали и сварки на уровне дорогих европейских брендов.</p>
         <div class="author">
           <div class="avatar">А</div>
           <div class="info"><div class="name">Алексей Воронцов</div><div class="loc">FOREST 2.5 · 18 м · Истра</div></div>
@@ -4527,7 +4563,7 @@ input[type="range"]:hover::-moz-range-thumb{
 
         <div class="faq-item open">
           <button class="faq-q"><span>Сколько в итоге это стоит?</span><span class="icon">+</span></button>
-          <div class="faq-a"><p>Стандартный забор 12 метров с подсветкой и монтажом — от 655 000 ₽. Точная цифра зависит от выбранной композиции модулей, высоты и сложности рисунка. Воспользуйтесь <a href="#calc" style="color:var(--amber-bright);text-decoration:underline">калькулятором выше</a> — он показывает ту же цену, что в коммерческом предложении.</p></div>
+          <div class="faq-a"><p>Стандартное ограждение 12 метров с подсветкой и монтажом — от 655 000 ₽. Точная цифра зависит от выбранной композиции модулей, высоты и сложности рисунка. Воспользуйтесь <a href="#calc" style="color:var(--amber-bright);text-decoration:underline">калькулятором выше</a> — он показывает ту же цену, что в коммерческом предложении.</p></div>
         </div>
 
         <div class="faq-item">
@@ -4536,7 +4572,7 @@ input[type="range"]:hover::-moz-range-thumb{
         </div>
 
         <div class="faq-item">
-          <button class="faq-q"><span>Сколько времени от заявки до готового забора?</span><span class="icon">+</span></button>
+          <button class="faq-q"><span>Сколько времени от заявки до готового ограждения?</span><span class="icon">+</span></button>
           <div class="faq-a"><p>В среднем 4–6 недель: бесплатный замер (1–3 дня), согласование дизайна и 3D (5–7 дней), производство (3–4 недели), монтаж (1–3 дня). Если у вас на участке уже есть фундамент или старые столбы — проверим и можем подключиться к ним, это сокращает срок.</p></div>
         </div>
 
@@ -4584,15 +4620,16 @@ input[type="range"]:hover::-moz-range-thumb{
       <div class="about-text">
         <div class="eyebrow">— О компании / 12</div>
         <h2 class="section-title" style="margin:20px 0 30px;">
-          <span>Делаем сами,</span><br>
-          <em>отвечаем сами</em>
+          <span>Работаем по всей России.</span><br>
+          <em>Контролируем каждый этап.</em>
         </h2>
-        <p class="lead">FORRMA — производство и монтаж в одном лице. Без посредников и субподрядчиков. С 2017 года, 340+ объектов в России.</p>
-        <p>Свой цех в Подмосковье: лазер ЧПУ, окрасочная камера, сборка, склад. Свои монтажные бригады с авто и оборудованием. На крупных проектах — один менеджер ведёт вас от первого звонка до подписания акта приёма.</p>
-        <p>Поэтому мы не «передадим заявку партнёру». Поэтому отвечаем за качество всей цепочки и можем дать 15 лет гарантии — это юридический договор, а не маркетинговое обещание.</p>
+        <p class="lead">FORRMA — архитектурная система ограждений нового поколения с поставками и реализацией проектов по всей России.</p>
+        <p>Стандартные элементы системы FORRMA поддерживаются в наличии на складе в Подмосковье и на производственной площадке в городе Балаково. Это позволяет сокращать сроки поставки и быстрее запускать объекты в работу.</p>
+        <p>Производство включает подготовку металла, лазерную обработку, окраску, сборку и контроль качества элементов системы.</p>
+        <p>Монтаж выполняют подготовленные сертифицированные бригады по стандартам FORRMA. Один подход к качеству, единые требования к монтажу и сопровождение проекта от первого обращения до завершения работ.</p>
         <div class="about-stats">
-          <div class="stat"><div class="num">340+</div><div class="lbl">проектов с 2017</div></div>
-          <div class="stat"><div class="num">14</div><div class="lbl">мастеров в штате</div></div>
+          <div class="stat"><div class="num">2</div><div class="lbl">площадки: склад&nbsp;и&nbsp;производство</div></div>
+          <div class="stat"><div class="num">РФ</div><div class="lbl">поставки по всей стране</div></div>
           <div class="stat"><div class="num">15</div><div class="lbl">лет гарантии</div></div>
         </div>
       </div>
@@ -4606,19 +4643,19 @@ input[type="range"]:hover::-moz-range-thumb{
     <div>
       <div class="eyebrow">— Связаться / 13</div>
       <h2><span>Получите смету</span><br><em>по своему участку</em></h2>
-      <p class="desc">Ответим в течение рабочего дня. Расскажите примерную длину забора и предпочтения по дизайну — пришлём референсы похожих проектов и предварительную стоимость. Замер — бесплатно, никаких обязательств.</p>
+      <p class="desc">Ответим в течение рабочего дня. Расскажите примерную длину ограждения и предпочтения по дизайну — пришлём референсы похожих проектов и предварительную стоимость. Замер — бесплатно, никаких обязательств.</p>
       <div class="contact-info">
         <div class="item"><span class="lbl">Телефон</span><span class="val"><a href="tel:+79272295828">+7 (927) 229-58-28</a></span></div>
         <div class="item"><span class="lbl">Email</span><span class="val"><a href="mailto:9272295828@mail.ru">9272295828@mail.ru</a></span></div>
         <div class="item"><span class="lbl">Производство</span><span class="val">Саратовская обл., Балаковский район, тупик Безымянный, д. 1</span></div>
-        <div class="item"><span class="lbl">Часы работы</span><span class="val">Пн–Сб 10:00–20:00</span></div>
+        <div class="item"><span class="lbl">Часы работы</span><span class="val">Пн–Сб 8:00–17:00</span></div>
       </div>
     </div>
     <form class="form" onsubmit="return submitForm(event, this);">
       <div><input type="text" required placeholder="Имя"></div>
       <div><input type="tel" required placeholder="Телефон"></div>
       <div><input type="email" placeholder="Email (необязательно)"></div>
-      <div><textarea placeholder="Расскажите про проект: длина забора, коллекция, особенности участка..."></textarea></div>
+      <div><textarea placeholder="Расскажите про проект: длина ограждения, коллекция, особенности участка..."></textarea></div>
       <label class="consent">
         <input type="checkbox" required id="formConsent">
         <span>Я согласен на обработку моих персональных данных (имя, телефон, email) в соответствии с <a href="politika.html" target="_blank" rel="noopener">политикой конфиденциальности</a> и <a href="politika.html" target="_blank" rel="noopener">152-ФЗ «О персональных данных»</a> для связи со мной по заявке.</span>
@@ -4632,7 +4669,7 @@ input[type="range"]:hover::-moz-range-thumb{
 <section class="final-cta">
   <div class="container">
     <div class="eyebrow"><span class="led-dot"></span>&nbsp;&nbsp;Следующий шаг</div>
-    <h2><span>Узнайте точную цену</span><br><em>своего забора</em></h2>
+    <h2><span>Узнайте точную цену</span><br><em>своего ограждения</em></h2>
     <p>Замерщик приедет на ваш участок бесплатно и составит смету за 24 часа. До оплаты — 3D-визуализация и согласование рисунка. Никаких авансов, оплата по факту.</p>
     <div class="final-checks">
       <div class="fc-row"><span class="ck">✓</span> Бесплатный замер за 24 часа</div>
@@ -4653,14 +4690,13 @@ input[type="range"]:hover::-moz-range-thumb{
     <div class="foot-grid">
       <div class="foot-col">
         <a href="#top" class="logo" style="font-size:24px;"><span class="dot"></span><img src="uploads/forrma-logo.svg" alt="FORRMA" class="logo-img footer-logo-img" /></a>
-        <p class="foot-tagline">Заборы, которые превращают участок в архитектуру.</p>
+        <p class="foot-tagline">Ограждения, которые превращают участок в архитектуру.</p>
       </div>
       <div class="foot-col">
         <h4>Навигация</h4>
         <a href="#tech">Конструкция</a>
         <a href="#collections">Коллекции</a>
-        <a href="#gallery">Галерея</a>
-        <a href="#calc">Калькулятор</a>
+          <a href="#calc">Калькулятор</a>
       </div>
       <div class="foot-col">
         <h4>Контакты</h4>
@@ -4778,6 +4814,58 @@ document.querySelectorAll('.tech-el').forEach(el => {
   });
 });
 
+// ============================================
+// SCROLL-SPY — подсветка раздела в навигации
+// при прокрутке страницы
+// ============================================
+(() => {
+  const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+  if (!navLinks.length) return;
+
+  // Карта: id раздела → ссылка в навигации
+  const linkBySection = new Map();
+  navLinks.forEach(link => {
+    const id = link.getAttribute('href').slice(1);
+    const section = document.getElementById(id);
+    if (section) linkBySection.set(section, link);
+  });
+
+  if (!linkBySection.size) return;
+
+  // Активным считается тот раздел, который ближе к верху экрана,
+  // но уже пересёк линию ~30% от верха окна.
+  function updateActive() {
+    const offset = window.innerHeight * 0.30;
+    let current = null;
+    let currentTop = -Infinity;
+
+    linkBySection.forEach((link, section) => {
+      const rect = section.getBoundingClientRect();
+      // Подходит раздел, чей верх уже выше offset (т.е. он "под" этим уровнем)
+      if (rect.top <= offset && rect.top > currentTop) {
+        currentTop = rect.top;
+        current = link;
+      }
+    });
+
+    navLinks.forEach(l => l.classList.toggle('is-current', l === current));
+  }
+
+  // Используем passive scroll + rAF троттлинг
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        updateActive();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  updateActive(); // первичный прогон при загрузке
+})();
+
 // === Construction stage (4-layer cross-fade) ===
 (() => {
   const stage    = document.getElementById('stage');
@@ -4864,6 +4952,8 @@ const fpMode = document.getElementById('fpMode');
 const DECOR_DESCRIPTIONS = {
   forest_a: 'FOREST · A — олень-самец с оленёнком на лесной поляне. Сильные раскидистые рога, ели и кустарники. Идеален для участков с природным ландшафтом и деревянных домов.',
   forest_b: 'FOREST · B — олениха с оленёнком и птица на ветке среди берёз. Более мягкий, лиричный сюжет. Подходит для семейных участков и спокойной архитектуры.',
+  forest_c: 'FOREST · C — медведица с медвежонком и сова на дубе. Самый эпичный сюжет коллекции. Для крупных участков с лесными мотивами и архитектурой в стиле шале.',
+  forest_d: 'FOREST · D — графический природный мотив: листья, ветви, лесная флора. Универсальный сюжет без животных — подходит для современной архитектуры и минималистичных участков.',
 };
 
 // Описания типов установки столбов
@@ -5063,20 +5153,37 @@ function tileSvg(type, mode) {
 const FOREST_DEER_SVG = `<g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none"> <path d="M7639 12751 c-102 -14 -293 -224 -380 -418 -47 -105 -47 -106 -63 -146 -9 -21 -25 -100 -37 -175 -26 -168 -25 -164 -46 -160 -31 6 -41 97 -48 413 -7 304 -14 371 -41 382 -17 6 -50 -21 -70 -58 -33 -65 -74 -345 -74 -510 0 -148 35 -340 105 -571 31 -103 4 -113 -107 -39 -41 27 -97 74 -125 104 -83 87 -186 310 -218 467 -22 114 -44 190 -61 218 -18 28 -55 29 -80 1 -17 -19 -19 -37 -18 -148 1 -79 7 -152 18 -196 34 -144 117 -382 154 -443 68 -112 259 -312 517 -542 33 -29 93 -85 134 -123 90 -83 206 -176 401 -322 283 -211 390 -303 633 -544 175 -172 215 -221 253 -307 49 -111 58 -145 41 -161 -13 -13 -22 -13 -78 1 -88 23 -127 49 -256 169 -131 123 -175 150 -342 211 -143 53 -232 99 -308 161 -66 54 -89 62 -113 40 -31 -28 -33 -89 -10 -255 39 -285 68 -409 120 -510 51 -101 211 -292 281 -336 51 -32 129 -51 237 -59 252 -18 296 -89 205 -331 -23 -61 -72 -211 -108 -335 -86 -291 -122 -397 -148 -436 -27 -41 -103 -81 -232 -124 l-100 -34 -275 0 c-232 0 -291 3 -380 20 -82 15 -145 20 -285 19 -171 -1 -189 -3 -371 -42 -349 -75 -474 -84 -750 -58 -585 57 -1696 52 -2499 -10 -137 -11 -357 -17 -700 -18 -492 -2 -501 -3 -570 -25 -95 -31 -286 -126 -420 -207 -204 -124 -252 -148 -525 -260 l-115 -47 -170 -171 c-237 -239 -405 -442 -433 -525 -19 -54 -51 -282 -86 -602 -9 -75 -20 -148 -25 -163 -6 -14 -14 -76 -17 -136 -7 -106 -6 -110 13 -110 11 0 27 8 34 17 8 9 70 53 139 98 69 45 132 91 141 101 9 11 40 61 68 112 50 87 54 92 85 92 40 0 55 18 142 164 86 146 98 143 109 -28 9 -154 111 -618 210 -956 76 -260 82 -304 61 -430 -19 -110 -68 -276 -96 -323 -11 -18 -34 -59 -52 -92 -38 -70 -110 -145 -194 -200 -61 -41 -270 -149 -384 -199 -78 -34 -99 -52 -153 -131 -40 -59 -41 -61 -39 -140 4 -139 32 -700 47 -945 43 -655 44 -866 9 -1187 -33 -296 -38 -522 -11 -570 9 -18 26 -37 38 -43 17 -10 25 -6 59 32 35 37 41 41 54 28 15 -17 42 -126 51 -214 9 -77 48 -192 76 -222 45 -48 246 -94 410 -94 123 0 156 11 175 60 8 20 33 54 54 74 28 26 40 46 40 65 0 52 -132 177 -250 236 -127 63 -205 148 -258 279 -22 54 -24 79 -32 320 -5 143 -16 456 -26 694 -15 374 -16 464 -5 665 18 337 19 343 72 390 28 26 131 82 289 159 408 200 430 210 437 193 9 -24 -90 -242 -159 -351 -90 -143 -89 -146 177 -464 450 -538 758 -971 953 -1340 19 -37 42 -104 53 -154 25 -112 57 -180 88 -184 29 -5 61 24 61 55 0 19 5 24 21 21 22 -3 35 -30 93 -189 32 -87 100 -152 204 -192 63 -25 203 -47 299 -47 88 0 117 9 181 57 30 23 33 29 27 60 -5 28 -1 41 19 68 34 44 33 55 -7 91 -57 54 -102 81 -258 164 -85 44 -180 100 -210 124 -68 53 -116 123 -125 182 -8 53 0 43 -229 326 -212 264 -290 364 -487 633 -209 284 -257 387 -243 530 8 82 29 136 68 172 17 17 113 89 212 160 280 203 547 413 666 523 46 43 249 282 288 340 21 30 60 96 86 145 70 131 113 202 128 208 6 2 37 -4 67 -14 62 -21 199 -49 375 -78 365 -60 299 -56 895 -56 546 1 593 3 980 40 347 34 592 54 605 48 8 -2 17 -13 20 -22 3 -10 -13 -112 -35 -227 -22 -115 -42 -222 -45 -239 -3 -16 -12 -68 -21 -115 -21 -117 -68 -406 -94 -575 -11 -77 -25 -160 -30 -185 -5 -25 -14 -110 -20 -190 -6 -80 -15 -199 -20 -266 -12 -148 -73 -609 -101 -759 -30 -160 -64 -291 -96 -365 -24 -57 -27 -78 -28 -176 0 -80 4 -116 14 -128 18 -22 37 -6 45 39 15 77 49 52 66 -49 12 -71 11 -78 -13 -153 -33 -102 -41 -165 -32 -266 7 -73 11 -85 39 -113 53 -53 248 -95 451 -98 141 -1 159 6 185 74 11 30 29 53 54 69 20 13 36 30 36 37 0 17 -58 83 -216 247 l-134 139 0 361 c0 378 2 404 45 607 15 68 41 208 60 310 l33 185 89 180 c48 99 109 230 135 290 83 197 168 406 168 414 0 12 30 22 42 15 20 -12 191 -301 262 -441 43 -86 47 -100 121 -348 76 -258 110 -357 152 -445 72 -151 104 -254 128 -400 49 -301 77 -535 85 -710 5 -107 12 -206 16 -220 18 -65 73 -81 102 -30 9 17 24 29 32 28 8 -2 32 -32 52 -68 l38 -65 0 -126 c0 -237 36 -284 256 -330 84 -17 118 -19 236 -13 147 7 158 12 158 62 0 10 14 38 31 62 28 39 30 45 17 68 -15 30 -185 185 -281 257 -83 63 -104 101 -152 280 -37 140 -89 299 -140 430 -68 176 -120 359 -204 710 -44 186 -61 295 -61 394 0 79 -13 185 -54 441 -74 465 -132 1351 -94 1435 16 35 55 57 173 95 153 50 230 94 475 268 154 110 198 149 226 201 13 25 42 68 64 95 21 28 54 76 72 108 87 155 274 413 549 758 154 193 191 247 277 395 207 357 292 614 307 935 6 148 42 429 56 444 5 6 33 16 61 23 102 26 280 131 308 182 6 12 11 80 11 161 l0 140 -40 74 c-41 73 -41 74 -41 179 0 90 4 116 26 174 14 37 40 108 57 156 31 92 46 109 78 89 53 -33 62 -2 24 84 -34 77 -33 115 7 159 17 20 34 53 37 72 7 40 19 49 76 58 33 5 53 20 117 85 110 113 167 200 234 357 32 76 81 179 109 228 83 145 97 210 49 241 -37 25 -106 6 -239 -66 -179 -98 -246 -129 -325 -149 -85 -21 -227 -85 -279 -125 -55 -41 -59 -17 -12 64 22 40 41 73 41 76 0 2 25 44 55 94 30 50 55 93 55 96 0 3 17 31 39 62 21 31 59 89 84 127 57 88 226 256 377 375 63 50 187 151 275 224 88 73 185 151 215 173 93 70 257 248 379 412 125 170 141 208 226 550 54 217 63 314 46 515 -12 145 -24 185 -66 212 -28 19 -50 10 -89 -37 -31 -37 -33 -43 -46 -194 -6 -66 -15 -168 -20 -227 -20 -219 -94 -439 -174 -517 -41 -40 -59 -36 -81 15 -45 109 -60 240 -74 658 -8 243 -11 271 -29 295 -25 34 -63 35 -79 0 -43 -90 -63 -260 -63 -552 0 -180 4 -240 22 -340 12 -69 22 -168 22 -227 1 -97 -1 -109 -26 -151 -33 -57 -164 -192 -241 -249 -87 -65 -83 -73 -142 282 -85 506 -120 641 -236 918 -61 145 -117 241 -149 257 -35 17 -64 -3 -68 -48 -3 -41 31 -171 87 -329 49 -138 70 -243 111 -540 17 -124 38 -269 47 -324 11 -71 14 -140 11 -250 -4 -142 -6 -155 -32 -202 -14 -27 -110 -141 -212 -254 -101 -113 -213 -245 -247 -294 -34 -48 -74 -106 -90 -127 -15 -22 -35 -39 -45 -39 -43 2 -156 190 -222 370 -43 116 -49 212 -21 345 41 199 36 266 -20 307 -24 19 -28 19 -56 4 -66 -33 -112 -116 -138 -245 -12 -60 -15 -126 -13 -282 l3 -205 42 -65 c42 -65 116 -215 169 -344 22 -54 28 -84 27 -131 -2 -67 -34 -163 -61 -186 -55 -47 -431 -41 -558 8 -33 13 -70 24 -81 24 -25 0 -67 41 -143 141 -84 109 -100 139 -100 184 0 63 26 156 64 231 19 38 55 114 81 169 l47 100 -2 216 c-1 271 -7 314 -50 352 -59 52 -74 23 -90 -173 -18 -225 -35 -292 -120 -464 -61 -124 -142 -236 -170 -236 -12 0 -55 29 -98 63 -108 89 -270 205 -457 329 -192 126 -291 204 -379 299 -77 83 -106 139 -113 217 -7 71 15 119 79 178 51 47 65 53 223 98 204 58 428 171 546 275 51 44 99 115 120 173 11 33 11 39 -6 58 -36 40 -157 15 -238 -50 -29 -22 -74 -58 -102 -80 -95 -77 -257 -142 -426 -175 -156 -29 -201 -17 -219 60 -12 51 4 223 31 330 28 112 114 282 223 437 51 73 101 147 110 165 29 57 17 146 -18 142 -6 -1 -32 -5 -57 -8z"/> </g>`;
 const FOREST_BEAR_SVG = `<g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none"> <path d="M5540 9934 c-100 -9 -632 -77 -892 -114 -345 -49 -459 -72 -573 -116 -51 -21 -106 -35 -127 -34 -48 1 -54 -2 -225 -126 -133 -97 -180 -122 -263 -139 -57 -12 -99 -38 -246 -153 -167 -130 -216 -162 -388 -254 -76 -40 -157 -93 -193 -125 -293 -257 -515 -924 -464 -1393 22 -201 61 -355 216 -845 30 -93 64 -207 76 -253 l22 -82 -43 -88 c-88 -180 -120 -297 -150 -557 -42 -360 -82 -436 -245 -466 -47 -9 -89 -7 -229 11 -94 12 -189 20 -212 17 -89 -10 -254 -119 -404 -267 -159 -157 -248 -295 -304 -473 -90 -285 -33 -636 171 -1047 218 -441 410 -603 598 -508 28 15 89 61 136 105 48 43 122 108 166 144 110 91 118 112 116 269 -1 69 -8 163 -16 210 -8 47 -14 86 -13 87 6 7 577 333 583 333 11 0 44 -272 43 -360 0 -48 -12 -104 -47 -220 -44 -143 -48 -163 -48 -260 0 -92 3 -111 24 -150 33 -61 135 -165 231 -234 l79 -57 103 10 c57 6 159 15 228 21 69 6 172 15 230 20 58 5 184 16 280 25 427 36 652 56 750 65 335 30 465 43 469 46 5 4 -54 144 -94 225 -46 90 -52 94 -154 94 -73 1 -103 6 -196 38 -104 36 -342 133 -357 146 -4 4 26 155 67 336 42 182 100 438 130 570 107 470 137 574 262 889 91 230 137 331 156 343 21 12 38 49 31 67 -7 20 -16 20 91 -3 165 -36 292 -44 585 -37 151 3 332 10 402 16 70 5 216 12 325 15 l198 7 -84 -52 c-113 -69 -183 -124 -262 -206 -137 -144 -203 -282 -244 -509 -26 -141 -18 -205 37 -298 34 -57 34 -67 3 -232 -41 -220 3 -500 169 -1068 25 -87 46 -166 46 -176 0 -10 7 -22 16 -25 35 -14 286 0 644 34 575 55 780 77 788 85 3 2 4 34 4 71 -1 48 -7 76 -24 107 -44 80 -130 106 -430 131 -265 22 -298 43 -298 188 0 130 64 324 177 538 65 122 180 319 199 339 11 12 27 1 105 -73 125 -119 287 -247 514 -406 359 -251 366 -261 369 -550 1 -163 2 -166 33 -230 17 -36 50 -85 73 -109 l41 -43 317 7 c174 4 324 9 332 10 8 2 155 6 325 10 171 3 321 8 335 10 14 2 118 7 233 10 115 4 210 12 213 17 4 5 -10 24 -31 40 -45 38 -57 66 -44 110 17 59 13 107 -11 133 -29 31 -46 36 -281 89 -327 74 -435 122 -560 245 -152 152 -228 355 -276 737 -14 111 -17 216 -17 524 0 409 10 533 55 705 28 109 56 158 144 255 42 47 95 112 117 144 68 99 151 287 187 424 l12 42 157 0 c346 0 704 63 1347 235 312 84 288 80 316 62 82 -52 502 -105 759 -95 108 4 122 7 234 51 124 49 182 86 253 159 81 84 80 113 -18 311 -86 173 -133 293 -149 378 -11 56 -11 87 4 203 l17 137 -44 82 -43 82 20 158 c18 145 18 160 4 191 -23 47 -67 64 -210 82 -68 8 -137 19 -155 23 -17 5 -118 55 -225 111 -267 140 -419 188 -728 229 -252 33 -330 40 -635 56 -860 45 -817 37 -1038 194 -234 165 -340 219 -512 263 -83 21 -112 23 -360 22 -168 0 -344 -6 -465 -17 -417 -36 -469 -39 -605 -34 -132 5 -149 8 -301 56 -98 30 -280 74 -465 111 -167 34 -393 86 -501 115 -168 46 -213 54 -310 58 -62 3 -133 3 -158 1z"/> </g>`;
 
-// 4 сцены FOREST — viewBox 100×180. Без ёлок. Олень/медведь крупно стоит на полукруглой земле.
+// Карта реальных SVG-файлов для каждого варианта серии FOREST.
+// Когда придёт новый файл (forest-b.svg, forest-c.svg, forest-d.svg) — просто положи его в uploads/
+// и добавь сюда. Если ключа нет — рендерится fallback с упрощённым силуэтом.
+const FOREST_VARIANT_SVG = {
+  a: 'uploads/forest-a-viz.svg',
+  b: 'uploads/PANEL_B_01.svg',
+  c: 'uploads/PANEL_C_01.svg',
+  d: 'uploads/PANEL_D_01.svg',
+};
+
+// 4 сцены FOREST — viewBox 100×180.
+// Если есть реальный SVG-файл варианта — вставляем его через <image>, заполняем весь тайл.
+// Иначе — fallback: упрощённый силуэт оленя/медведя на земле.
 function forestSceneSvg(variant, lath) {
+  // Если для варианта есть готовый SVG-файл — используем его (заполняет весь тайл).
+  if (FOREST_VARIANT_SVG[variant]) {
+    return `<image href="${FOREST_VARIANT_SVG[variant]}" x="0" y="0" width="100" height="180" preserveAspectRatio="xMidYMid slice"/>`;
+  }
+
+  // FALLBACK для вариантов без готового SVG.
   // Полукруглая земля — широкий эллипс, края выходят за тайл (обрезаются естественно).
   const ground = `<ellipse cx="50" cy="180" rx="80" ry="22" fill="${lath}"/>`;
 
   // ОЛЕНЬ — копыта на верху дуги (y≈158).
   const deerCentered = `<svg x="6" y="28" width="88" height="130" viewBox="0 0 1180 1280" preserveAspectRatio="xMidYMid meet">${FOREST_DEER_SVG}</svg>`;
-  // МЕДВЕДЬ — quadrat viewBox 1280×1280. Делаем крупнее под пропорции тайла.
+  // МЕДВЕДЬ — quadrat viewBox 1280×1280.
   const bearCentered = `<svg x="6" y="50" width="88" height="108" viewBox="0 0 1280 1280" preserveAspectRatio="xMidYMid meet">${FOREST_BEAR_SVG}</svg>`;
 
-  if (variant === 'a') return ground + deerCentered;
-  if (variant === 'b') return ground + deerCentered;  // плейсхолдер до получения оленихи
+  if (variant === 'b') return ground + deerCentered;
   if (variant === 'c') return ground + bearCentered;
-  return ground + bearCentered;  // плейсхолдер до получения лисы
+  return ground + bearCentered;  // плейсхолдер для остальных
 }
 
 // 4 сцены FOREST — viewBox 60×150 (узкий вертикальный)
@@ -5314,7 +5421,7 @@ function updateCalc() {
 
   // Количество стандартных секций = ceil(fenceLen / 2.5)
   const sections = Math.max(0, Math.ceil(fenceLen / 2.5));
-  // Реальная длина забора, учтённая в секциях (для отображения)
+  // Реальная длина ограждения, учтённая в секциях (для отображения)
   const actualFenceLen = sections * 2.5;
   // Общая длина для монтажа = totalLen
   const len = totalLen;
@@ -5463,7 +5570,10 @@ updateCalc();
 // ============================================
 (function initDecorCatalog() {
   const cards = document.querySelectorAll('[data-decor-render]');
-  if (!cards.length) return;
+  // Раньше тут стоял `if (!cards.length) return;` — это ломало инициализацию
+  // кнопок и flip-карточек ниже, потому что прерывало всю IIFE.
+  // Сейчас decor-render не используется (карточки B/C/D рендерятся через CSS background-image),
+  // поэтому просто пропускаем рендер если нет элементов.
 
   // Используем ту же функцию forestSceneSvg + ту же CSS-окраску, что и в визуализаторе.
   // Контейнер карточки — flex 3:4. SVG растягивается на 100%.
@@ -5525,6 +5635,54 @@ updateCalc();
         e.preventDefault();
         toggleFlip();
       }
+    });
+  });
+
+  // === 3D-tilt по движению мыши на карточках декора ===
+  // Карточка слегка наклоняется в сторону курсора + появляется глянцевый блик.
+  // Работает поверх flip-анимации через CSS-переменные --tilt-x/--tilt-y.
+  document.querySelectorAll('.coll-decor-img').forEach(zone => {
+    const TILT_MAX = 6;      // максимальный угол наклона (умеренный, чтобы не вылезать за рамку)
+    const card = zone.closest('.coll');
+
+    function setTilt(x, y){
+      // x, y — 0..1 (позиция курсора в карточке)
+      // На back-стороне (flipped) инвертируем Y-наклон, чтобы карточка
+      // визуально наклонялась "к курсору" с той же стороны, что и на front.
+      const flipped = card && card.classList.contains('is-flipped');
+      let tiltY = (x - 0.5) * 2 * TILT_MAX;
+      let tiltX = (0.5 - y) * 2 * TILT_MAX;
+      if (flipped) {
+        tiltY = -tiltY;  // компенсация поворота на 180°
+      }
+      zone.style.setProperty('--tilt-x', tiltX.toFixed(2) + 'deg');
+      zone.style.setProperty('--tilt-y', tiltY.toFixed(2) + 'deg');
+
+      // Блик — точно под курсором
+      zone.style.setProperty('--mx', (x * 100).toFixed(1) + '%');
+      zone.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+    }
+
+    zone.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      const rect = zone.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top)  / rect.height;
+      setTilt(Math.max(0, Math.min(1, x)), Math.max(0, Math.min(1, y)));
+    });
+
+    zone.addEventListener('pointerenter', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      zone.classList.add('is-tilting');
+      zone.style.setProperty('--gloss', '1');
+    });
+
+    zone.addEventListener('pointerleave', () => {
+      zone.classList.remove('is-tilting');
+      zone.style.setProperty('--gloss', '0');
+      // Плавный возврат в 0 — через CSS transition (а не JS lerp)
+      zone.style.setProperty('--tilt-x', '0deg');
+      zone.style.setProperty('--tilt-y', '0deg');
     });
   });
 })();
@@ -6100,14 +6258,9 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
   const cards = document.querySelectorAll('.decor-card');
   if (!cards.length) return;
 
-  // Simple placeholders for variants без своих картинок (forest_b).
-  // forest_a использует реальные SVG PANEL_A_01 / PANEL_A_02 — стилизуется через CSS, мозаика не нужна.
-  const PLACEHOLDERS = {
-    forest_b: {
-      1: makeSVG({ palette: 'morning_gold', subject: 'doe_fawn_birches', sunPos: 'left' }),
-      2: makeSVG({ palette: 'dusk_violet',  subject: 'doe_fawn_birches', sunPos: 'right' }),
-    },
-  };
+  // Все варианты (forest_a, _b, _c, _d) используют реальные SVG-панели через CSS.
+  // JS-плейсхолдеры больше не нужны.
+  const PLACEHOLDERS = {};
 
   // Применяем фон базовой картинки и строим мозаику для альтернативной.
   // Мозаика — сетка плиток, каждая показывает свой кусок второй картинки
@@ -6389,7 +6542,7 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
         <span class="label">Получить PDF смету</span>
       </button>
 
-      <p class="pdf-foot-note">PDF будет готов через несколько секунд — сможете сразу скачать. Менеджер свяжется в рабочее время (9:00–21:00 МСК), чтобы уточнить детали и предложить дату замера.</p>
+      <p class="pdf-foot-note">PDF будет готов через несколько секунд — сможете сразу скачать. Менеджер свяжется в рабочее время (8:00–17:00 МСК), чтобы уточнить детали и предложить дату замера.</p>
     </form>
 
     <!-- Progress state — пока генерируется PDF -->
@@ -6680,7 +6833,7 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
           <div style="font-size:11px;color:#8a8478;font-style:italic;line-height:1.6;margin-bottom:14px;">Цена ориентировочная. Точную смету бесплатно пришлёт замерщик после выезда на участок. Предложение действует 14 дней с даты выдачи.</div>
           <div style="display:flex;justify-content:space-between;">
             <div style="font-size:11px;color:#f0a042;font-weight:700;letter-spacing:2.5px;font-family:'JetBrains Mono',monospace;">FORRMA · forrma.ru</div>
-            <div style="font-size:11px;color:#8a8478;font-family:'JetBrains Mono',monospace;">+7 (927) 229-58-28 · 9:00–21:00 МСК</div>
+            <div style="font-size:11px;color:#8a8478;font-family:'JetBrains Mono',monospace;">+7 (927) 229-58-28 · 8:00–17:00 МСК</div>
           </div>
         </div>
 
@@ -6912,7 +7065,7 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
   const hint    = document.getElementById('heroFenceHint');
   if (!hero || !bg || !offImg || !hot) return;
 
-  // Координаты забора в долях от исходной картинки (2835×1582).
+  // Координаты ограждения в долях от исходной картинки (2835×1582).
   // Лево / верх / право / низ — захватывают обе панели + рамки столбов.
   const FENCE = { l: 0.520, t: 0.330, r: 0.952, b: 0.732 };
 
@@ -6961,7 +7114,7 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     hot.style.height = height + 'px';
 
     if (hint){
-      // Подсказка по центру забора, чуть выше его верхнего края
+      // Подсказка по центру ограждения, чуть выше его верхнего края
       hint.style.left = (left + width / 2) + 'px';
       hint.style.top  = Math.max(8, top - 38) + 'px';
     }
@@ -6993,9 +7146,9 @@ if (AUTO_START && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     if (e.pointerType === 'mouse') setLit(false);
   });
 
-  // ─── Доп. триггер: наведение на CTA "Узнать цену моего забора"
+  // ─── Доп. триггер: наведение на CTA "Узнать цену моего ограждения"
   // По UX: пользователь читает текст слева, видит кнопку — и hero оживает,
-  // подсказывая что забор и есть продукт.
+  // подсказывая что ограждение и есть продукт.
   const ctaBtn = document.querySelector('.hero-actions .cta-btn:not(.ghost)');
   if (ctaBtn) {
     ctaBtn.addEventListener('pointerenter', (e) => {
